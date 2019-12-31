@@ -1,22 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Filter;
+namespace LaminasTest\Log\Filter;
 
-use Zend\Log\Filter\Priority;
+use Laminas\Log\Filter\Priority;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class PriorityTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,7 +40,7 @@ class PriorityTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorThrowsOnInvalidPriority()
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'must be an integer');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'must be an integer');
         new Priority('foo');
     }
 }

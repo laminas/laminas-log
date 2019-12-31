@@ -1,20 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  */
 class WriterPluginManager extends AbstractPluginManager
 {
@@ -24,14 +22,14 @@ class WriterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = array(
-        'db'          => 'Zend\Log\Writer\Db',
-        'firephp'     => 'Zend\Log\Writer\FirePhp',
-        'mail'        => 'Zend\Log\Writer\Mail',
-        'mock'        => 'Zend\Log\Writer\Mock',
-        'null'        => 'Zend\Log\Writer\Null',
-        'stream'      => 'Zend\Log\Writer\Stream',
-        'syslog'      => 'Zend\Log\Writer\Syslog',
-        'zendmonitor' => 'Zend\Log\Writer\ZendMonitor',
+        'db'          => 'Laminas\Log\Writer\Db',
+        'firephp'     => 'Laminas\Log\Writer\FirePhp',
+        'mail'        => 'Laminas\Log\Writer\Mail',
+        'mock'        => 'Laminas\Log\Writer\Mock',
+        'null'        => 'Laminas\Log\Writer\Null',
+        'stream'      => 'Laminas\Log\Writer\Stream',
+        'syslog'      => 'Laminas\Log\Writer\Syslog',
+        'zendmonitor' => 'Laminas\Log\Writer\ZendMonitor',
     );
 
     /**
