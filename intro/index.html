@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Robust, composite logger with filtering, formatting, and PSR-3 support.">  
+    <link rel="canonical" href="https://docs.laminas.dev/intro/">
+    <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
+
+    <title>Introduction - laminas-log - Laminas Docs</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body id="page-top" class="components">
+
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        
+        <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+        </a>
+        <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
+            Documentation
+        </a>
+
+        
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
+                </li>
+            </ul>
+
+            
+            
+                <div class="d-block d-sm-none">
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="..">laminas-log</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item subnavigation__list-item--active">
+                                <a href="./" class="subnavigation__link">Introduction</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Reference</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../writers/" class="subnavigation__link">Writers</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../filters/" class="subnavigation__link">Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../formatters/" class="subnavigation__link">Formatters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../processors/" class="subnavigation__link">Processors</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../service-manager/" class="subnavigation__link">Service Manager Integration</a>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../psr3/" class="subnavigation__link">PSR-3 Support</a>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                </div>
+            
+
+            
+            <div class="d-block d-sm-none">
+                <div class="component-selector">
+    
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    
+    <header class="header">
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="col-6 offset-md-2">
+                <h1 class="header__title">
+                    Components
+
+                    
+                        <small class="header__subtitle">laminas-log</small>
+                    
+                </h1>
+            </div>
+
+            
+            <div class="col-4 text-sm-right">
+                
+                    
+
+                    <a href="#" class="header__link header__link--search" data-toggle="modal" data-target="#mkdocs_search_modal" title="Open search">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                    <a href="https://github.com/laminas/laminas-log/" class="header__link header__link--github" title="Go to repository of laminas-log">
+                        <i class="fa fa-github"></i> GitHub
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 col-sm-12">
+                
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+                
+                    <li class="toc__entry">
+                        <a href="#creating-a-log" class="toc__link">Creating a Log</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#logging-messages" class="toc__link">Logging Messages</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#destroying-a-log" class="toc__link">Destroying a Log</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#using-built-in-priorities" class="toc__link">Using Built-in Priorities</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#understanding-log-events" class="toc__link">Understanding Log Events</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#log-php-errors" class="toc__link">Log PHP Errors</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+            </div>
+            <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
+                
+                    <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        
+            <li class="breadcrumb-item"><a href="">Overview</a></li>
+
+            
+                <li class="breadcrumb-item"><a href="..">laminas-log</a></li>
+
+                
+
+                <li class="breadcrumb-item active" aria-current="page">Introduction</li>
+            
+        
+    </ol>
+</nav>
+
+
+
+
+
+
+    
+    
+
+    <h1 id="overview">Overview</h1>
+<p><code>Laminas\Log\Logger</code> is a component for general purpose logging. It supports
+multiple log backends, formatting messages sent to the log, and filtering
+messages from being logged. These functions are divided into the following
+objects:</p>
+<ul>
+<li>A <strong>logger</strong> (instance of <code>Laminas\Log\Logger</code>) is the object that your application
+  uses the most. You can have as many logger objects as you like; they do not
+  interact. A logger object must contain at least one <em>writer</em>, and can optionally
+  contain one or more <em>filters</em>.</li>
+<li>A <strong>writer</strong> (inherits from <code>Laminas\Log\Writer\AbstractWriter</code>) writes data to
+  an underlying storage implementation.</li>
+<li>A <strong>filter</strong> (implements <code>Laminas\Log\Filter\FilterInterface</code>) filters (blocks)
+  log data from being saved. A filter is applied to an individual writer.
+  Filters can be chained.</li>
+<li>A <strong>formatter</strong> (implements <code>Laminas\Log\Formatter\FormatterInterface</code>) formats
+  the log data before it is written by a writer. Each writer has exactly one
+  formatter.</li>
+<li>A <strong>processor</strong> (implements <code>Laminas\Log\Processor\ProcessorInterface</code>) processes
+  the log event prior to filtering or writing, allowing the ability to
+  substitute, add, remove, or modify data to be logged.</li>
+</ul>
+<h2 id="creating-a-log">Creating a Log</h2>
+<p>To get started logging, instantiate a writer and then pass it to a logger instance:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
+<span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
+
+<span class=x>$logger-&gt;addWriter($writer);</span>
+</pre></div></p>
+<p>It is important to note that the logger must have at least one writer. You can
+add any number of writers using the logger's <code>addWriter()</code> method.</p>
+<p>You can also add a priority to each writer. The priority is specified as an
+integer and passed as the second argument in the <code>addWriter()</code> method.</p>
+<p>Another way to add a writer to a logger is to use the name of the writer as
+follow:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
+
+<span class=x>$logger-&gt;addWriter(&#39;stream&#39;, null, [&#39;stream&#39; =&gt; &#39;php://output&#39;]);</span>
+</pre></div></p>
+<p>In this example we passed the stream <code>php://output</code> as a parameter (via an
+options array).</p>
+<h2 id="logging-messages">Logging Messages</h2>
+<p>To log a message, call the <code>log()</code> method of a <code>Logger</code> instance and pass it the
+message priority and the message:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;log(Laminas\Log\Logger::INFO, &#39;Informational message&#39;);</span>
+</pre></div></p>
+<p>The first parameter of the <code>log()</code> method is the integer <code>priority</code> and the
+second parameter is the string <code>message</code>. The priority must be one of the
+priorities recognized by the <code>Logger</code> instance (explained in the next section).
+There is also an optional third parameter used to pass extra
+information/metadata to the writer.</p>
+<p>Instead of using the <code>log()</code> method, you can optionally call methods named after
+the various supported priorities, which allows you to omit the <code>priority</code>
+argument:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;log(Laminas\Log\Logger::INFO, &#39;Informational message&#39;);</span>
+<span class=x>$logger-&gt;info(&#39;Informational message&#39;);</span>
+
+<span class=x>$logger-&gt;log(Laminas\Log\Logger::EMERG, &#39;Emergency message&#39;);</span>
+<span class=x>$logger-&gt;emerg(&#39;Emergency message&#39;);</span>
+</pre></div></p>
+<h2 id="destroying-a-log">Destroying a Log</h2>
+<p>If the <code>Logger</code> instance is no longer needed, set the variable containing it to
+<code>NULL</code> to destroy it.  This will automatically call the <code>shutdown()</code> instance
+method of each attached writer before the <code>Logger</code> instance is destroyed.</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger = null;</span>
+</pre></div></p>
+<p>Explicitly destroying the log in this way is optional and is performed
+automatically at PHP shutdown.</p>
+<h2 id="using-built-in-priorities">Using Built-in Priorities</h2>
+<p>The <code>Laminas\Log\Logger</code> class defines the following priorities:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>EMERG   = 0;  // Emergency: system is unusable</span>
+<span class=x>ALERT   = 1;  // Alert: action must be taken immediately</span>
+<span class=x>CRIT    = 2;  // Critical: critical conditions</span>
+<span class=x>ERR     = 3;  // Error: error conditions</span>
+<span class=x>WARN    = 4;  // Warning: warning conditions</span>
+<span class=x>NOTICE  = 5;  // Notice: normal but significant condition</span>
+<span class=x>INFO    = 6;  // Informational: informational messages</span>
+<span class=x>DEBUG   = 7;  // Debug: debug messages</span>
+</pre></div></p>
+<p>These priorities are always available, and a convenience method of the same name
+(but lowercased) is available for each one.</p>
+<p>The priorities are not arbitrary. They come from the BSD syslog protocol, which
+is described in <a href="http://tools.ietf.org/html/rfc3164">RFC-3164</a>. The names and
+corresponding priority numbers are also compatible with another PHP logging
+system, <a href="http://pear.php.net/package/log">PEAR Log</a>, which perhaps promotes
+interoperability between it and <code>Laminas\Log\Logger</code>;
+<a href="http://www.php-fig.org/psr/psr-3/">PSR-3</a> uses similar semantics, but without
+the explicit priority integers.</p>
+<p>Priority numbers descend in order of importance. <code>EMERG</code> (0) is the most
+important priority. <code>DEBUG</code> (7) is the least important priority of the built-in
+priorities. You may define priorities of lower importance than <code>DEBUG</code>. When
+selecting the priority for your log message, be aware of this priority hierarchy
+and choose appropriately.</p>
+<h2 id="understanding-log-events">Understanding Log Events</h2>
+<p>When you call the <code>log()</code> method or one of its shortcuts, a log event is
+created. This is simply an associative array with data describing the event that
+is passed to the writers. The following keys are always created in this array:</p>
+<ul>
+<li><code>timestamp</code></li>
+<li><code>message</code></li>
+<li><code>priority</code></li>
+<li><code>priorityName</code></li>
+</ul>
+<p>The creation of the <code>event</code> array is an internal detail of implementation.</p>
+<h2 id="log-php-errors">Log PHP Errors</h2>
+<p><code>Laminas\Log\Logger</code> can also be used to log PHP errors and intercept exceptions.
+Calling the static method <code>registerErrorHandler($logger)</code> will register the
+<code>$logger</code> instance to log errors; it returns a boolean <code>false</code> ensuring that it
+returns delegation to any other error handlers registered, including the default
+PHP error handler.</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
+<span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
+
+<span class=x>$logger-&gt;addWriter($writer);</span>
+
+<span class=x>Laminas\Log\Logger::registerErrorHandler($logger);</span>
+</pre></div></p>
+<p>If you want to unregister the error handler, can use the <code>unregisterErrorHandler()</code> static
+method.</p>
+<p>You can also configure a logger to intercept exceptions using the static method
+<code>registerExceptionHandler($logger)</code>.</p>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="..">
+                    <i class="fa fa-chevron-left"></i> Previous
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../writers/">
+                    Next <i class="fa fa-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+
+    <div class="help-wanted">
+        <p>
+            Found a mistake or want to contribute to the documentation?
+            <a href="https://github.com/laminas/laminas-log/edit/master/docs/book/intro.md" target="_blank" class="help-wanted__link">
+                Edit this page on GitHub!
+            </a>
+        </p>
+    </div>
+
+                
+            </div>
+            <div class="col-md-3 col-sm-12 sidebar">
+                
+                    <div class="component-selector">
+    
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="..">laminas-log</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item subnavigation__list-item--active">
+                                <a href="./" class="subnavigation__link">Introduction</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Reference</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../writers/" class="subnavigation__link">Writers</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../filters/" class="subnavigation__link">Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../formatters/" class="subnavigation__link">Formatters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../processors/" class="subnavigation__link">Processors</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../service-manager/" class="subnavigation__link">Service Manager Integration</a>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../psr3/" class="subnavigation__link">PSR-3 Support</a>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="footer">
+    <div class="container">
+
+        
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a class="footer__button" href="#page-top"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7 offset-md-2">
+                <h5>Laminas</h5>
+                <ul>
+                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
+                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+
+            
+            <div class="col-md-4 offset-md-2">
+                <h4 class="footer__headline">Support</h4>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://laminas.dev/chat" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://github.com/laminas" class="support__link" title="Github"><i class="fa fa-github"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/getlaminas" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://getlaminas.org/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://getlaminas.org/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            
+            <div class="col-md-3">
+                <h4 class="footer__headline">License</h4>
+                <p>
+                    Code licensed under <a
+                        href="https://github.com/laminas/laminas-log//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                </p>
+            </div>
+
+            
+            <div class="col-md-3">
+                <h4 class="footer__headline">Copyright</h4>
+                <p>
+                    <!--Built with love by the Laminas team with the help of our
+                    <a href="https://github.com/laminas/laminas-log//graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        let base_url = '..',
+            project  = "components",
+            siteName = 'laminas-log';
+    </script>
+    <script src="/js/scripts.js"></script>
+        <script src="../search/main.js"></script>
+
+    
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in laminas-log" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+</html>
