@@ -1,23 +1,21 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
-use Zend\Log\Writer\Stream as StreamWriter;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Writer\Stream as StreamWriter;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class StreamWriterTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +26,7 @@ class StreamWriterTest extends \PHPUnit_Framework_TestCase
             new StreamWriter($resource);
             $this->fail();
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Zend\Log\Exception\InvalidArgumentException', $e);
+            $this->assertInstanceOf('Laminas\Log\Exception\InvalidArgumentException', $e);
             $this->assertRegExp('/not a stream/i', $e->getMessage());
         }
         xml_parser_free($resource);
@@ -48,13 +46,13 @@ class StreamWriterTest extends \PHPUnit_Framework_TestCase
     public function testConstructorThrowsWhenModeSpecifiedForExistingStream()
     {
         $stream = fopen('php://memory', 'w+');
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'existing stream');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'existing stream');
         new StreamWriter($stream, 'w+');
     }
 
     public function testConstructorThrowsWhenStreamCannotBeOpened()
     {
-        $this->setExpectedException('Zend\Log\Exception\RuntimeException', 'cannot be opened');
+        $this->setExpectedException('Laminas\Log\Exception\RuntimeException', 'cannot be opened');
         new StreamWriter('');
     }
 
@@ -79,7 +77,7 @@ class StreamWriterTest extends \PHPUnit_Framework_TestCase
         $writer = new StreamWriter($stream);
         fclose($stream);
 
-        $this->setExpectedException('Zend\Log\Exception\RuntimeException', 'Unable to write');
+        $this->setExpectedException('Laminas\Log\Exception\RuntimeException', 'Unable to write');
         $writer->write(array('message' => 'foo'));
     }
 
@@ -90,7 +88,7 @@ class StreamWriterTest extends \PHPUnit_Framework_TestCase
 
         $writer->shutdown();
 
-        $this->setExpectedException('Zend\Log\Exception\RuntimeException', 'Unable to write');
+        $this->setExpectedException('Laminas\Log\Exception\RuntimeException', 'Unable to write');
         $writer->write(array('message' => 'this write should fail'));
     }
 
