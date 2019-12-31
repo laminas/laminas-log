@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
-use Zend\Log\WriterPluginManager;
+use Laminas\Log\WriterPluginManager;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class WriterPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,13 +27,13 @@ class WriterPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisteringInvalidWriterRaisesException()
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'must implement');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'must implement');
         $this->plugins->setService('test', $this);
     }
 
     public function testInvokableClassFirephp()
     {
         $firephp = $this->plugins->get('firephp');
-        $this->assertInstanceOf('Zend\Log\Writer\Firephp', $firephp);
+        $this->assertInstanceOf('Laminas\Log\Writer\Firephp', $firephp);
     }
 }
