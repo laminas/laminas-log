@@ -1,29 +1,28 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
+use Laminas\Log\Exception;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Mail\Message as MailMessage;
+use Laminas\Mail\MessageFactory as MailMessageFactory;
+use Laminas\Mail\Transport;
+use Laminas\Mail\Transport\Exception as TransportException;
 use Traversable;
-use Zend\Log\Exception;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-use Zend\Mail\Message as MailMessage;
-use Zend\Mail\MessageFactory as MailMessageFactory;
-use Zend\Mail\Transport;
-use Zend\Mail\Transport\Exception as TransportException;
 
 /**
- * Class used for writing log messages to email via Zend\Mail.
+ * Class used for writing log messages to email via Laminas\Mail.
  *
  * Allows for emailing log messages at and above a certain level via a
- * Zend\Mail\Message object.  Note that this class only sends the email upon
+ * Laminas\Mail\Message object.  Note that this class only sends the email upon
  * completion, so any log entries accumulated are sent in a single email.
- * The email is sent using a Zend\Mail\Transport\TransportInterface object
+ * The email is sent using a Laminas\Mail\Transport\TransportInterface object
  * (Sendmail is default).
  */
 class Mail extends AbstractWriter
@@ -59,7 +58,7 @@ class Mail extends AbstractWriter
     /**
      * Subject prepend text.
      *
-     * Can only be used of the Zend\Mail object has not already had its
+     * Can only be used of the Laminas\Mail object has not already had its
      * subject line set.  Using this will cause the subject to have the entry
      * counts per-priority level appended to it.
      *
@@ -95,7 +94,7 @@ class Mail extends AbstractWriter
         // Ensure we have a valid mail message
         if (!$mail instanceof MailMessage) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Mail parameter of type %s is invalid; must be of type Zend\Mail\Message',
+                'Mail parameter of type %s is invalid; must be of type Laminas\Mail\Message',
                 (is_object($mail) ? get_class($mail) : gettype($mail))
             ));
         }
@@ -107,7 +106,7 @@ class Mail extends AbstractWriter
         }
         if (!$transport instanceof Transport\TransportInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Transport parameter of type %s is invalid; must be of type Zend\Mail\Transport\TransportInterface',
+                'Transport parameter of type %s is invalid; must be of type Laminas\Mail\Transport\TransportInterface',
                 (is_object($transport) ? get_class($transport) : gettype($transport))
             ));
         }
@@ -153,8 +152,8 @@ class Mail extends AbstractWriter
      * entry counts per-priority level.
      *
      * Sets the text for use in the subject, with entry counts per-priority
-     * level appended to the end.  Since a Zend\Mail\Message subject can only be set
-     * once, this method cannot be used if the Zend\Mail\Message object already has a
+     * level appended to the end.  Since a Laminas\Mail\Message subject can only be set
+     * once, this method cannot be used if the Laminas\Mail\Message object already has a
      * subject set.
      *
      * @param  string $subject Subject prepend text
@@ -180,7 +179,7 @@ class Mail extends AbstractWriter
 
         if ($this->subjectPrependText !== null) {
             // Tack on the summary of entries per-priority to the subject
-            // line and set it on the Zend\Mail object.
+            // line and set it on the Laminas\Mail object.
             $numEntries = $this->getFormattedNumEntriesPerPriority();
             $this->mail->setSubject("{$this->subjectPrependText} ({$numEntries})");
         }
