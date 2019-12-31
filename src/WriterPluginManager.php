@@ -1,15 +1,14 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 class WriterPluginManager extends AbstractPluginManager
 {
@@ -19,16 +18,16 @@ class WriterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = array(
-        'chromephp'      => 'Zend\Log\Writer\ChromePhp',
-        'db'             => 'Zend\Log\Writer\Db',
-        'fingerscrossed' => 'Zend\Log\Writer\FingersCrossed',
-        'firephp'        => 'Zend\Log\Writer\FirePhp',
-        'mail'           => 'Zend\Log\Writer\Mail',
-        'mock'           => 'Zend\Log\Writer\Mock',
-        'null'           => 'Zend\Log\Writer\Null',
-        'stream'         => 'Zend\Log\Writer\Stream',
-        'syslog'         => 'Zend\Log\Writer\Syslog',
-        'zendmonitor'    => 'Zend\Log\Writer\ZendMonitor',
+        'chromephp'      => 'Laminas\Log\Writer\ChromePhp',
+        'db'             => 'Laminas\Log\Writer\Db',
+        'fingerscrossed' => 'Laminas\Log\Writer\FingersCrossed',
+        'firephp'        => 'Laminas\Log\Writer\FirePhp',
+        'mail'           => 'Laminas\Log\Writer\Mail',
+        'mock'           => 'Laminas\Log\Writer\Mock',
+        'null'           => 'Laminas\Log\Writer\Null',
+        'stream'         => 'Laminas\Log\Writer\Stream',
+        'syslog'         => 'Laminas\Log\Writer\Syslog',
+        'zendmonitor'    => 'Laminas\Log\Writer\ZendMonitor',
     );
 
     /**
