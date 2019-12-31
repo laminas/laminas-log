@@ -1,13 +1,13 @@
 # Service Manager
 
-The `zend-log` package provides several components which can be used in 
-combination with [zend-servicemanager](https://docs.zendframework.com/zend-servicemanager).
+The `laminas-log` package provides several components which can be used in 
+combination with [laminas-servicemanager](https://docs.laminas.dev/laminas-servicemanager).
 These components make it possible to quickly setup a logger instance or to
 provide custom writers, filters, formatters, or processors.
 
 ## LoggerAbstractServiceFactory
 
-When you register the abstract factory called `Zend\Log\LoggerAbstractServiceFactory`,
+When you register the abstract factory called `Laminas\Log\LoggerAbstractServiceFactory`,
 you will be able to setup loggers via the configuration. The abstract factory can be
 registered in the service manager using the following configuration:
 
@@ -16,23 +16,23 @@ registered in the service manager using the following configuration:
 return [
     'service_manager' => [
         'abstract_factories' => [
-            'Zend\Log\LoggerAbstractServiceFactory',
+            'Laminas\Log\LoggerAbstractServiceFactory',
         ],
     ],
 ];
 ```
 
-> ### Users of zend-component-installer
+> ### Users of laminas-component-installer
 >
-> If you are using zend-component-installer, you will have been prompted to
-> install zend-log as a module or configuration provider when you installed
-> zend-log. When you do, the abstract factory is automatically registered
+> If you are using laminas-component-installer, you will have been prompted to
+> install laminas-log as a module or configuration provider when you installed
+> laminas-log. When you do, the abstract factory is automatically registered
 > for you in your configuration.
 
-> ### zend-log as a module
+> ### laminas-log as a module
 >
-> If you are using zend-log v2.8 or later with a zend-mvc-based application,
-> but not using zend-component-installer, you can register `Zend\Log` as a
+> If you are using laminas-log v2.8 or later with a laminas-mvc-based application,
+> but not using laminas-component-installer, you can register `Laminas\Log` as a
 > module in your application. When you do, the abstract service factory
 > will be registered automatically.
 
@@ -69,7 +69,7 @@ The logger can now be retrieved via the service manager using the key used in
 the configuration (`MyLogger`):
 
 ```php
-/** @var \Zend\Log\Logger $logger */ 
+/** @var \Laminas\Log\Logger $logger */ 
 $logger = $container->get('MyLogger');
 ```
 

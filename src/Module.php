@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
 class Module
 {
     /**
-     * Return default zend-log configuration for zend-mvc applications.
+     * Return default laminas-log configuration for laminas-mvc applications.
      */
     public function getConfig()
     {
@@ -24,9 +23,9 @@ class Module
     }
 
     /**
-     * Register specifications for all zend-log plugin managers with the ServiceListener.
+     * Register specifications for all laminas-log plugin managers with the ServiceListener.
      *
-     * @param \Zend\ModuleManager\ModuleManager $moduleManager
+     * @param \Laminas\ModuleManager\ModuleManager $moduleManager
      * @return void
      */
     public function init($moduleManager)
@@ -38,28 +37,28 @@ class Module
         $serviceListener->addServiceManager(
             'LogProcessorManager',
             'log_processors',
-            'Zend\ModuleManager\Feature\LogProcessorProviderInterface',
+            'Laminas\ModuleManager\Feature\LogProcessorProviderInterface',
             'getLogProcessorConfig'
         );
 
         $serviceListener->addServiceManager(
             'LogWriterManager',
             'log_writers',
-            'Zend\ModuleManager\Feature\LogWriterProviderInterface',
+            'Laminas\ModuleManager\Feature\LogWriterProviderInterface',
             'getLogWriterConfig'
         );
 
         $serviceListener->addServiceManager(
             'LogFilterManager',
             'log_filters',
-            'Zend\Log\Filter\LogFilterProviderInterface',
+            'Laminas\Log\Filter\LogFilterProviderInterface',
             'getLogFilterConfig'
         );
 
         $serviceListener->addServiceManager(
             'LogFormatterManager',
             'log_formatters',
-            'Zend\Log\Filter\LogFormatterProviderInterface',
+            'Laminas\Log\Filter\LogFormatterProviderInterface',
             'getLogFormatterConfig'
         );
     }
