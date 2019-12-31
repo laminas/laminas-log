@@ -1,21 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer\Factory;
+namespace LaminasTest\Log\Writer\Factory;
 
 use Interop\Container\ContainerInterface;
+use Laminas\Log\Writer\Factory\WriterFactory;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use LaminasTest\Log\Writer\TestAsset\InvokableObject;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Writer\Factory\WriterFactory;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ZendTest\Log\Writer\TestAsset\InvokableObject;
 
 class WriterFactoryTest extends TestCase
 {
@@ -27,7 +26,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::setCreationOptions
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::setCreationOptions
      */
     public function testSetCreationOptions()
     {
@@ -52,8 +51,8 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__construct
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::createService
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
     public function testCreateServiceWithoutCreationOptions()
     {
@@ -75,8 +74,8 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__construct
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::createService
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
     public function testCreateServiceWithCreationOptions()
     {
@@ -98,8 +97,8 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__construct
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::createService
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
     public function testCreateServiceWithValidRequestName()
     {
@@ -121,8 +120,8 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__construct
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::createService
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
     public function testCreateServiceInvalidNames()
     {
@@ -144,7 +143,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithoutOptions()
     {
@@ -161,7 +160,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithInvalidFilterManagerAsString()
     {
@@ -182,7 +181,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithValidFilterManagerAsString()
     {
@@ -207,7 +206,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithoutFilterManager()
     {
@@ -230,7 +229,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithInvalidFormatterManagerAsString()
     {
@@ -251,7 +250,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithValidFormatterManagerAsString()
     {
@@ -275,7 +274,7 @@ class WriterFactoryTest extends TestCase
     }
 
     /**
-     * @covers \Zend\Log\Writer\Factory\WriterFactory::__invoke
+     * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
     public function testInvokeWithoutFormatterManager()
     {

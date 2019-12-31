@@ -1,14 +1,15 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-log/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
 use DateTime;
-use Zend\Log\Formatter\Json;
+use Laminas\Log\Formatter\Json;
 
 class JsonTest extends \PHPUnit_Framework_TestCase
 {
