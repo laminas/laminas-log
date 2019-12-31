@@ -1,28 +1,26 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
-use Zend\ServiceManager\ServiceManager;
-use Zend\Mvc\Service\ServiceManagerConfig;
+use Laminas\Mvc\Service\ServiceManagerConfig;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $serviceManager;
 
@@ -34,7 +32,7 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->serviceManager = new ServiceManager(new ServiceManagerConfig(array(
-            'abstract_factories' => array('Zend\Log\LoggerAbstractServiceFactory'),
+            'abstract_factories' => array('Laminas\Log\LoggerAbstractServiceFactory'),
         )));
 
         $this->serviceManager->setService('Config', array(
@@ -75,13 +73,13 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testValidLoggerService($service)
     {
         $actual = $this->serviceManager->get($service);
-        $this->assertInstanceOf('Zend\Log\Logger', $actual);
+        $this->assertInstanceOf('Laminas\Log\Logger', $actual);
     }
 
     /**
      * @param string $service
      * @dataProvider providerInvalidLoggerService
-     * @expectedException \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @expectedException \Laminas\ServiceManager\Exception\ServiceNotFoundException
      */
     public function testInvalidLoggerService($service)
     {
