@@ -1,22 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\Log\Filter;
-use Zend\Log\Exception;
+use Laminas\Log\Exception;
+use Laminas\Log\Filter;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  */
 class FilterPluginManager extends AbstractPluginManager
 {
@@ -26,12 +24,12 @@ class FilterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = array(
-        'mock'           => 'Zend\Log\Filter\Mock',
-        'priority'       => 'Zend\Log\Filter\Priority',
-        'regex'          => 'Zend\Log\Filter\Regex',
-        'suppress'       => 'Zend\Log\Filter\suppressFilter',
-        'suppressfilter' => 'Zend\Log\Filter\suppressFilter',
-        'validator'      => 'Zend\Log\Filter\Validator',
+        'mock'           => 'Laminas\Log\Filter\Mock',
+        'priority'       => 'Laminas\Log\Filter\Priority',
+        'regex'          => 'Laminas\Log\Filter\Regex',
+        'suppress'       => 'Laminas\Log\Filter\suppressFilter',
+        'suppressfilter' => 'Laminas\Log\Filter\suppressFilter',
+        'validator'      => 'Laminas\Log\Filter\Validator',
     );
 
     /**
