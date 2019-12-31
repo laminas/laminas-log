@@ -1,23 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Filter;
+namespace LaminasTest\Log\Filter;
 
 use ArrayObject;
 use DateTime;
+use Laminas\Log\Filter\Timestamp as TimestampFilter;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Log\Filter\Timestamp as TimestampFilter;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  *
- * @covers \Zend\Log\Filter\Timestamp
+ * @covers \Laminas\Log\Filter\Timestamp
  */
 class TimestampTest extends TestCase
 {
@@ -54,7 +53,7 @@ class TimestampTest extends TestCase
     }
 
     /**
-     * @expectedException \Zend\Log\Exception\InvalidArgumentException
+     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
      */
     public function testConstructorThrowsOnInvalidValue()
     {
@@ -62,7 +61,7 @@ class TimestampTest extends TestCase
     }
 
     /**
-     * @expectedException \Zend\Log\Exception\InvalidArgumentException
+     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
      */
     public function testConstructorThrowsWhenDateFormatCharIsMissing()
     {
@@ -70,7 +69,7 @@ class TimestampTest extends TestCase
     }
 
     /**
-     * @expectedException \Zend\Log\Exception\InvalidArgumentException
+     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
      */
     public function testConstructorThrowsOnUnsupportedComparisonOperator()
     {

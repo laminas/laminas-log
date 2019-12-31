@@ -1,21 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
-use Zend\Log\Logger;
-use Zend\Log\Writer\Mail as MailWriter;
-use Zend\Mail\Message as MailMessage;
-use Zend\Mail\Transport;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Mail as MailWriter;
+use Laminas\Mail\Message as MailMessage;
+use Laminas\Mail\Transport;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class MailTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,8 +32,8 @@ class MailTest extends \PHPUnit_Framework_TestCase
     {
         if (! class_exists(MailMessage::class)) {
             $this->markTestSkipped(
-                'zend-mail related tests are disabled when testing zend-servicemanager v3 '
-                . 'forwards compatibility, until zend-mail is also forwards compatible'
+                'laminas-mail related tests are disabled when testing laminas-servicemanager v3 '
+                . 'forwards compatibility, until laminas-mail is also forwards compatible'
             );
         }
 
@@ -101,8 +100,8 @@ class MailTest extends \PHPUnit_Framework_TestCase
         ]);
         $transport->setOptions($options);
 
-        $formatter = new \Zend\Log\Formatter\Simple();
-        $filter    = new \Zend\Log\Filter\Mock();
+        $formatter = new \Laminas\Log\Formatter\Simple();
+        $filter    = new \Laminas\Log\Filter\Mock();
         $writer = new MailWriter([
                 'filters'   => $filter,
                 'formatter' => $formatter,
@@ -124,7 +123,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $messageOptions = [
             'encoding'  => 'UTF-8',
             'from'      => 'matthew@example.com',
-            'to'        => 'zf-devteam@example.com',
+            'to'        => 'api-tools-devteam@example.com',
             'subject'   => 'subject',
             'body'      => 'body',
         ];
@@ -133,7 +132,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
             'mail' => $messageOptions,
         ]);
 
-        $this->assertAttributeInstanceOf('Zend\Mail\Message', 'mail', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Mail\Message', 'mail', $writer);
     }
 
     public function testConstructWithMailTransportAsArrayOptions()
@@ -141,7 +140,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $messageOptions = [
             'encoding'  => 'UTF-8',
             'from'      => 'matthew@example.com',
-            'to'        => 'zf-devteam@example.com',
+            'to'        => 'api-tools-devteam@example.com',
             'subject'   => 'subject',
             'body'      => 'body',
         ];
@@ -164,6 +163,6 @@ class MailTest extends \PHPUnit_Framework_TestCase
             'transport' => $transportOptions,
         ]);
 
-        $this->assertAttributeInstanceOf('Zend\Mail\Transport\Smtp', 'transport', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Mail\Transport\Smtp', 'transport', $writer);
     }
 }

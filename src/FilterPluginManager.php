@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 class FilterPluginManager extends AbstractPluginManager
 {
@@ -22,6 +21,20 @@ class FilterPluginManager extends AbstractPluginManager
         'suppress'       => Filter\SuppressFilter::class,
         'suppressfilter' => Filter\SuppressFilter::class,
         'validator'      => Filter\Validator::class,
+
+        // Legacy Zend Framework aliases
+        \Zend\Log\Filter\Mock::class => Filter\Mock::class,
+        \Zend\Log\Filter\Priority::class => Filter\Priority::class,
+        \Zend\Log\Filter\Regex::class => Filter\Regex::class,
+        \Zend\Log\Filter\SuppressFilter::class => Filter\SuppressFilter::class,
+        \Zend\Log\Filter\Validator::class => Filter\Validator::class,
+
+        // v2 normalized FQCNs
+        'zendlogfiltermock' => Filter\Mock::class,
+        'zendlogfilterpriority' => Filter\Priority::class,
+        'zendlogfilterregex' => Filter\Regex::class,
+        'zendlogfiltersuppressfilter' => Filter\SuppressFilter::class,
+        'zendlogfiltervalidator' => Filter\Validator::class,
     ];
 
     protected $factories = [
@@ -33,11 +46,11 @@ class FilterPluginManager extends AbstractPluginManager
         // Legacy (v2) due to alias resolution; canonical form of resolved
         // alias is used to look up the factory, while the non-normalized
         // resolved alias is used as the requested name passed to the factory.
-        'zendlogfiltermock'           => InvokableFactory::class,
-        'zendlogfilterpriority'       => InvokableFactory::class,
-        'zendlogfilterregex'          => InvokableFactory::class,
-        'zendlogfiltersuppressfilter' => InvokableFactory::class,
-        'zendlogfiltervalidator'      => InvokableFactory::class,
+        'laminaslogfiltermock'           => InvokableFactory::class,
+        'laminaslogfilterpriority'       => InvokableFactory::class,
+        'laminaslogfilterregex'          => InvokableFactory::class,
+        'laminaslogfiltersuppressfilter' => InvokableFactory::class,
+        'laminaslogfiltervalidator'      => InvokableFactory::class,
     ];
 
     protected $instanceOf = Filter\FilterInterface::class;

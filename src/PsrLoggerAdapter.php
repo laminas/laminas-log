@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
 use Psr\Log\AbstractLogger as PsrAbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 
 /**
- * PSR-3 logger adapter for Zend\Log\LoggerInterface
+ * PSR-3 logger adapter for Laminas\Log\LoggerInterface
  *
  * Decorates a LoggerInterface to allow it to be used anywhere a PSR-3 logger
  * is expected.
@@ -22,7 +21,7 @@ use Psr\Log\LogLevel;
 class PsrLoggerAdapter extends PsrAbstractLogger
 {
     /**
-     * Zend\Log logger
+     * Laminas\Log logger
      *
      * @var LoggerInterface
      */

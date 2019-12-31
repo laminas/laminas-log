@@ -1,21 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Filter;
+use Laminas\Log\FilterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
-use Zend\Log\Exception\InvalidArgumentException;
-use Zend\Log\Filter;
-use Zend\Log\FilterPluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Test\CommonPluginManagerTrait;
 
 class FilterPluginManagerCompatibilityTest extends TestCase
 {

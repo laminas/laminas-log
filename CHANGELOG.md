@@ -6,26 +6,26 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#7](https://github.com/zendframework/zend-log/pull/7) and
-  [#15](https://github.com/zendframework/zend-log/pull/15) add a new argument
-  and option to `Zend\Log\Writer\Stream` to allow setting the permission mode
+- [zendframework/zend-log#7](https://github.com/zendframework/zend-log/pull/7) and
+  [zendframework/zend-log#15](https://github.com/zendframework/zend-log/pull/15) add a new argument
+  and option to `Laminas\Log\Writer\Stream` to allow setting the permission mode
   for the stream. You can pass it as the optional fourth argument to the
   constructor, or as the `chmod` option if using an options array.
-- [#10](https://github.com/zendframework/zend-log/pull/10) adds `array` to the
-  expected return types from `Zend\Log\Formatter\FormatterInterface::format()`,
+- [zendframework/zend-log#10](https://github.com/zendframework/zend-log/pull/10) adds `array` to the
+  expected return types from `Laminas\Log\Formatter\FormatterInterface::format()`,
   codifying what we're already allowing.
-- [#24](https://github.com/zendframework/zend-log/pull/24) prepares the
+- [zendframework/zend-log#24](https://github.com/zendframework/zend-log/pull/24) prepares the
   documentation for publication, adds a chapter on processors, and publishes it
-  to https://zendframework.github.io/zend-log/
+  to https://docs.laminas.dev/laminas-log/
 
 ### Deprecated
 
-- [#14](https://github.com/zendframework/zend-log/pull/14) deprecates the
+- [zendframework/zend-log#14](https://github.com/zendframework/zend-log/pull/14) deprecates the
   following, suggesting the associated replacements:
-  - `Zend\Log\Writer\FilterPluginManager` is deprecated; use
-    `Zend\Log\FilterPluginManager` instead.
-  - `Zend\Log\Writer\FormatterPluginManager` is deprecated; use
-    `Zend\Log\FormatterPluginManager` instead.
+  - `Laminas\Log\Writer\FilterPluginManager` is deprecated; use
+    `Laminas\Log\FilterPluginManager` instead.
+  - `Laminas\Log\Writer\FormatterPluginManager` is deprecated; use
+    `Laminas\Log\FormatterPluginManager` instead.
 
 ### Removed
 
@@ -33,22 +33,22 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#14](https://github.com/zendframework/zend-log/pull/14) and
-  [#17](https://github.com/zendframework/zend-log/pull/17) update the component
-  to be forwards-compatible with zend-stdlib and zend-servicemanager v3.
+- [zendframework/zend-log#14](https://github.com/zendframework/zend-log/pull/14) and
+  [zendframework/zend-log#17](https://github.com/zendframework/zend-log/pull/17) update the component
+  to be forwards-compatible with laminas-stdlib and laminas-servicemanager v3.
 
 ## 2.6.0 - 2015-07-20
 
 ### Added
 
-- [#6](https://github.com/zendframework/zend-log/pull/6) adds
-  [PSR-3](http://www.php-fig.org/psr/psr-3/) support to zend-log:
-  - `Zend\Log\PsrLoggerAdapter` allows you to decorate a
-    `Zend\Log\LoggerInterface` instance so it can be used wherever a PSR-3
+- [zendframework/zend-log#6](https://github.com/zendframework/zend-log/pull/6) adds
+  [PSR-3](http://www.php-fig.org/psr/psr-3/) support to laminas-log:
+  - `Laminas\Log\PsrLoggerAdapter` allows you to decorate a
+    `Laminas\Log\LoggerInterface` instance so it can be used wherever a PSR-3
     logger is expected.
-  - `Zend\Log\Writer\Psr` allows you to decorate a PSR-3 logger instance for use
-    as a log writer with `Zend\Log\Logger`.
-  - `Zend\Log\Processor\PsrPlaceholder` allows you to use PSR-3-compliant
+  - `Laminas\Log\Writer\Psr` allows you to decorate a PSR-3 logger instance for use
+    as a log writer with `Laminas\Log\Logger`.
+  - `Laminas\Log\Processor\PsrPlaceholder` allows you to use PSR-3-compliant
     message placeholders in your log messages; they will be substituted from
     corresponding keys of values passed in the `$extra` array when logging the
     message.
@@ -69,10 +69,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#2](https://github.com/zendframework/zend-log/pull/2) adds
+- [zendframework/zend-log#2](https://github.com/zendframework/zend-log/pull/2) adds
   the ability to specify the mail transport via the configuration options for a
   mail log writer, using the same format supported by
-  `Zend\Mail\Transport\Factory::create()`; as an example:
+  `Laminas\Mail\Transport\Factory::create()`; as an example:
 
   ```php
   $writer = new MailWriter([
@@ -94,15 +94,15 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#43](https://github.com/zendframework/zend-diactoros/pull/43) removed both
+- [zendframework/zend-log#43](https://github.com/zendframework/zend-diactoros/pull/43) removed both
   `ServerRequestFactory::marshalUri()` and `ServerRequestFactory::marshalHostAndPort()`,
   which were deprecated prior to the 1.0 release.
 
 ### Fixed
 
-- [#4](https://github.com/zendframework/zend-log/pull/4) adds better, more
+- [zendframework/zend-log#4](https://github.com/zendframework/zend-log/pull/4) adds better, more
   complete verbiage to the `composer.json` `suggest` section, to detail why
   and when you might need additional dependencies.
-- [#1](https://github.com/zendframework/zend-log/pull/1) updates the code to
+- [zendframework/zend-log#1](https://github.com/zendframework/zend-log/pull/1) updates the code to
   remove conditionals related to PHP versions prior to PHP 5.5, and use bound
   closures in tests (not possible before 5.5).
