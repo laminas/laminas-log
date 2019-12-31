@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 class FormatterPluginManager extends AbstractPluginManager
 {
@@ -22,6 +21,22 @@ class FormatterPluginManager extends AbstractPluginManager
         'db'               => Formatter\Db::class,
         'errorhandler'     => Formatter\ErrorHandler::class,
         'exceptionhandler' => Formatter\ExceptionHandler::class,
+
+        // Legacy Zend Framework aliases
+        \Zend\Log\Formatter\Base::class => Formatter\Base::class,
+        \Zend\Log\Formatter\Simple::class => Formatter\Simple::class,
+        \Zend\Log\Formatter\Xml::class => Formatter\Xml::class,
+        \Zend\Log\Formatter\Db::class => Formatter\Db::class,
+        \Zend\Log\Formatter\ErrorHandler::class => Formatter\ErrorHandler::class,
+        \Zend\Log\Formatter\ExceptionHandler::class => Formatter\ExceptionHandler::class,
+
+        // v2 normalized FQCNs
+        'zendlogformatterbase' => Formatter\Base::class,
+        'zendlogformattersimple' => Formatter\Simple::class,
+        'zendlogformatterxml' => Formatter\Xml::class,
+        'zendlogformatterdb' => Formatter\Db::class,
+        'zendlogformattererrorhandler' => Formatter\ErrorHandler::class,
+        'zendlogformatterexceptionhandler' => Formatter\ExceptionHandler::class,
     ];
 
     protected $factories = [
@@ -34,12 +49,12 @@ class FormatterPluginManager extends AbstractPluginManager
         // Legacy (v2) due to alias resolution; canonical form of resolved
         // alias is used to look up the factory, while the non-normalized
         // resolved alias is used as the requested name passed to the factory.
-        'zendlogformatterbase'             => InvokableFactory::class,
-        'zendlogformattersimple'           => InvokableFactory::class,
-        'zendlogformatterxml'              => InvokableFactory::class,
-        'zendlogformatterdb'               => InvokableFactory::class,
-        'zendlogformattererrorhandler'     => InvokableFactory::class,
-        'zendlogformatterexceptionhandler' => InvokableFactory::class,
+        'laminaslogformatterbase'             => InvokableFactory::class,
+        'laminaslogformattersimple'           => InvokableFactory::class,
+        'laminaslogformatterxml'              => InvokableFactory::class,
+        'laminaslogformatterdb'               => InvokableFactory::class,
+        'laminaslogformattererrorhandler'     => InvokableFactory::class,
+        'laminaslogformatterexceptionhandler' => InvokableFactory::class,
     ];
 
     protected $instanceOf = Formatter\FormatterInterface::class;
