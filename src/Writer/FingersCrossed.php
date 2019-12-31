@@ -1,21 +1,20 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-namespace Zend\Log\Writer;
 
+/**
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
+ */
+namespace Laminas\Log\Writer;
+
+use Laminas\Log\Exception;
+use Laminas\Log\Filter\FilterInterface;
+use Laminas\Log\Filter\Priority as PriorityFilter;
+use Laminas\Log\Formatter\FormatterInterface;
+use Laminas\Log\Logger;
+use Laminas\Log\WriterPluginManager;
+use Laminas\Stdlib\ArrayUtils;
 use Traversable;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Log\Exception;
-use Zend\Log\Filter\FilterInterface;
-use Zend\Log\Filter\Priority as PriorityFilter;
-use Zend\Log\Formatter\FormatterInterface;
-use Zend\Log\Logger;
-use Zend\Log\WriterPluginManager;
 
 /**
  * Buffers all events until the strategy determines to flush them.
