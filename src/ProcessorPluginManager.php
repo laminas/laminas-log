@@ -1,15 +1,14 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 /**
  * Plugin manager for log processors.
@@ -22,10 +21,10 @@ class ProcessorPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = [
-        'backtrace'      => 'Zend\Log\Processor\Backtrace',
-        'psrplaceholder' => 'Zend\Log\Processor\PsrPlaceholder',
-        'referenceid'    => 'Zend\Log\Processor\ReferenceId',
-        'requestid'      => 'Zend\Log\Processor\RequestId',
+        'backtrace'      => 'Laminas\Log\Processor\Backtrace',
+        'psrplaceholder' => 'Laminas\Log\Processor\PsrPlaceholder',
+        'referenceid'    => 'Laminas\Log\Processor\ReferenceId',
+        'requestid'      => 'Laminas\Log\Processor\RequestId',
     ];
 
     /**

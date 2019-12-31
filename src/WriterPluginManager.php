@@ -1,15 +1,14 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 /**
  * Plugin manager for log writers.
@@ -18,6 +17,9 @@ class WriterPluginManager extends AbstractPluginManager
 {
     protected $aliases = [
         'null'                 => 'noop',
+        'Laminas\Log\Writer\Null' => 'noop',
+
+        // Legacy Zend Framework aliases
         'Zend\Log\Writer\Null' => 'noop',
     ];
 
@@ -27,17 +29,17 @@ class WriterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = [
-        'chromephp'      => 'Zend\Log\Writer\ChromePhp',
-        'db'             => 'Zend\Log\Writer\Db',
-        'fingerscrossed' => 'Zend\Log\Writer\FingersCrossed',
-        'firephp'        => 'Zend\Log\Writer\FirePhp',
-        'mail'           => 'Zend\Log\Writer\Mail',
-        'mock'           => 'Zend\Log\Writer\Mock',
-        'noop'           => 'Zend\Log\Writer\Noop',
-        'psr'            => 'Zend\Log\Writer\Psr',
-        'stream'         => 'Zend\Log\Writer\Stream',
-        'syslog'         => 'Zend\Log\Writer\Syslog',
-        'zendmonitor'    => 'Zend\Log\Writer\ZendMonitor',
+        'chromephp'      => 'Laminas\Log\Writer\ChromePhp',
+        'db'             => 'Laminas\Log\Writer\Db',
+        'fingerscrossed' => 'Laminas\Log\Writer\FingersCrossed',
+        'firephp'        => 'Laminas\Log\Writer\FirePhp',
+        'mail'           => 'Laminas\Log\Writer\Mail',
+        'mock'           => 'Laminas\Log\Writer\Mock',
+        'noop'           => 'Laminas\Log\Writer\Noop',
+        'psr'            => 'Laminas\Log\Writer\Psr',
+        'stream'         => 'Laminas\Log\Writer\Stream',
+        'syslog'         => 'Laminas\Log\Writer\Syslog',
+        'zendmonitor'    => 'Laminas\Log\Writer\ZendMonitor',
     ];
 
     /**
