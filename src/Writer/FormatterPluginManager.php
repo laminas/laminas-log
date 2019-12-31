@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
-use Zend\Log\Exception;
-use Zend\Log\Formatter;
-use Zend\ServiceManager\AbstractPluginManager;
+use Laminas\Log\Exception;
+use Laminas\Log\Formatter;
+use Laminas\ServiceManager\AbstractPluginManager;
 
 class FormatterPluginManager extends AbstractPluginManager
 {
@@ -21,12 +20,12 @@ class FormatterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = array(
-        'base'             => 'Zend\Log\Formatter\Base',
-        'simple'           => 'Zend\Log\Formatter\Simple',
-        'xml'              => 'Zend\Log\Formatter\Xml',
-        'db'               => 'Zend\Log\Formatter\Db',
-        'errorhandler'     => 'Zend\Log\Formatter\ErrorHandler',
-        'exceptionhandler' => 'Zend\Log\Formatter\ExceptionHandler',
+        'base'             => 'Laminas\Log\Formatter\Base',
+        'simple'           => 'Laminas\Log\Formatter\Simple',
+        'xml'              => 'Laminas\Log\Formatter\Xml',
+        'db'               => 'Laminas\Log\Formatter\Db',
+        'errorhandler'     => 'Laminas\Log\Formatter\ErrorHandler',
+        'exceptionhandler' => 'Laminas\Log\Formatter\ExceptionHandler',
     );
 
     /**
