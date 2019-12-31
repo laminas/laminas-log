@@ -1,22 +1,21 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Filter\Regex as RegexFilter;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use LaminasTest\Log\TestAsset\ConcreteWriter;
+use LaminasTest\Log\TestAsset\ErrorGeneratingWriter;
 use ReflectionObject;
-use ZendTest\Log\TestAsset\ConcreteWriter;
-use ZendTest\Log\TestAsset\ErrorGeneratingWriter;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-use Zend\Log\Filter\Regex as RegexFilter;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class AbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,44 +29,44 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     public function testSetSimpleFormatterByName()
     {
         $instance = $this->_writer->setFormatter('simple');
-        $this->assertAttributeInstanceOf('Zend\Log\Formatter\Simple', 'formatter', $instance);
+        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\Simple', 'formatter', $instance);
     }
 
     public function testAddFilter()
     {
         $this->_writer->addFilter(1);
         $this->_writer->addFilter(new RegexFilter('/mess/'));
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException');
         $this->_writer->addFilter(new \stdClass());
     }
 
     public function testAddMockFilterByName()
     {
         $instance = $this->_writer->addFilter('mock');
-        $this->assertInstanceOf('ZendTest\Log\TestAsset\ConcreteWriter', $instance);
+        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
     }
 
     public function testAddRegexFilterWithParamsByName()
     {
         $instance = $this->_writer->addFilter('regex', array( 'regex' => '/mess/' ));
-        $this->assertInstanceOf('ZendTest\Log\TestAsset\ConcreteWriter', $instance);
+        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
     }
 
     /**
-     * @group ZF-8953
+     * @group Laminas-8953
      */
     public function testFluentInterface()
     {
         $instance = $this->_writer->addFilter(1)
                                   ->setFormatter(new SimpleFormatter());
 
-        $this->assertInstanceOf('ZendTest\Log\TestAsset\ConcreteWriter', $instance);
+        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
     }
 
     public function testConvertErrorsToException()
     {
         $writer = new ErrorGeneratingWriter();
-        $this->setExpectedException('Zend\Log\Exception\RuntimeException');
+        $this->setExpectedException('Laminas\Log\Exception\RuntimeException');
         $writer->write(array('message' => 'test'));
 
         $writer->setConvertWriteErrorsToExceptions(false);
@@ -95,12 +94,12 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
 
         $writer = new ConcreteWriter($options);
 
-        $this->assertAttributeInstanceOf('Zend\Log\Formatter\Base', 'formatter', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\Base', 'formatter', $writer);
 
         $filters = $this->readAttribute($writer, 'filters');
         $this->assertCount(2, $filters);
 
-        $this->assertInstanceOf('Zend\Log\Filter\Priority', $filters[1]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[1]);
         $this->assertEquals(3, $this->readAttribute($filters[1], 'priority'));
     }
 
@@ -110,7 +109,7 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
         $writer = new ConcreteWriter(array('filters' => 3));
         $filters = $this->readAttribute($writer, 'filters');
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf('Zend\Log\Filter\Priority', $filters[0]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
         $this->assertEquals(3, $this->readAttribute($filters[0], 'priority'));
 
         // Accept an int in an array of filters as a PriorityFilter
@@ -119,13 +118,13 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
         $writer = new ConcreteWriter($options);
         $filters = $this->readAttribute($writer, 'filters');
         $this->assertCount(2, $filters);
-        $this->assertInstanceOf('Zend\Log\Filter\Priority', $filters[0]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
         $this->assertEquals(3, $this->readAttribute($filters[0], 'priority'));
-        $this->assertInstanceOf('Zend\Log\Filter\Mock', $filters[1]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Mock', $filters[1]);
     }
 
     /**
-     * @covers Zend\Log\Writer\AbstractWriter::getFormatter
+     * @covers Laminas\Log\Writer\AbstractWriter::getFormatter
      */
     public function testFormatterDefaultsToNull()
     {
@@ -136,8 +135,8 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zend\Log\Writer\AbstractWriter::getFormatter
-     * @covers Zend\Log\Writer\AbstractWriter::setFormatter
+     * @covers Laminas\Log\Writer\AbstractWriter::getFormatter
+     * @covers Laminas\Log\Writer\AbstractWriter::setFormatter
      */
     public function testCanSetFormatter()
     {
@@ -151,7 +150,7 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Zend\Log\Writer\AbstractWriter::hasFormatter
+     * @covers Laminas\Log\Writer\AbstractWriter::hasFormatter
      */
     public function testHasFormatter()
     {
