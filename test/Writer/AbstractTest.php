@@ -1,24 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
-use ZendTest\Log\TestAsset\ConcreteWriter;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-use Zend\Log\Filter\Regex as RegexFilter;
+use Laminas\Log\Filter\Regex as RegexFilter;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use LaminasTest\Log\TestAsset\ConcreteWriter;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class AbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,7 +28,7 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-6085
+     * @group Laminas-6085
      */
     public function testSetFormatter()
     {
@@ -43,7 +41,7 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     {
         $this->_writer->addFilter(1);
         $this->_writer->addFilter(new RegexFilter('/mess/'));
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException');
         $this->_writer->addFilter(new \StdClass());
     }
 
@@ -60,7 +58,7 @@ class AbstractTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-8953
+     * @group Laminas-8953
      */
     public function testFluentInterface()
     {

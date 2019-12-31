@@ -1,7 +1,7 @@
 <?php
-namespace ZendTest\Log\TestAsset;
+namespace LaminasTest\Log\TestAsset;
 
-use Zend\Log\Writer\FirePhp\FirePhpInterface;
+use Laminas\Log\Writer\FirePhp\FirePhpInterface;
 
 class MockFirePhp implements FirePhpInterface
 {

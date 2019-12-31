@@ -1,32 +1,30 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
 use DateTime;
-use ZendTest\Log\TestAsset\StringObject;
-use Zend\Log\Formatter\Simple;
-use stdClass;
+use Laminas\Log\Formatter\Simple;
+use LaminasTest\Log\TestAsset\StringObject;
 use RuntimeException;
+use stdClass;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class SimpleTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorThrowsOnBadFormatString()
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'must be a string');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'must be a string');
         new Simple(1);
     }
 
@@ -82,7 +80,7 @@ class SimpleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-10427
+     * @group Laminas-10427
      */
     public function testDefaultFormatShouldDisplayExtraInformations()
     {

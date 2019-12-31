@@ -1,25 +1,23 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
-use ZendTest\Log\TestAsset\CustomSyslogWriter;
-use Zend\Log\Writer\Syslog as SyslogWriter;
-use Zend\Log\Logger;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Syslog as SyslogWriter;
+use LaminasTest\Log\TestAsset\CustomSyslogWriter;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class SyslogTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,30 +32,30 @@ class SyslogTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-7603
+     * @group Laminas-7603
      */
     public function testThrowExceptionValueNotPresentInFacilities()
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'Invalid log facility provided');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'Invalid log facility provided');
         $writer = new SyslogWriter();
         $writer->setFacility(LOG_USER * 1000);
     }
 
     /**
-     * @group ZF-7603
+     * @group Laminas-7603
      */
     public function testThrowExceptionIfFacilityInvalidInWindows()
     {
         if ('WIN' != strtoupper(substr(PHP_OS, 0, 3))) {
             $this->markTestSkipped('Run only in windows');
         }
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'Only LOG_USER is a valid');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'Only LOG_USER is a valid');
         $writer = new SyslogWriter();
         $writer->setFacility(LOG_AUTH);
     }
 
     /**
-     * @group ZF-8953
+     * @group Laminas-8953
      */
     public function testFluentInterface()
     {
@@ -69,7 +67,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-10769
+     * @group Laminas-10769
      */
     public function testPastFacilityViaConstructor()
     {
@@ -78,7 +76,7 @@ class SyslogTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-8382
+     * @group Laminas-8382
      */
     public function testWriteWithFormatter()
     {
