@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Formatter;
+use Laminas\Log\FormatterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Log\Exception\InvalidArgumentException;
-use Zend\Log\Formatter;
-use Zend\Log\FormatterPluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Test\CommonPluginManagerTrait;
 
 class FormatterPluginManagerCompatibilityTest extends TestCase
 {

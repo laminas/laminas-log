@@ -1,30 +1,29 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
-use Zend\Log\LoggerAbstractServiceFactory;
-use Zend\Log\ProcessorPluginManager;
-use Zend\Log\Writer\Noop;
-use Zend\Log\WriterPluginManager;
-use Zend\Log\Writer\Db as DbWriter;
-use Zend\ServiceManager\Config;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Log\LoggerAbstractServiceFactory;
+use Laminas\Log\ProcessorPluginManager;
+use Laminas\Log\Writer\Db as DbWriter;
+use Laminas\Log\Writer\Noop;
+use Laminas\Log\WriterPluginManager;
+use Laminas\ServiceManager\Config;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $serviceManager;
 
@@ -80,7 +79,7 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testValidLoggerService($service)
     {
         $actual = $this->serviceManager->get($service);
-        $this->assertInstanceOf('Zend\Log\Logger', $actual);
+        $this->assertInstanceOf('Laminas\Log\Logger', $actual);
     }
 
     /**
@@ -99,14 +98,14 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrievesDatabaseServiceFromServiceManagerWhenEncounteringDbWriter()
     {
-        if (! class_exists('Zend\Db\Adapter\Adapter')) {
+        if (! class_exists('Laminas\Db\Adapter\Adapter')) {
             $this->markTestSkipped(
-                'zend-db related tests are disabled when testing zend-servicemanager v3 '
-                . 'forwards compatibility, until zend-db is also forwards compatible'
+                'laminas-db related tests are disabled when testing laminas-servicemanager v3 '
+                . 'forwards compatibility, until laminas-db is also forwards compatible'
             );
         }
 
-        $db = $this->getMockBuilder('Zend\Db\Adapter\Adapter')
+        $db = $this->getMockBuilder('Laminas\Db\Adapter\Adapter')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -138,7 +137,7 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $config->configureServiceManager($serviceManager);
 
         $logger = $serviceManager->get('Application\Log');
-        $this->assertInstanceOf('Zend\Log\Logger', $logger);
+        $this->assertInstanceOf('Laminas\Log\Logger', $logger);
         $writers = $logger->getWriters();
         $found   = false;
 
@@ -159,7 +158,7 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testWillInjectWriterPluginManagerIfAvailable()
     {
         $writers = new WriterPluginManager(new ServiceManager());
-        $mockWriter = $this->getMock('Zend\Log\Writer\WriterInterface');
+        $mockWriter = $this->getMock('Laminas\Log\Writer\WriterInterface');
         $writers->setService('CustomWriter', $mockWriter);
 
         $config = new Config([
@@ -191,7 +190,7 @@ class LoggerAbstractServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testWillInjectProcessorPluginManagerIfAvailable()
     {
         $processors = new ProcessorPluginManager(new ServiceManager());
-        $mockProcessor = $this->getMock('Zend\Log\Processor\ProcessorInterface');
+        $mockProcessor = $this->getMock('Laminas\Log\Processor\ProcessorInterface');
         $processors->setService('CustomProcessor', $mockProcessor);
 
         $config = new Config([
