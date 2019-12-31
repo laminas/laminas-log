@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
+use Laminas\Log\Exception;
+use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\Logger;
 use Traversable;
-use Zend\Log\Exception;
-use Zend\Log\Formatter\Simple as SimpleFormatter;
-use Zend\Log\Logger;
 
 /**
  * Writes log messages to syslog
@@ -20,7 +19,7 @@ use Zend\Log\Logger;
 class Syslog extends AbstractWriter
 {
     /**
-     * Maps Zend\Log priorities to PHP's syslog priorities
+     * Maps Laminas\Log priorities to PHP's syslog priorities
      *
      * @var array
      */
@@ -61,7 +60,7 @@ class Syslog extends AbstractWriter
      *
      * @var string
      */
-    protected $appName = 'Zend\Log';
+    protected $appName = 'Laminas\Log';
 
     /**
      * Facility used by this syslog-writer instance

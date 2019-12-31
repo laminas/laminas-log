@@ -1,24 +1,23 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2019 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
+use Laminas\Log\PsrLoggerAbstractAdapterFactory;
+use Laminas\ServiceManager\Config;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\PsrLoggerAbstractAdapterFactory;
-use Zend\ServiceManager\Config;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\ServiceManager;
 
 class PsrLoggerAbstractAdapterFactoryTest extends TestCase
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface
      */
     protected $serviceManager;
 
@@ -72,7 +71,7 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
     public function testValidLoggerService($service)
     {
         $actual = $this->serviceManager->get($service);
-        $this->assertInstanceOf('Zend\Log\PsrLoggerAdapter', $actual);
+        $this->assertInstanceOf('Laminas\Log\PsrLoggerAdapter', $actual);
     }
 
     /**
