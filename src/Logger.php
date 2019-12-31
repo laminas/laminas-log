@@ -1,26 +1,24 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
 use DateTime;
 use ErrorException;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Stdlib\SplPriorityQueue;
 use Traversable;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\SplPriorityQueue;
 
 /**
  * Logging messages with a stack of backends
  *
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  */
 class Logger implements LoggerInterface
 {
@@ -190,7 +188,7 @@ class Logger implements LoggerInterface
             $writer = $this->writerPlugin($writer, $options);
         } elseif (!$writer instanceof Writer\WriterInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Writer must implement Zend\Log\Writer; received "%s"',
+                'Writer must implement Laminas\Log\Writer; received "%s"',
                 is_object($writer) ? get_class($writer) : gettype($writer)
             ));
         }
@@ -220,7 +218,7 @@ class Logger implements LoggerInterface
     {
         foreach ($writers->toArray() as $writer) {
             if (!$writer instanceof Writer\WriterInterface) {
-                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Zend\Log\Writer');
+                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Laminas\Log\Writer');
             }
         }
         $this->writers = $writers;
