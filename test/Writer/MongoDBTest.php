@@ -1,25 +1,22 @@
 <?php
 
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Log\Writer\MongoDB as MongoDBWriter;
 use MongoDate;
-use Zend\Log\Writer\MongoDB as MongoDBWriter;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class MongoDBTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +26,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('The mongo PHP extension is not available');
         }
 
-        $this->database = 'zf2_test';
+        $this->database = 'laminas_test';
         $this->collection = 'logs';
 
         $mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? 'Mongo' : 'MongoClient';
@@ -51,13 +48,13 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Zend\Log\Exception\InvalidArgumentException
+     * @expectedException Laminas\Log\Exception\InvalidArgumentException
      */
     public function testFormattingIsNotSupported()
     {
         $writer = new MongoDBWriter($this->mongo, $this->database, $this->collection);
 
-        $writer->setFormatter($this->getMock('Zend\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->getMock('Laminas\Log\Formatter\FormatterInterface'));
     }
 
     public function testWriteWithDefaultSaveOptions()
