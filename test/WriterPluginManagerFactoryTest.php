@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
 use Interop\Container\ContainerInterface;
+use Laminas\Log\Writer\WriterInterface;
+use Laminas\Log\WriterPluginManager;
+use Laminas\Log\WriterPluginManagerFactory;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Log\Writer\WriterInterface;
-use Zend\Log\WriterPluginManager;
-use Zend\Log\WriterPluginManagerFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class WriterPluginManagerFactoryTest extends TestCase
 {
@@ -25,10 +26,10 @@ class WriterPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(WriterPluginManager::class, $writers);
 
         if (method_exists($writers, 'configure')) {
-            // zend-servicemanager v3
+            // laminas-servicemanager v3
             $this->assertAttributeSame($container, 'creationContext', $writers);
         } else {
-            // zend-servicemanager v2
+            // laminas-servicemanager v2
             $this->assertSame($container, $writers->getServiceLocator());
         }
     }

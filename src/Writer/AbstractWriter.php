@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
+use Laminas\Log\Exception;
+use Laminas\Log\Filter;
+use Laminas\Log\Formatter;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\ErrorHandler;
 use Traversable;
-use Zend\Log\Exception;
-use Zend\Log\Filter;
-use Zend\Log\Formatter;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ErrorHandler;
 
 abstract class AbstractWriter implements WriterInterface
 {
@@ -47,14 +46,14 @@ abstract class AbstractWriter implements WriterInterface
     protected $formatter;
 
     /**
-     * Use Zend\Stdlib\ErrorHandler to report errors during calls to write
+     * Use Laminas\Stdlib\ErrorHandler to report errors during calls to write
      *
      * @var bool
      */
     protected $convertWriteErrorsToExceptions = true;
 
     /**
-     * Error level passed to Zend\Stdlib\ErrorHandler::start for errors reported during calls to write
+     * Error level passed to Laminas\Stdlib\ErrorHandler::start for errors reported during calls to write
      *
      * @var bool
      */

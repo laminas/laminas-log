@@ -1,23 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
-use DateTime;
-use stdClass;
-use EmptyIterator;
 use ArrayIterator;
-use ZendTest\Log\TestAsset\StringObject;
-use Zend\Log\Formatter\Base as BaseFormatter;
+use DateTime;
+use EmptyIterator;
+use Laminas\Log\Formatter\Base as BaseFormatter;
+use LaminasTest\Log\TestAsset\StringObject;
+use stdClass;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
