@@ -1,7 +1,7 @@
 <?php
-namespace ZendTest\Log\TestAsset;
+namespace LaminasTest\Log\TestAsset;
 
-use Zend\Log\Writer\ChromePhp\ChromePhpInterface;
+use Laminas\Log\Writer\ChromePhp\ChromePhpInterface;
 
 class MockChromePhp implements ChromePhpInterface
 {
