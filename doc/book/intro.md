@@ -1,23 +1,23 @@
 # Overview
 
-`Zend\Log\Logger` is a component for general purpose logging. It supports
+`Laminas\Log\Logger` is a component for general purpose logging. It supports
 multiple log backends, formatting messages sent to the log, and filtering
 messages from being logged. These functions are divided into the following
 objects:
 
-- A **logger** (instance of `Zend\Log\Logger`) is the object that your application
+- A **logger** (instance of `Laminas\Log\Logger`) is the object that your application
   uses the most. You can have as many logger objects as you like; they do not
   interact. A logger object must contain at least one *writer*, and can optionally
   contain one or more *filters*.
-- A **writer** (inherits from `Zend\Log\Writer\AbstractWriter`) writes data to
+- A **writer** (inherits from `Laminas\Log\Writer\AbstractWriter`) writes data to
   an underlying storage implementation.
-- A **filter** (implements `Zend\Log\Filter\FilterInterface`) filters (blocks)
+- A **filter** (implements `Laminas\Log\Filter\FilterInterface`) filters (blocks)
   log data from being saved. A filter is applied to an individual writer.
   Filters can be chained.
-- A **formatter** (implements `Zend\Log\Formatter\FormatterInterface`) formats
+- A **formatter** (implements `Laminas\Log\Formatter\FormatterInterface`) formats
   the log data before it is written by a writer. Each writer has exactly one
   formatter.
-- A **processor** (implements `Zend\Log\Processor\ProcessorInterface`) processes
+- A **processor** (implements `Laminas\Log\Processor\ProcessorInterface`) processes
   the log event prior to filtering or writing, allowing the ability to
   substitute, add, remove, or modify data to be logged.
 
@@ -26,8 +26,8 @@ objects:
 To get started logging, instantiate a writer and then pass it to a logger instance:
 
 ```php
-$logger = new Zend\Log\Logger;
-$writer = new Zend\Log\Writer\Stream('php://output');
+$logger = new Laminas\Log\Logger;
+$writer = new Laminas\Log\Writer\Stream('php://output');
 
 $logger->addWriter($writer);
 ```
@@ -42,7 +42,7 @@ Another way to add a writer to a logger is to use the name of the writer as
 follow:
 
 ```php
-$logger = new Zend\Log\Logger;
+$logger = new Laminas\Log\Logger;
 
 $logger->addWriter('stream', null, ['stream' => 'php://output']);
 ```
@@ -56,7 +56,7 @@ To log a message, call the `log()` method of a `Logger` instance and pass it the
 message priority and the message:
 
 ```php
-$logger->log(Zend\Log\Logger::INFO, 'Informational message');
+$logger->log(Laminas\Log\Logger::INFO, 'Informational message');
 ```
 
 The first parameter of the `log()` method is the integer `priority` and the
@@ -70,10 +70,10 @@ the various supported priorities, which allows you to omit the `priority`
 argument:
 
 ```php
-$logger->log(Zend\Log\Logger::INFO, 'Informational message');
+$logger->log(Laminas\Log\Logger::INFO, 'Informational message');
 $logger->info('Informational message');
 
-$logger->log(Zend\Log\Logger::EMERG, 'Emergency message');
+$logger->log(Laminas\Log\Logger::EMERG, 'Emergency message');
 $logger->emerg('Emergency message');
 ```
 
@@ -92,7 +92,7 @@ automatically at PHP shutdown.
 
 ## Using Built-in Priorities
 
-The `Zend\Log\Logger` class defines the following priorities:
+The `Laminas\Log\Logger` class defines the following priorities:
 
 ```php
 EMERG   = 0;  // Emergency: system is unusable
@@ -112,7 +112,7 @@ The priorities are not arbitrary. They come from the BSD syslog protocol, which
 is described in [RFC-3164](http://tools.ietf.org/html/rfc3164). The names and
 corresponding priority numbers are also compatible with another PHP logging
 system, [PEAR Log](http://pear.php.net/package/log), which perhaps promotes
-interoperability between it and `Zend\Log\Logger`;
+interoperability between it and `Laminas\Log\Logger`;
 [PSR-3](http://www.php-fig.org/psr/psr-3/) uses similar semantics, but without
 the explicit priority integers.
 
@@ -137,19 +137,19 @@ The creation of the `event` array is an internal detail of implementation.
 
 ## Log PHP Errors
 
-`Zend\Log\Logger` can also be used to log PHP errors and intercept exceptions.
+`Laminas\Log\Logger` can also be used to log PHP errors and intercept exceptions.
 Calling the static method `registerErrorHandler($logger)` will register the
 `$logger` instance to log errors; it returns a boolean `false` ensuring that it
 returns delegation to any other error handlers registered, including the default
 PHP error handler.
 
 ```php
-$logger = new Zend\Log\Logger;
-$writer = new Zend\Log\Writer\Stream('php://output');
+$logger = new Laminas\Log\Logger;
+$writer = new Laminas\Log\Writer\Stream('php://output');
 
 $logger->addWriter($writer);
 
-Zend\Log\Logger::registerErrorHandler($logger);
+Laminas\Log\Logger::registerErrorHandler($logger);
 ```
 
 If you want to unregister the error handler, can use the `unregisterErrorHandler()` static
