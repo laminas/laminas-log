@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
 use DateTime;
+use Laminas\Log\Formatter\Xml as XmlFormatter;
+use LaminasTest\Log\TestAsset\SerializableObject;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Formatter\Xml as XmlFormatter;
-use ZendTest\Log\TestAsset\SerializableObject;
 
 class XmlTest extends TestCase
 {
@@ -82,8 +81,8 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @group ZF-2062
-     * @group ZF-4190
+     * @group Laminas-2062
+     * @group Laminas-4190
      */
     public function testHtmlSpecialCharsInMessageGetEscapedForValidXml()
     {
@@ -95,8 +94,8 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @group ZF-2062
-     * @group ZF-4190
+     * @group Laminas-2062
+     * @group Laminas-4190
      */
     public function testFixingBrokenCharsSoXmlIsValid()
     {
@@ -135,7 +134,7 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @group ZF-11161
+     * @group Laminas-11161
      */
     public function testNonScalarValuesAreExcludedFromFormattedString()
     {
@@ -156,7 +155,7 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @group ZF-11161
+     * @group Laminas-11161
      */
     public function testObjectsWithStringSerializationAreIncludedInFormattedString()
     {
@@ -170,7 +169,7 @@ class XmlTest extends TestCase
             'reference' => new SerializableObject()
         ];
         $expected = '<log><message>tottakai</message><priority>4</priority><reference>'
-            .'ZendTest\Log\TestAsset\SerializableObject</reference></log>';
+            .'LaminasTest\Log\TestAsset\SerializableObject</reference></log>';
 
         $formatter = new XmlFormatter($options);
         $output = $formatter->format($event);
@@ -178,7 +177,7 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @group ZF2-453
+     * @group Laminas-453
      */
     public function testFormatWillRemoveExtraEmptyArrayFromEvent()
     {
@@ -257,7 +256,7 @@ class XmlTest extends TestCase
             .'<priority>1</priority><priorityName>CRIT</priorityName><extra><test><one/><two><three><four>four</four>'
             .'</three><five/></two></test><test_null/><test_int>14</test_int><test_object>'
             .'"Object" of type stdClass does not support __toString() method</test_object><serializable_object>'
-            .'ZendTest\Log\TestAsset\SerializableObject</serializable_object><test_empty_array/>'
+            .'LaminasTest\Log\TestAsset\SerializableObject</serializable_object><test_empty_array/>'
             .'<bar>foo</bar><foobar/></extra></logEntry>';
         $expected .= "\n" . PHP_EOL;
         $this->assertEquals($expected, $formatter->format($event));
@@ -298,7 +297,7 @@ class XmlTest extends TestCase
         ];
 
         // @codingStandardsIgnoreStart
-        $expected = '<logEntry><timestamp>2001-01-01T12:00:00-06:00</timestamp><message>test</message><priority>1</priority><priorityName>CRIT</priorityName><extra><test><one/><two><three><four>four&amp;four</four></three><five/></two></test><test_null/><test_int>14</test_int><test_object>"Object" of type stdClass does not support __toString() method</test_object><serializable_object>ZendTest\Log\TestAsset\SerializableObject</serializable_object><test_empty_array/><bar>foo</bar><foobar/></extra></logEntry>';
+        $expected = '<logEntry><timestamp>2001-01-01T12:00:00-06:00</timestamp><message>test</message><priority>1</priority><priorityName>CRIT</priorityName><extra><test><one/><two><three><four>four&amp;four</four></three><five/></two></test><test_null/><test_int>14</test_int><test_object>"Object" of type stdClass does not support __toString() method</test_object><serializable_object>LaminasTest\Log\TestAsset\SerializableObject</serializable_object><test_empty_array/><bar>foo</bar><foobar/></extra></logEntry>';
         $expected .= "\n" . PHP_EOL;
         // @codingStandardsIgnoreEnd
 

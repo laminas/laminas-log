@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
-*
-* @link      http://github.com/zendframework/zf2 for the canonical source repository
-* @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
-* @license   http://framework.zend.com/license/new-bsd New BSD License
-*/
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
+ */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Writer\FingersCrossed as FingersCrossedWriter;
+use Laminas\Log\Writer\Mock as MockWriter;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Writer\FingersCrossed as FingersCrossedWriter;
-use Zend\Log\Writer\Mock as MockWriter;
 
 class FingersCrossedTest extends TestCase
 {
@@ -51,18 +50,18 @@ class FingersCrossedTest extends TestCase
     public function setWriterByName()
     {
         $writer = new FingersCrossedWriter('mock');
-        $this->assertAttributeInstanceOf('Zend\Log\Writer\Mock', 'writer', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
     }
 
     public function testConstructorOptions()
     {
         $options = ['writer' => 'mock', 'priority' => 3];
         $writer = new FingersCrossedWriter($options);
-        $this->assertAttributeInstanceOf('Zend\Log\Writer\Mock', 'writer', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
 
         $filters = $this->readAttribute($writer, 'filters');
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf('Zend\Log\Filter\Priority', $filters[0]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
         $this->assertAttributeEquals(3, 'priority', $filters[0]);
     }
 
@@ -71,7 +70,7 @@ class FingersCrossedTest extends TestCase
         $options = ['writer' => 'mock', 'priority' => 3];
         $writer = new FingersCrossedWriter($options);
 
-        $writer->setFormatter($this->createMock('Zend\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
         $this->assertAttributeEmpty('formatter', $writer);
     }
 }

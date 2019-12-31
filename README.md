@@ -1,9 +1,9 @@
-# zend-log
+# laminas-log
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-log.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-log)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-log/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-log?branch=master)
+[![Build Status](https://travis-ci.org/laminas/laminas-log.svg?branch=master)](https://travis-ci.org/laminas/laminas-log)
+[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-log/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-log?branch=master)
 
-`Zend\Log` is a component for general purpose logging. It supports multiple log
+`Laminas\Log` is a component for general purpose logging. It supports multiple log
 backends, formatting messages sent to the log, and filtering messages from being
 logged.
 
@@ -12,15 +12,15 @@ logged.
 Run the following to install this library:
 
 ```bash
-$ composer require zendframework/zend-log
+$ composer require laminas/laminas-log
 ```
 
 ## Documentation
 
-Browse the documentation online at https://docs.zendframework.com/zend-log/
+Browse the documentation online at https://docs.laminas.dev/laminas-log/
 
 ## Support
 
-* [Issues](https://github.com/zendframework/zend-log/issues/)
-* [Chat](https://zendframework-slack.herokuapp.com/)
-* [Forum](https://discourse.zendframework.com/)
+* [Issues](https://github.com/laminas/laminas-log/issues/)
+* [Chat](https://laminas.dev/chat/)
+* [Forum](https://discourse.laminas.dev/)

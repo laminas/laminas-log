@@ -1,16 +1,15 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Processor;
+namespace LaminasTest\Log\Processor;
 
+use Laminas\Log\Processor\Backtrace;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Processor\Backtrace;
 
 class BacktraceTest extends TestCase
 {
@@ -41,9 +40,9 @@ class BacktraceTest extends TestCase
 
     public function testConstructorAcceptsOptionalIgnoredNamespaces()
     {
-        $this->assertSame(['Zend\\Log'], $this->processor->getIgnoredNamespaces());
+        $this->assertSame(['Laminas\\Log'], $this->processor->getIgnoredNamespaces());
 
         $processor = new Backtrace(['ignoredNamespaces' => ['Foo\\Bar']]);
-        $this->assertSame(['Zend\\Log', 'Foo\\Bar'], $processor->getIgnoredNamespaces());
+        $this->assertSame(['Laminas\\Log', 'Foo\\Bar'], $processor->getIgnoredNamespaces());
     }
 }
