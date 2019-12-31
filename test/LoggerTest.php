@@ -1,26 +1,25 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
-use Exception;
 use ErrorException;
-use Zend\Log\Logger;
-use Zend\Log\Processor\Backtrace;
-use Zend\Log\Writer\Mock as MockWriter;
-use Zend\Log\Writer\Stream as StreamWriter;
-use Zend\Log\Filter\Mock as MockFilter;
-use Zend\Stdlib\SplPriorityQueue;
-use Zend\Validator\Digits as DigitsFilter;
+use Exception;
+use Laminas\Log\Filter\Mock as MockFilter;
+use Laminas\Log\Logger;
+use Laminas\Log\Processor\Backtrace;
+use Laminas\Log\Writer\Mock as MockWriter;
+use Laminas\Log\Writer\Stream as StreamWriter;
+use Laminas\Stdlib\SplPriorityQueue;
+use Laminas\Validator\Digits as DigitsFilter;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,13 +38,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testUsesWriterPluginManagerByDefault()
     {
-        $this->assertInstanceOf('Zend\Log\WriterPluginManager', $this->logger->getWriterPluginManager());
+        $this->assertInstanceOf('Laminas\Log\WriterPluginManager', $this->logger->getWriterPluginManager());
     }
 
     public function testPassingValidStringClassToSetPluginManager()
     {
-        $this->logger->setWriterPluginManager('Zend\Log\WriterPluginManager');
-        $this->assertInstanceOf('Zend\Log\WriterPluginManager', $this->logger->getWriterPluginManager());
+        $this->logger->setWriterPluginManager('Laminas\Log\WriterPluginManager');
+        $this->assertInstanceOf('Laminas\Log\WriterPluginManager', $this->logger->getWriterPluginManager());
     }
 
     public static function provideInvalidClasses()
@@ -61,21 +60,21 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPassingInvalidArgumentToSetPluginManagerRaisesException($plugins)
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException');
         $this->logger->setWriterPluginManager($plugins);
     }
 
     public function testPassingShortNameToPluginReturnsWriterByThatName()
     {
         $writer = $this->logger->writerPlugin('mock');
-        $this->assertInstanceOf('Zend\Log\Writer\Mock', $writer);
+        $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writer);
     }
 
     public function testPassWriterAsString()
     {
         $this->logger->addWriter('mock');
         $writers = $this->logger->getWriters();
-        $this->assertInstanceOf('Zend\Stdlib\SplPriorityQueue', $writers);
+        $this->assertInstanceOf('Laminas\Stdlib\SplPriorityQueue', $writers);
     }
 
     /**
@@ -83,13 +82,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPassingInvalidArgumentToAddWriterRaisesException($writer)
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException', 'must implement');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException', 'must implement');
         $this->logger->addWriter($writer);
     }
 
     public function testEmptyWriter()
     {
-        $this->setExpectedException('Zend\Log\Exception\RuntimeException', 'No log writer specified');
+        $this->setExpectedException('Laminas\Log\Exception\RuntimeException', 'No log writer specified');
         $this->logger->log(Logger::INFO, 'test');
     }
 
@@ -103,11 +102,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->logger->setWriters($writers);
 
         $writers = $this->logger->getWriters();
-        $this->assertInstanceOf('Zend\Stdlib\SplPriorityQueue', $writers);
+        $this->assertInstanceOf('Laminas\Stdlib\SplPriorityQueue', $writers);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Null);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Null);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Mock);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Mock);
     }
 
     public function testAddWriterWithPriority()
@@ -118,11 +117,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->logger->addWriter($writer2, 2);
         $writers = $this->logger->getWriters();
 
-        $this->assertInstanceOf('Zend\Stdlib\SplPriorityQueue', $writers);
+        $this->assertInstanceOf('Laminas\Stdlib\SplPriorityQueue', $writers);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Null);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Null);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Mock);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Mock);
     }
 
     public function testAddWithSamePriority()
@@ -133,11 +132,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->logger->addWriter($writer2, 1);
         $writers = $this->logger->getWriters();
 
-        $this->assertInstanceOf('Zend\Stdlib\SplPriorityQueue', $writers);
+        $this->assertInstanceOf('Laminas\Stdlib\SplPriorityQueue', $writers);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Mock);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Mock);
         $writer = $writers->extract();
-        $this->assertTrue($writer instanceof \Zend\Log\Writer\Null);
+        $this->assertTrue($writer instanceof \Laminas\Log\Writer\Null);
     }
 
     public function testLogging()
@@ -249,7 +248,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testPassingInvalidArgumentToLogRaisesException($message, $extra)
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException');
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException');
         $this->logger->log(Logger::ERR, $message, $extra);
     }
 
@@ -284,7 +283,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $writers = $logger->getWriters()->toArray();
         $this->assertCount(1, $writers);
-        $this->assertInstanceOf('Zend\Log\Writer\Mock', $writers[0]);
+        $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writers[0]);
     }
 
     public function testOptionsWithWriterOptions()
@@ -302,7 +301,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $writers = $logger->getWriters()->toArray();
         $this->assertCount(1, $writers);
-        $this->assertInstanceOf('Zend\Log\Writer\Stream', $writers[0]);
+        $this->assertInstanceOf('Laminas\Log\Writer\Stream', $writers[0]);
         $this->assertEquals('foo', $writers[0]->getLogSeparator());
     }
 
@@ -323,7 +322,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger = new Logger($options);
         $processors = $logger->getProcessors()->toArray();
         $this->assertCount(1, $processors);
-        $this->assertInstanceOf('Zend\Log\Processor\RequestId', $processors[0]);
+        $this->assertInstanceOf('Laminas\Log\Processor\RequestId', $processors[0]);
     }
 
     public function testAddProcessor()
@@ -340,7 +339,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->logger->addProcessor('backtrace');
 
         $processors = $this->logger->getProcessors()->toArray();
-        $this->assertInstanceOf('Zend\Log\Processor\Backtrace', $processors[0]);
+        $this->assertInstanceOf('Laminas\Log\Processor\Backtrace', $processors[0]);
 
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
@@ -410,7 +409,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         );
         $logger = new Logger($options);
 
-        $this->assertInstanceOf('Zend\Log\Logger', $logger->info('Hi', array('extra' => '')));
+        $this->assertInstanceOf('Laminas\Log\Logger', $logger->info('Hi', array('extra' => '')));
         fclose($stream);
     }
 
@@ -455,7 +454,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $self = $this;
         register_shutdown_function(function () use ($writer, $self) {
             $self->assertEquals(
-                'Call to undefined method ZendTest\Log\LoggerTest::callToNonExistingMethod()',
+                'Call to undefined method LaminasTest\Log\LoggerTest::callToNonExistingMethod()',
                 $writer->events[0]['message']
             );
         });
@@ -493,11 +492,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF2-7238
+     * @group Laminas-7238
      */
     public function testCatchExceptionNotValidPriority()
     {
-        $this->setExpectedException('Zend\Log\Exception\InvalidArgumentException',
+        $this->setExpectedException('Laminas\Log\Exception\InvalidArgumentException',
                                     '$priority must be an integer >= 0 and < 8; received -1');
         $writer = new MockWriter();
         $this->logger->addWriter($writer);
