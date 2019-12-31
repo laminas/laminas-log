@@ -1,24 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
 use DateTime;
-use ZendTest\Log\TestAsset\SerializableObject;
-use Zend\Log\Formatter\Xml as XmlFormatter;
+use Laminas\Log\Formatter\Xml as XmlFormatter;
+use LaminasTest\Log\TestAsset\SerializableObject;
 
 /**
- * @category   Zend
- * @package    Zend_Log
+ * @category   Laminas
+ * @package    Laminas_Log
  * @subpackage UnitTests
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class XmlTest extends \PHPUnit_Framework_TestCase
 {
@@ -88,8 +86,8 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-2062
-     * @group ZF-4190
+     * @group Laminas-2062
+     * @group Laminas-4190
      */
     public function testHtmlSpecialCharsInMessageGetEscapedForValidXml()
     {
@@ -101,8 +99,8 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-2062
-     * @group ZF-4190
+     * @group Laminas-2062
+     * @group Laminas-4190
      */
     public function testFixingBrokenCharsSoXmlIsValid()
     {
@@ -138,7 +136,7 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-11161
+     * @group Laminas-11161
      */
     public function testNonScalarValuesAreExcludedFromFormattedString()
     {
@@ -159,7 +157,7 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF-11161
+     * @group Laminas-11161
      */
     public function testObjectsWithStringSerializationAreIncludedInFormattedString()
     {
@@ -172,7 +170,7 @@ class XmlTest extends \PHPUnit_Framework_TestCase
             'context' => array('test'=>'one'),
             'reference' => new SerializableObject()
         );
-        $expected = '<log><message>tottakai</message><priority>4</priority><reference>ZendTest\Log\TestAsset\SerializableObject</reference></log>';
+        $expected = '<log><message>tottakai</message><priority>4</priority><reference>LaminasTest\Log\TestAsset\SerializableObject</reference></log>';
 
         $formatter = new XmlFormatter($options);
         $output = $formatter->format($event);
@@ -180,7 +178,7 @@ class XmlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group ZF2-453
+     * @group Laminas-453
      */
     public function testFormatWillRemoveExtraEmptyArrayFromEvent()
     {
