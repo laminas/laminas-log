@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\ChromePhp;
+use LaminasTest\Log\TestAsset\MockChromePhp;
 use PHPUnit\Framework\TestCase;
-use ZendTest\Log\TestAsset\MockChromePhp;
-use Zend\Log\Writer\ChromePhp;
-use Zend\Log\Logger;
 
 class ChromePhpTest extends TestCase
 {
@@ -26,7 +25,7 @@ class ChromePhpTest extends TestCase
     public function testGetChromePhp()
     {
         $writer = new ChromePhp($this->chromephp);
-        $this->assertInstanceOf('Zend\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
+        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
     }
 
     public function testSetChromePhp()
@@ -35,7 +34,7 @@ class ChromePhpTest extends TestCase
         $chromephp2 = new MockChromePhp();
 
         $writer->setChromePhp($chromephp2);
-        $this->assertInstanceOf('Zend\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
+        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
         $this->assertEquals($chromephp2, $writer->getChromePhp());
     }
 
@@ -62,15 +61,15 @@ class ChromePhpTest extends TestCase
 
     public function testConstructWithOptions()
     {
-        $formatter = new \Zend\Log\Formatter\Simple();
-        $filter    = new \Zend\Log\Filter\Mock();
+        $formatter = new \Laminas\Log\Formatter\Simple();
+        $filter    = new \Laminas\Log\Filter\Mock();
         $writer = new ChromePhp([
             'filters'   => $filter,
             'formatter' => $formatter,
             'instance'  => $this->chromephp,
         ]);
-        $this->assertInstanceOf('Zend\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
-        $this->assertAttributeInstanceOf('Zend\Log\Formatter\ChromePhp', 'formatter', $writer);
+        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
+        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\ChromePhp', 'formatter', $writer);
 
         $filters = self::readAttribute($writer, 'filters');
         $this->assertCount(1, $filters);
