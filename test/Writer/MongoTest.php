@@ -1,19 +1,17 @@
 <?php
 
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Log\Writer\Mongo as MongoWriter;
 use MongoDate;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Writer\Mongo as MongoWriter;
 
 class MongoTest extends TestCase
 {
@@ -23,7 +21,7 @@ class MongoTest extends TestCase
             $this->markTestSkipped('The mongo PHP extension is not available');
         }
 
-        $this->database = 'zf2_test';
+        $this->database = 'laminas_test';
         $this->collection = 'logs';
 
         $mongoClass = (version_compare(phpversion('mongo'), '1.3.0', '<')) ? 'Mongo' : 'MongoClient';
@@ -48,7 +46,7 @@ class MongoTest extends TestCase
     {
         $writer = new MongoWriter($this->mongo, $this->database, $this->collection);
 
-        $writer->setFormatter($this->createMock('Zend\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
         $this->assertAttributeEmpty('formatter', $writer);
     }
 

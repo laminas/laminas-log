@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log;
+namespace LaminasTest\Log;
 
 use Interop\Container\ContainerInterface;
+use Laminas\Log\Processor\ProcessorInterface;
+use Laminas\Log\ProcessorPluginManager;
+use Laminas\Log\ProcessorPluginManagerFactory;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\ProcessorPluginManager;
-use Zend\Log\ProcessorPluginManagerFactory;
-use Zend\Log\Processor\ProcessorInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ProcessorPluginManagerFactoryTest extends TestCase
 {
@@ -25,10 +26,10 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
 
         if (method_exists($processors, 'configure')) {
-            // zend-servicemanager v3
+            // laminas-servicemanager v3
             $this->assertAttributeSame($container, 'creationContext', $processors);
         } else {
-            // zend-servicemanager v2
+            // laminas-servicemanager v2
             $this->assertSame($container, $processors->getServiceLocator());
         }
     }

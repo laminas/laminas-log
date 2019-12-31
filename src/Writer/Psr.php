@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
-use Traversable;
-use Psr\Log\LogLevel;
+use Laminas\Log\Logger;
 use Psr\Log\LoggerAwareTrait as PsrLoggerAwareTrait;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
+use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
-use Zend\Log\Logger;
+use Traversable;
 
 /**
  * Proxies log messages to an existing PSR-3 compliant logger.

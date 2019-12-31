@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log\Writer;
+namespace Laminas\Log\Writer;
 
+use Laminas\Log\Exception;
+use Laminas\Log\Formatter\ChromePhp as ChromePhpFormatter;
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\ChromePhp\ChromePhpBridge;
+use Laminas\Log\Writer\ChromePhp\ChromePhpInterface;
 use Traversable;
-use Zend\Log\Writer\ChromePhp\ChromePhpBridge;
-use Zend\Log\Writer\ChromePhp\ChromePhpInterface;
-use Zend\Log\Formatter\ChromePhp as ChromePhpFormatter;
-use Zend\Log\Logger;
-use Zend\Log\Exception;
 
 class ChromePhp extends AbstractWriter
 {
@@ -44,7 +43,7 @@ class ChromePhp extends AbstractWriter
 
         if (! ($instance instanceof ChromePhpInterface || $instance === null)) {
             throw new Exception\InvalidArgumentException(
-                'You must pass a valid Zend\Log\Writer\ChromePhp\ChromePhpInterface'
+                'You must pass a valid Laminas\Log\Writer\ChromePhp\ChromePhpInterface'
             );
         }
 

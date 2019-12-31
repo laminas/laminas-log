@@ -1,19 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Formatter;
+namespace LaminasTest\Log\Formatter;
 
 use DateTime;
+use Laminas\Log\Formatter\ErrorHandler;
+use LaminasTest\Log\TestAsset\NotStringObject;
+use LaminasTest\Log\TestAsset\StringObject;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Formatter\ErrorHandler;
-use ZendTest\Log\TestAsset\StringObject;
-use ZendTest\Log\TestAsset\NotStringObject;
 
 class ErrorHandlerTest extends TestCase
 {

@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Log\Formatter\FormatterInterface;
+use Laminas\Log\Writer\Db as DbWriter;
+use LaminasTest\Log\TestAsset\MockDbAdapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
-use Zend\Log\Formatter\FormatterInterface;
-use Zend\Log\Writer\Db as DbWriter;
-use ZendTest\Log\TestAsset\MockDbAdapter;
 
 class DbTest extends TestCase
 {
@@ -28,14 +27,14 @@ class DbTest extends TestCase
 
     public function testNotPassingTableNameToConstructorThrowsException()
     {
-        $this->expectException('Zend\Log\Exception\InvalidArgumentException');
+        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('table name');
         $writer = new DbWriter($this->db);
     }
 
     public function testNotPassingDbToConstructorThrowsException()
     {
-        $this->expectException('Zend\Log\Exception\InvalidArgumentException');
+        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Adapter');
         $writer = new DbWriter([]);
     }
@@ -47,7 +46,7 @@ class DbTest extends TestCase
             'table' => $this->tableName,
         ];
         $writer = new DbWriter($options);
-        $this->assertInstanceOf('Zend\Log\Writer\Db', $writer);
+        $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
         $this->assertAttributeEquals($this->tableName, 'tableName', $writer);
     }
 
@@ -190,7 +189,7 @@ class DbTest extends TestCase
         $this->writer->write(['message' => 'this should not fail']);
         $this->writer->shutdown();
 
-        $this->expectException('Zend\Log\Exception\RuntimeException');
+        $this->expectException('Laminas\Log\Exception\RuntimeException');
         $this->expectExceptionMessage('Database adapter is null');
         $this->writer->write(['message' => 'this should fail']);
     }
@@ -229,8 +228,8 @@ class DbTest extends TestCase
 
     public function testConstructWithOptions()
     {
-        $formatter = new \Zend\Log\Formatter\Simple();
-        $filter    = new \Zend\Log\Filter\Mock();
+        $formatter = new \Laminas\Log\Formatter\Simple();
+        $filter    = new \Laminas\Log\Filter\Mock();
         $writer = new DbWriter([
             'filters'   => $filter,
             'formatter' => $formatter,
@@ -238,7 +237,7 @@ class DbTest extends TestCase
             'db'        => $this->db,
 
         ]);
-        $this->assertInstanceOf('Zend\Log\Writer\Db', $writer);
+        $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
         $this->assertAttributeEquals($this->tableName, 'tableName', $writer);
 
         $filters = self::readAttribute($writer, 'filters');

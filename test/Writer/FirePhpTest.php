@@ -1,19 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\FirePhp;
+use Laminas\Log\Writer\FirePhp\FirePhpInterface;
+use LaminasTest\Log\TestAsset\MockFirePhp;
 use PHPUnit\Framework\TestCase;
-use Zend\Log\Logger;
-use Zend\Log\Writer\FirePhp;
-use Zend\Log\Writer\FirePhp\FirePhpInterface;
-use ZendTest\Log\TestAsset\MockFirePhp;
 
 class FirePhpTest extends TestCase
 {
@@ -29,7 +28,7 @@ class FirePhpTest extends TestCase
     public function testGetFirePhp()
     {
         $writer = new FirePhp($this->firephp);
-        $this->assertInstanceOf('Zend\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
+        $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
     }
     /**
      * Test set firephp
@@ -40,7 +39,7 @@ class FirePhpTest extends TestCase
         $firephp2 = new MockFirePhp();
 
         $writer->setFirePhp($firephp2);
-        $this->assertInstanceOf('Zend\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
+        $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
         $this->assertEquals($firephp2, $writer->getFirePhp());
     }
     /**
@@ -71,15 +70,15 @@ class FirePhpTest extends TestCase
 
     public function testConstructWithOptions()
     {
-        $formatter = new \Zend\Log\Formatter\Simple();
-        $filter    = new \Zend\Log\Filter\Mock();
+        $formatter = new \Laminas\Log\Formatter\Simple();
+        $filter    = new \Laminas\Log\Filter\Mock();
         $writer = new FirePhp([
                 'filters'   => $filter,
                 'formatter' => $formatter,
                 'instance'  => $this->firephp,
         ]);
-        $this->assertInstanceOf('Zend\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
-        $this->assertAttributeInstanceOf('Zend\Log\Formatter\FirePhp', 'formatter', $writer);
+        $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
+        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\FirePhp', 'formatter', $writer);
 
         $filters = self::readAttribute($writer, 'filters');
         $this->assertCount(1, $filters);
@@ -89,7 +88,7 @@ class FirePhpTest extends TestCase
     /**
      * Verify behavior of __construct when 'instance' is not an FirePhpInterface
      *
-     * @expectedException Zend\Log\Exception\InvalidArgumentException
+     * @expectedException Laminas\Log\Exception\InvalidArgumentException
      * @expectedExceptionMessage You must pass a valid FirePhp\FirePhpInterface
      */
     public function testConstructWithInvalidInstance()
