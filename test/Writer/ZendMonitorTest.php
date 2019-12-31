@@ -1,23 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Log\Writer;
+namespace LaminasTest\Log\Writer;
 
-use Zend\Log\Writer\ZendMonitor;
+use Laminas\Log\Writer\ZendMonitor;
 
 /**
- * @group      Zend_Log
+ * @group      Laminas_Log
  */
 class ZendMonitorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @group ZF-10081
+     * @group Laminas-10081
      */
     public function testWrite()
     {
