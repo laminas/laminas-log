@@ -1,20 +1,19 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
-*
-* @link      http://github.com/zendframework/zf2 for the canonical source repository
-* @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
-* @license   http://framework.zend.com/license/new-bsd New BSD License
-*/
-
-namespace ZendTest\Log\Writer;
-
-use Zend\Log\Writer\FingersCrossed as FingersCrossedWriter;
-use Zend\Log\Writer\Mock as MockWriter;
-use Zend\Log\Logger;
 
 /**
- * @group      Zend_Log
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
+ */
+
+namespace LaminasTest\Log\Writer;
+
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\FingersCrossed as FingersCrossedWriter;
+use Laminas\Log\Writer\Mock as MockWriter;
+
+/**
+ * @group      Laminas_Log
  */
 class FingersCrossedTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,18 +53,18 @@ class FingersCrossedTest extends \PHPUnit_Framework_TestCase
     public function setWriterByName()
     {
         $writer = new FingersCrossedWriter('mock');
-        $this->assertAttributeInstanceOf('Zend\Log\Writer\Mock', 'writer', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
     }
 
     public function testConstructorOptions()
     {
         $options = array('writer' => 'mock', 'priority' => 3);
         $writer = new FingersCrossedWriter($options);
-        $this->assertAttributeInstanceOf('Zend\Log\Writer\Mock', 'writer', $writer);
+        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
 
         $filters = $this->readAttribute($writer, 'filters');
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf('Zend\Log\Filter\Priority', $filters[0]);
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
         $this->assertAttributeEquals(3, 'priority', $filters[0]);
     }
 
@@ -74,7 +73,7 @@ class FingersCrossedTest extends \PHPUnit_Framework_TestCase
         $options = array('writer' => 'mock', 'priority' => 3);
         $writer = new FingersCrossedWriter($options);
 
-        $writer->setFormatter($this->getMock('Zend\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->getMock('Laminas\Log\Formatter\FormatterInterface'));
         $this->assertAttributeEmpty('formatter', $writer);
     }
 }
