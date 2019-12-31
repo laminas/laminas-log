@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
 use DateTime;
 use ErrorException;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Stdlib\SplPriorityQueue;
 use Traversable;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\SplPriorityQueue;
 
 /**
  * Logging messages with a stack of backends
@@ -314,7 +313,7 @@ class Logger implements LoggerInterface
     {
         foreach ($writers->toArray() as $writer) {
             if (!$writer instanceof Writer\WriterInterface) {
-                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Zend\Log\Writer');
+                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Laminas\Log\Writer');
             }
         }
         $this->writers = $writers;
@@ -385,7 +384,7 @@ class Logger implements LoggerInterface
             $processor = $this->processorPlugin($processor, $options);
         } elseif (!$processor instanceof Processor\ProcessorInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Processor must implement Zend\Log\ProcessorInterface; received "%s"',
+                'Processor must implement Laminas\Log\ProcessorInterface; received "%s"',
                 is_object($processor) ? get_class($processor) : gettype($processor)
             ));
         }
