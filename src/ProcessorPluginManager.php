@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-log for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-log for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Log;
+namespace Laminas\Log;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 /**
  * Plugin manager for log processors.
@@ -22,7 +21,19 @@ class ProcessorPluginManager extends AbstractPluginManager
         'backtrace'      => Processor\Backtrace::class,
         'psrplaceholder' => Processor\PsrPlaceholder::class,
         'referenceid'    => Processor\ReferenceId::class,
-        'requestid'      => Processor\RequestId::class
+        'requestid'      => Processor\RequestId::class,
+
+        // Legacy Zend Framework aliases
+        \Zend\Log\Processor\Backtrace::class => Processor\Backtrace::class,
+        \Zend\Log\Processor\PsrPlaceholder::class => Processor\PsrPlaceholder::class,
+        \Zend\Log\Processor\ReferenceId::class => Processor\ReferenceId::class,
+        \Zend\Log\Processor\RequestId::class => Processor\RequestId::class,
+
+        // v2 normalized FQCNs
+        'zendlogprocessorbacktrace' => Processor\Backtrace::class,
+        'zendlogprocessorpsrplaceholder' => Processor\PsrPlaceholder::class,
+        'zendlogprocessorreferenceid' => Processor\ReferenceId::class,
+        'zendlogprocessorrequestid' => Processor\RequestId::class,
     ];
 
     protected $factories = [
@@ -33,10 +44,10 @@ class ProcessorPluginManager extends AbstractPluginManager
         // Legacy (v2) due to alias resolution; canonical form of resolved
         // alias is used to look up the factory, while the non-normalized
         // resolved alias is used as the requested name passed to the factory.
-        'zendlogprocessorbacktrace'      => InvokableFactory::class,
-        'zendlogprocessorpsrplaceholder' => InvokableFactory::class,
-        'zendlogprocessorreferenceid'    => InvokableFactory::class,
-        'zendlogprocessorrequestid'      => InvokableFactory::class,
+        'laminaslogprocessorbacktrace'      => InvokableFactory::class,
+        'laminaslogprocessorpsrplaceholder' => InvokableFactory::class,
+        'laminaslogprocessorreferenceid'    => InvokableFactory::class,
+        'laminaslogprocessorrequestid'      => InvokableFactory::class,
     ];
 
     protected $instanceOf = Processor\ProcessorInterface::class;

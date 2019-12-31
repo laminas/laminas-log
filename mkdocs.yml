@@ -1,6 +1,6 @@
 docs_dir: docs/book
 site_dir: docs/html
-pages:
+nav:
     - Home: index.md
     - Introduction: intro.md
     - Reference:
@@ -10,6 +10,6 @@ pages:
       - Processors: processors.md
       - "Service Manager Integration": service-manager.md
     - 'PSR-3 Support': psr3.md
-site_name: zend-log
+site_name: laminas-log
 site_description: 'Robust, composite logger with filtering, formatting, and PSR-3 support.'
-repo_url: 'https://github.com/zendframework/zend-log'
+repo_url: 'https://github.com/laminas/laminas-log'
