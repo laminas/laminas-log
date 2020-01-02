@@ -1,10 +1,15 @@
 docs_dir: docs/book
 site_dir: docs/html
 nav:
-    - { Home: index.md }
-    - { Introduction: intro.md }
-    - { Reference: [{ Writers: writers.md }, { Filters: filters.md }, { Formatters: formatters.md }, { Processors: processors.md }, { 'Service Manager Integration': service-manager.md }] }
-    - { 'PSR-3 Support': psr3.md }
+    - Home: index.md
+    - Introduction: intro.md
+    - Reference:
+      - Writers: writers.md
+      - Filters: filters.md
+      - Formatters: formatters.md
+      - Processors: processors.md
+      - "Service Manager Integration": service-manager.md
+    - 'PSR-3 Support': psr3.md
 site_name: laminas-log
 site_description: 'Robust, composite logger with filtering, formatting, and PSR-3 support.'
 repo_url: 'https://github.com/laminas/laminas-log'
