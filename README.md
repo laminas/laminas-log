@@ -1,6 +1,6 @@
 # laminas-log
 
-[![Build Status](https://travis-ci.org/laminas/laminas-log.svg?branch=master)](https://travis-ci.org/laminas/laminas-log)
+[![Build Status](https://travis-ci.com/laminas/laminas-log.svg?branch=master)](https://travis-ci.com/laminas/laminas-log)
 [![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-log/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-log?branch=master)
 
 `Laminas\Log` is a component for general purpose logging. It supports multiple log
