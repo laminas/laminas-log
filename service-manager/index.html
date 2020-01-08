@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -265,15 +269,14 @@ provide custom writers, filters, formatters, or processors.</p>
 <p>When you register the abstract factory called <code>Laminas\Log\LoggerAbstractServiceFactory</code>,
 you will be able to setup loggers via the configuration. The abstract factory can be
 registered in the service manager using the following configuration:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
-<span class=x>return [</span>
-<span class=x>    &#39;service_manager&#39; =&gt; [</span>
-<span class=x>        &#39;abstract_factories&#39; =&gt; [</span>
-<span class=x>            &#39;Laminas\Log\LoggerAbstractServiceFactory&#39;,</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// module.config.php
+return [
+    'service_manager' =&gt; [
+        'abstract_factories' =&gt; [
+            'Laminas\Log\LoggerAbstractServiceFactory',
+        ],
+    ],
+];</code></pre>
 <blockquote>
 <h3>Users of laminas-component-installer</h3>
 <p>If you are using laminas-component-installer, you will have been prompted to
@@ -287,129 +290,123 @@ module in your application. When you do, the abstract service factory
 will be registered automatically.</p>
 </blockquote>
 <p>Next, define your custom loggers in the configuration as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
-<span class=x>return [</span>
-<span class=x>    &#39;log&#39; =&gt; [</span>
-<span class=x>        &#39;MyLogger&#39; =&gt; [</span>
-<span class=x>            &#39;writers&#39; =&gt; [</span>
-<span class=x>                &#39;stream&#39; =&gt; [</span>
-<span class=x>                    &#39;name&#39; =&gt; &#39;stream&#39;,</span>
-<span class=x>                    &#39;priority&#39; =&gt; 1,</span>
-<span class=x>                    &#39;options&#39; =&gt; [</span>
-<span class=x>                        &#39;stream&#39; =&gt; &#39;php://output&#39;,</span>
-<span class=x>                        &#39;formatter&#39; =&gt; [</span>
-<span class=x>                            &#39;name&#39; =&gt; \Laminas\Log\Formatter\Simple::class,</span>
-<span class=x>                            &#39;options&#39; =&gt; [</span>
-<span class=x>                                &#39;format&#39; =&gt; &#39;%timestamp% %priorityName% (%priority%): %message% %extra%&#39;,</span>
-<span class=x>                                &#39;dateTimeFormat&#39; =&gt; &#39;c&#39;,</span>
-<span class=x>                            ],</span>
-<span class=x>                        ],</span>
-<span class=x>                        &#39;filters&#39; =&gt; [</span>
-<span class=x>                            &#39;priority&#39; =&gt; [</span>
-<span class=x>                                &#39;name&#39; =&gt; &#39;priority&#39;,</span>
-<span class=x>                                &#39;options&#39; =&gt; [</span>
-<span class=x>                                    &#39;operator&#39; =&gt; &#39;&lt;=&#39;,</span>
-<span class=x>                                    &#39;priority&#39; =&gt; \Laminas\Log\Logger::INFO,</span>
-<span class=x>                                ],</span>
-<span class=x>                            ],</span>
-<span class=x>                        ],</span>
-<span class=x>                    ],</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>            &#39;processors&#39; =&gt; [</span>
-<span class=x>                &#39;requestid&#39; =&gt; [</span>
-<span class=x>                    &#39;name&#39; =&gt; \Laminas\Log\Processor\RequestId::class,</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// module.config.php
+return [
+    'log' =&gt; [
+        'MyLogger' =&gt; [
+            'writers' =&gt; [
+                'stream' =&gt; [
+                    'name' =&gt; 'stream',
+                    'priority' =&gt; 1,
+                    'options' =&gt; [
+                        'stream' =&gt; 'php://output',
+                        'formatter' =&gt; [
+                            'name' =&gt; \Laminas\Log\Formatter\Simple::class,
+                            'options' =&gt; [
+                                'format' =&gt; '%timestamp% %priorityName% (%priority%): %message% %extra%',
+                                'dateTimeFormat' =&gt; 'c',
+                            ],
+                        ],
+                        'filters' =&gt; [
+                            'priority' =&gt; [
+                                'name' =&gt; 'priority',
+                                'options' =&gt; [
+                                    'operator' =&gt; '&lt;=',
+                                    'priority' =&gt; \Laminas\Log\Logger::INFO,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'processors' =&gt; [
+                'requestid' =&gt; [
+                    'name' =&gt; \Laminas\Log\Processor\RequestId::class,
+                ],
+            ],
+        ],
+    ],
+];</code></pre>
 <p>The logger can now be retrieved via the service manager using the key used in
 the configuration (<code>MyLogger</code>):</p>
-<p> <div class=codehilite><pre><span></span><span class=x>/** @var \Laminas\Log\Logger $logger */</span>
-<span class=x>$logger = $container-&gt;get(&#39;MyLogger&#39;);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>/** @var \Laminas\Log\Logger $logger */
+$logger = $container-&gt;get('MyLogger');</code></pre>
 <p>For the formatter and the filters, only the <code>name</code> is required, the options have
 default values (the values set in this example are the default ones). When only
 the name is needed, a shorter format can be used:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
-<span class=x>                    &#39;options&#39; =&gt; [</span>
-<span class=x>                        &#39;stream&#39; =&gt; &#39;php://output&#39;,</span>
-<span class=x>                        &#39;formatter&#39; =&gt; \Laminas\Log\Formatter\Simple::class,</span>
-<span class=x>                        &#39;filters&#39; =&gt; [</span>
-<span class=x>                            &#39;priority&#39; =&gt; \Laminas\Log\Filter\Priority::class,</span>
-<span class=x>                        ],</span>
-<span class=x>                    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// module.config.php
+                    'options' =&gt; [
+                        'stream' =&gt; 'php://output',
+                        'formatter' =&gt; \Laminas\Log\Formatter\Simple::class,
+                        'filters' =&gt; [
+                            'priority' =&gt; \Laminas\Log\Filter\Priority::class,
+                        ],
+                    ],
+];</code></pre>
 <p>Because the main filter is <code>Priority</code>, it can be set directly too:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
-<span class=x>                        &#39;filters&#39; =&gt; \Laminas\Log\Logger::INFO,</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// module.config.php
+                        'filters' =&gt; \Laminas\Log\Logger::INFO,
+];</code></pre>
 <h2 id="psrloggerabstractservicefactory">PsrLoggerAbstractServiceFactory</h2>
 <p>As with the <a href="#loggerabstractservicefactory"><code>LoggerAbstractServiceFactory</code> above</a>,
 you can use <code>PsrLoggerAbstractServiceFactory</code> to create <a href="../psr3/">PSR-3-conforming
 logger instances</a>. Register it as an abstract factory in your
 configuration; as an example:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
+<pre class=codehilite><code class=language-php>// module.config.php
 
-<span class=x>use Laminas\Log\PsrLoggerAbstractServiceFactory;</span>
+use Laminas\Log\PsrLoggerAbstractServiceFactory;
 
-<span class=x>return [</span>
-<span class=x>    &#39;service_manager&#39; =&gt; [</span>
-<span class=x>        &#39;abstract_factories&#39; =&gt; [</span>
-<span class=x>            PsrLoggerAbstractServiceFactory::class,</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+return [
+    'service_manager' =&gt; [
+        'abstract_factories' =&gt; [
+            PsrLoggerAbstractServiceFactory::class,
+        ],
+    ],
+];</code></pre>
 <p>Additionally, instead of using the <code>log</code> configuration key, you will use the key
 <code>psr_log</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
+<pre class=codehilite><code class=language-php>// module.config.php
 
-<span class=x>use Laminas\Log\Formatter\Simple;</span>
-<span class=x>use Laminas\Log\Logger;</span>
-<span class=x>use Laminas\Log\Processor\RequestId;</span>
+use Laminas\Log\Formatter\Simple;
+use Laminas\Log\Logger;
+use Laminas\Log\Processor\RequestId;
 
-<span class=x>return [</span>
-<span class=x>    &#39;psr_log&#39; =&gt; [                   // &lt;-- NOTE: key change!</span>
-<span class=x>        &#39;MyLogger&#39; =&gt; [</span>
-<span class=x>            &#39;writers&#39; =&gt; [</span>
-<span class=x>                &#39;stream&#39; =&gt; [</span>
-<span class=x>                    &#39;name&#39; =&gt; &#39;stream&#39;,</span>
-<span class=x>                    &#39;priority&#39; =&gt; 1,</span>
-<span class=x>                    &#39;options&#39; =&gt; [</span>
-<span class=x>                        &#39;stream&#39; =&gt; &#39;php://output&#39;,</span>
-<span class=x>                        &#39;formatter&#39; =&gt; [</span>
-<span class=x>                            &#39;name&#39; =&gt; Simple::class,</span>
-<span class=x>                            &#39;options&#39; =&gt; [</span>
-<span class=x>                                &#39;format&#39; =&gt; &#39;%timestamp% %priorityName% (%priority%): %message% %extra%&#39;,</span>
-<span class=x>                                &#39;dateTimeFormat&#39; =&gt; &#39;c&#39;,</span>
-<span class=x>                            ],</span>
-<span class=x>                        ],</span>
-<span class=x>                        &#39;filters&#39; =&gt; [</span>
-<span class=x>                            &#39;priority&#39; =&gt; [</span>
-<span class=x>                                &#39;name&#39; =&gt; &#39;priority&#39;,</span>
-<span class=x>                                &#39;options&#39; =&gt; [</span>
-<span class=x>                                    &#39;operator&#39; =&gt; &#39;&lt;=&#39;,</span>
-<span class=x>                                    &#39;priority&#39; =&gt; Logger::INFO,</span>
-<span class=x>                                ],</span>
-<span class=x>                            ],</span>
-<span class=x>                        ],</span>
-<span class=x>                    ],</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>            &#39;processors&#39; =&gt; [</span>
-<span class=x>                &#39;requestid&#39; =&gt; [</span>
-<span class=x>                    &#39;name&#39; =&gt; RequestId::class,</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+return [
+    'psr_log' =&gt; [                   // &lt;-- NOTE: key change!
+        'MyLogger' =&gt; [
+            'writers' =&gt; [
+                'stream' =&gt; [
+                    'name' =&gt; 'stream',
+                    'priority' =&gt; 1,
+                    'options' =&gt; [
+                        'stream' =&gt; 'php://output',
+                        'formatter' =&gt; [
+                            'name' =&gt; Simple::class,
+                            'options' =&gt; [
+                                'format' =&gt; '%timestamp% %priorityName% (%priority%): %message% %extra%',
+                                'dateTimeFormat' =&gt; 'c',
+                            ],
+                        ],
+                        'filters' =&gt; [
+                            'priority' =&gt; [
+                                'name' =&gt; 'priority',
+                                'options' =&gt; [
+                                    'operator' =&gt; '&lt;=',
+                                    'priority' =&gt; Logger::INFO,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'processors' =&gt; [
+                'requestid' =&gt; [
+                    'name' =&gt; RequestId::class,
+                ],
+            ],
+        ],
+    ],
+];</code></pre>
 <h2 id="custom-writers-formatters-filters-and-processors">Custom Writers, Formatters, Filters, and Processors</h2>
 <p>In the <code>LoggerAbstractServiceFactory</code> example above, a custom formatter (called
 <code>MyFormatter</code>) and a custom filter (called <code>MyFilter</code>) are used. These classes
@@ -422,30 +419,29 @@ custom plugin managers which have the names:</p>
 <li><code>log_writers</code></li>
 </ul>
 <h3>Example</h3>
-<p> <div class=codehilite><pre><span></span><span class=x>// module.config.php</span>
-<span class=x>return [</span>
-<span class=x>    &#39;log_formatters&#39; =&gt; [</span>
-<span class=x>        &#39;factories&#39; =&gt; [</span>
-<span class=x>            // ...</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>    &#39;log_filters&#39; =&gt; [</span>
-<span class=x>        &#39;factories&#39; =&gt; [</span>
-<span class=x>            // ...</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>    &#39;log_processors&#39; =&gt; [</span>
-<span class=x>        &#39;factories&#39; =&gt; [</span>
-<span class=x>            // ...</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>    &#39;log_writers&#39; =&gt; [</span>
-<span class=x>        &#39;factories&#39; =&gt; [</span>
-<span class=x>            // ...</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// module.config.php
+return [
+    'log_formatters' =&gt; [
+        'factories' =&gt; [
+            // ...
+        ],
+    ],
+    'log_filters' =&gt; [
+        'factories' =&gt; [
+            // ...
+        ],
+    ],
+    'log_processors' =&gt; [
+        'factories' =&gt; [
+            // ...
+        ],
+    ],
+    'log_writers' =&gt; [
+        'factories' =&gt; [
+            // ...
+        ],
+    ],
+];</code></pre>
 
 
 
@@ -605,9 +601,10 @@ custom plugin managers which have the names:</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -644,7 +641,7 @@ custom plugin managers which have the names:</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-log//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-log/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -653,8 +650,8 @@ custom plugin managers which have the names:</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-log//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-log/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

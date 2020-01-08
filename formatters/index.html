@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -269,21 +273,19 @@ in the event array are formatted properly for the writer.</p>
 <h2 id="simple-formatting">Simple Formatting</h2>
 <p><code>Laminas\Log\Formatter\Simple</code> is the default formatter. It is configured automatically when you
 specify no formatter. The default configuration is equivalent to the following:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$format = &#39;%timestamp% %priorityName% (%priority%): %message%&#39; . PHP_EOL;</span>
-<span class=x>$formatter = new Laminas\Log\Formatter\Simple($format);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$format = '%timestamp% %priorityName% (%priority%): %message%' . PHP_EOL;
+$formatter = new Laminas\Log\Formatter\Simple($format);</code></pre>
 <p>A formatter is set on an individual writer object using the writer's <code>setFormatter()</code> method:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
-<span class=x>$formatter = new Laminas\Log\Formatter\Simple(&#39;hello %message%&#39; . PHP_EOL);</span>
-<span class=x>$writer-&gt;setFormatter($formatter);</span>
+<pre class=codehilite><code class=language-php>$writer = new Laminas\Log\Writer\Stream('php://output');
+$formatter = new Laminas\Log\Formatter\Simple('hello %message%' . PHP_EOL);
+$writer-&gt;setFormatter($formatter);
 
-<span class=x>$logger = new Laminas\Log\Logger();</span>
-<span class=x>$logger-&gt;addWriter($writer);</span>
+$logger = new Laminas\Log\Logger();
+$logger-&gt;addWriter($writer);
 
-<span class=x>$logger-&gt;info(&#39;there&#39;);</span>
+$logger-&gt;info('there');
 
-<span class=x>// outputs &quot;hello there&quot;</span>
-</pre></div></p>
+// outputs &quot;hello there&quot;</code></pre>
 <p>The constructor of <code>Laminas\Log\Formatter\Simple</code> accepts a single parameter: the
 format string. This string contains keys surrounded by percent signs (e.g.
 <code>%message%</code>). The format string may contain any key from the event data array.
@@ -292,62 +294,57 @@ You can retrieve the default keys by using the <code>DEFAULT_FORMAT</code> const
 <h2 id="formatting-to-json">Formatting to JSON</h2>
 <p><code>Laminas\Log\Formatter\Json</code> is the JSON formatter.  By default, it
 automatically logs all items as JSON:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
-<span class=x>$formatter = new Laminas\Log\Formatter\Json();</span>
-<span class=x>$writer-&gt;setFormatter($formatter);</span>
+<pre class=codehilite><code class=language-php>$writer = new Laminas\Log\Writer\Stream('php://output');
+$formatter = new Laminas\Log\Formatter\Json();
+$writer-&gt;setFormatter($formatter);
 
-<span class=x>$logger = new Laminas\Log\Logger();</span>
-<span class=x>$logger-&gt;addWriter($writer);</span>
+$logger = new Laminas\Log\Logger();
+$logger-&gt;addWriter($writer);
 
-<span class=x>$logger-&gt;info(&#39;there&#39;);</span>
+$logger-&gt;info('there');
 
-<span class=x>// outputs &quot;{&quot;timestamp&quot;:&quot;2016-09-07T13:58:01+00:00&quot;,&quot;priority&quot;:6,&quot;priorityName&quot;:&quot;INFO&quot;,&quot;message&quot;:&quot;there&quot;,&quot;extra&quot;:[]}&quot;</span>
-</pre></div></p>
+// outputs &quot;{&quot;timestamp&quot;:&quot;2016-09-07T13:58:01+00:00&quot;,&quot;priority&quot;:6,&quot;priorityName&quot;:&quot;INFO&quot;,&quot;message&quot;:&quot;there&quot;,&quot;extra&quot;:[]}&quot;</code></pre>
 <h2 id="formatting-to-xml">Formatting to XML</h2>
 <p><code>Laminas\Log\Formatter\Xml</code> formats log data into XML strings. By default, it
 automatically logs all items in the event array:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
-<span class=x>$formatter = new Laminas\Log\Formatter\Xml();</span>
-<span class=x>$writer-&gt;setFormatter($formatter);</span>
+<pre class=codehilite><code class=language-php>$writer = new Laminas\Log\Writer\Stream('php://output');
+$formatter = new Laminas\Log\Formatter\Xml();
+$writer-&gt;setFormatter($formatter);
 
-<span class=x>$logger = new Laminas\Log\Logger();</span>
-<span class=x>$logger-&gt;addWriter($writer);</span>
+$logger = new Laminas\Log\Logger();
+$logger-&gt;addWriter($writer);
 
-<span class=x>$logger-&gt;info(&#39;informational message&#39;);</span>
-</pre></div></p>
+$logger-&gt;info('informational message');</code></pre>
 <p>The code above outputs the following XML (space added for clarity):</p>
-<p> <div class=codehilite><pre><span></span><span class=x>&lt;logEntry&gt;</span>
-<span class=x>  &lt;timestamp&gt;2007-04-06T07:24:37-07:00&lt;/timestamp&gt;</span>
-<span class=x>  &lt;message&gt;informational message&lt;/message&gt;</span>
-<span class=x>  &lt;priority&gt;6&lt;/priority&gt;</span>
-<span class=x>  &lt;priorityName&gt;INFO&lt;/priorityName&gt;</span>
-<span class=x>&lt;/logEntry&gt;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>&lt;logEntry&gt;
+  &lt;timestamp&gt;2007-04-06T07:24:37-07:00&lt;/timestamp&gt;
+  &lt;message&gt;informational message&lt;/message&gt;
+  &lt;priority&gt;6&lt;/priority&gt;
+  &lt;priorityName&gt;INFO&lt;/priorityName&gt;
+&lt;/logEntry&gt;</code></pre>
 <p>It's possible to customize the root element, as well as specify a mapping of
 XML elements to the items in the event data array. The constructor of
 <code>Laminas\Log\Formatter\Xml</code> accepts a string with the name of the root element as
 the first parameter, and an associative array with the element mapping as the
 second parameter:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
-<span class=x>$formatter = new Laminas\Log\Formatter\Xml(&#39;log&#39;, [</span>
-<span class=x>    &#39;msg&#39; =&gt; &#39;message&#39;,</span>
-<span class=x>    &#39;level&#39; =&gt; &#39;priorityName&#39;,</span>
-<span class=x>]);</span>
-<span class=x>$writer-&gt;setFormatter($formatter);</span>
+<pre class=codehilite><code class=language-php>$writer = new Laminas\Log\Writer\Stream('php://output');
+$formatter = new Laminas\Log\Formatter\Xml('log', [
+    'msg' =&gt; 'message',
+    'level' =&gt; 'priorityName',
+]);
+$writer-&gt;setFormatter($formatter);
 
-<span class=x>$logger = new Laminas\Log\Logger();</span>
-<span class=x>$logger-&gt;addWriter($writer);</span>
+$logger = new Laminas\Log\Logger();
+$logger-&gt;addWriter($writer);
 
-<span class=x>$logger-&gt;info(&#39;informational message&#39;);</span>
-</pre></div></p>
+$logger-&gt;info('informational message');</code></pre>
 <p>The code above changes the root element from its default of <code>logEntry</code> to
 <code>log</code>. It also maps the element <code>msg</code> to the event data item <code>message</code>. This
 results in the following output:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>&lt;log&gt;</span>
-<span class=x>  &lt;msg&gt;informational message&lt;/msg&gt;</span>
-<span class=x>  &lt;level&gt;INFO&lt;/level&gt;</span>
-<span class=x>&lt;/log&gt;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>&lt;log&gt;
+  &lt;msg&gt;informational message&lt;/msg&gt;
+  &lt;level&gt;INFO&lt;/level&gt;
+&lt;/log&gt;</code></pre>
 <h2 id="formatting-to-firephp">Formatting to FirePhp</h2>
 <p><code>Laminas\Log\Formatter\FirePhp</code> formats log data for the <a href="http://getfirebug.com/">Firebug</a> extension
 for Firefox.</p>
@@ -510,9 +507,10 @@ for Firefox.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -549,7 +547,7 @@ for Firefox.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-log//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-log/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -558,8 +556,8 @@ for Firefox.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-log//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-log/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

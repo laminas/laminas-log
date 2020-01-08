@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -283,28 +287,25 @@ objects:</p>
 </ul>
 <h2 id="creating-a-log">Creating a Log</h2>
 <p>To get started logging, instantiate a writer and then pass it to a logger instance:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
-<span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
+<pre class=codehilite><code class=language-php>$logger = new Laminas\Log\Logger;
+$writer = new Laminas\Log\Writer\Stream('php://output');
 
-<span class=x>$logger-&gt;addWriter($writer);</span>
-</pre></div></p>
+$logger-&gt;addWriter($writer);</code></pre>
 <p>It is important to note that the logger must have at least one writer. You can
 add any number of writers using the logger's <code>addWriter()</code> method.</p>
 <p>You can also add a priority to each writer. The priority is specified as an
 integer and passed as the second argument in the <code>addWriter()</code> method.</p>
 <p>Another way to add a writer to a logger is to use the name of the writer as
 follow:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
+<pre class=codehilite><code class=language-php>$logger = new Laminas\Log\Logger;
 
-<span class=x>$logger-&gt;addWriter(&#39;stream&#39;, null, [&#39;stream&#39; =&gt; &#39;php://output&#39;]);</span>
-</pre></div></p>
+$logger-&gt;addWriter('stream', null, ['stream' =&gt; 'php://output']);</code></pre>
 <p>In this example we passed the stream <code>php://output</code> as a parameter (via an
 options array).</p>
 <h2 id="logging-messages">Logging Messages</h2>
 <p>To log a message, call the <code>log()</code> method of a <code>Logger</code> instance and pass it the
 message priority and the message:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;log(Laminas\Log\Logger::INFO, &#39;Informational message&#39;);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$logger-&gt;log(Laminas\Log\Logger::INFO, 'Informational message');</code></pre>
 <p>The first parameter of the <code>log()</code> method is the integer <code>priority</code> and the
 second parameter is the string <code>message</code>. The priority must be one of the
 priorities recognized by the <code>Logger</code> instance (explained in the next section).
@@ -313,31 +314,28 @@ information/metadata to the writer.</p>
 <p>Instead of using the <code>log()</code> method, you can optionally call methods named after
 the various supported priorities, which allows you to omit the <code>priority</code>
 argument:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;log(Laminas\Log\Logger::INFO, &#39;Informational message&#39;);</span>
-<span class=x>$logger-&gt;info(&#39;Informational message&#39;);</span>
+<pre class=codehilite><code class=language-php>$logger-&gt;log(Laminas\Log\Logger::INFO, 'Informational message');
+$logger-&gt;info('Informational message');
 
-<span class=x>$logger-&gt;log(Laminas\Log\Logger::EMERG, &#39;Emergency message&#39;);</span>
-<span class=x>$logger-&gt;emerg(&#39;Emergency message&#39;);</span>
-</pre></div></p>
+$logger-&gt;log(Laminas\Log\Logger::EMERG, 'Emergency message');
+$logger-&gt;emerg('Emergency message');</code></pre>
 <h2 id="destroying-a-log">Destroying a Log</h2>
 <p>If the <code>Logger</code> instance is no longer needed, set the variable containing it to
 <code>NULL</code> to destroy it.  This will automatically call the <code>shutdown()</code> instance
 method of each attached writer before the <code>Logger</code> instance is destroyed.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger = null;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$logger = null;</code></pre>
 <p>Explicitly destroying the log in this way is optional and is performed
 automatically at PHP shutdown.</p>
 <h2 id="using-built-in-priorities">Using Built-in Priorities</h2>
 <p>The <code>Laminas\Log\Logger</code> class defines the following priorities:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>EMERG   = 0;  // Emergency: system is unusable</span>
-<span class=x>ALERT   = 1;  // Alert: action must be taken immediately</span>
-<span class=x>CRIT    = 2;  // Critical: critical conditions</span>
-<span class=x>ERR     = 3;  // Error: error conditions</span>
-<span class=x>WARN    = 4;  // Warning: warning conditions</span>
-<span class=x>NOTICE  = 5;  // Notice: normal but significant condition</span>
-<span class=x>INFO    = 6;  // Informational: informational messages</span>
-<span class=x>DEBUG   = 7;  // Debug: debug messages</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>EMERG   = 0;  // Emergency: system is unusable
+ALERT   = 1;  // Alert: action must be taken immediately
+CRIT    = 2;  // Critical: critical conditions
+ERR     = 3;  // Error: error conditions
+WARN    = 4;  // Warning: warning conditions
+NOTICE  = 5;  // Notice: normal but significant condition
+INFO    = 6;  // Informational: informational messages
+DEBUG   = 7;  // Debug: debug messages</code></pre>
 <p>These priorities are always available, and a convenience method of the same name
 (but lowercased) is available for each one.</p>
 <p>The priorities are not arbitrary. They come from the BSD syslog protocol, which
@@ -369,13 +367,12 @@ Calling the static method <code>registerErrorHandler($logger)</code> will regist
 <code>$logger</code> instance to log errors; it returns a boolean <code>false</code> ensuring that it
 returns delegation to any other error handlers registered, including the default
 PHP error handler.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger = new Laminas\Log\Logger;</span>
-<span class=x>$writer = new Laminas\Log\Writer\Stream(&#39;php://output&#39;);</span>
+<pre class=codehilite><code class=language-php>$logger = new Laminas\Log\Logger;
+$writer = new Laminas\Log\Writer\Stream('php://output');
 
-<span class=x>$logger-&gt;addWriter($writer);</span>
+$logger-&gt;addWriter($writer);
 
-<span class=x>Laminas\Log\Logger::registerErrorHandler($logger);</span>
-</pre></div></p>
+Laminas\Log\Logger::registerErrorHandler($logger);</code></pre>
 <p>If you want to unregister the error handler, can use the <code>unregisterErrorHandler()</code> static
 method.</p>
 <p>You can also configure a logger to intercept exceptions using the static method
@@ -539,9 +536,10 @@ method.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -578,7 +576,7 @@ method.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-log//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-log/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -587,8 +585,8 @@ method.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-log//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-log/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

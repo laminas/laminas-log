@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -270,60 +274,53 @@ completion.</p>
 </ul>
 <h2 id="processor-interface">Processor interface</h2>
 <p>All processors must implement <code>Laminas\Log\Processor\ProcessorInterface</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Laminas\Log\Processor;</span>
+<pre class=codehilite><code class=language-php>namespace Laminas\Log\Processor;
 
-<span class=x>interface ProcessorInterface</span>
-<span class=x>{</span>
-<span class=x>    /**</span>
-<span class=x>     * Processes a log message before it is given to the writers</span>
-<span class=x>     *</span>
-<span class=x>     * @param  array $event</span>
-<span class=x>     * @return array</span>
-<span class=x>     */</span>
-<span class=x>    public function process(array $event);</span>
-<span class=x>}</span>
-</pre></div></p>
+interface ProcessorInterface
+{
+    /**
+     * Processes a log message before it is given to the writers
+     *
+     * @param  array $event
+     * @return array
+     */
+    public function process(array $event);
+}</code></pre>
 <h2 id="adding-processors">Adding processors</h2>
 <p>To add a processor to a <code>Logger</code> instance, inject it using the <code>addProcessor()</code> method:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;addProcessor(new Laminas\Log\Processor\Backtrace());</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$logger-&gt;addProcessor(new Laminas\Log\Processor\Backtrace());</code></pre>
 <h2 id="available-processors">Available processors</h2>
 <p>The following processors are available.</p>
 <h3>Backtrace</h3>
 <p><code>Laminas\Log\Processor\Backtrace</code> calls <code>debug_backtrace()</code> for every log event,
 injecting the details into the event's <code>extra</code> array:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$event = [</span>
-<span class=x>    // ... standard elements ...</span>
-<span class=x>    &#39;extra&#39; =&gt; [</span>
-<span class=x>        &#39;file&#39; =&gt; &#39;SomeFile.php&#39;,</span>
-<span class=x>        &#39;line&#39; =&gt; 1337,</span>
-<span class=x>        &#39;class&#39; =&gt; &#39;Foo\MyClass&#39;,</span>
-<span class=x>        &#39;function&#39; =&gt; &#39;myMethod&#39;,</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$event = [
+    // ... standard elements ...
+    'extra' =&gt; [
+        'file' =&gt; 'SomeFile.php',
+        'line' =&gt; 1337,
+        'class' =&gt; 'Foo\MyClass',
+        'function' =&gt; 'myMethod',
+    ],
+];</code></pre>
 <p>By default, classes under the <code>Laminas\Log</code> namespace are excluded from the backtrace
 that is logged so that the actual application code triggering the log event can be
 identified. You can add your own excluded namespaces to the backtrace processor by
 passing options into the constructor (note the required escaping of the <code>\</code>):</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$processor = new Laminas\Log\Processor\Backtrace([&#39;ignoredNamespaces&#39; =&gt; [&#39;Foo\\Log&#39;]]);</span>
-<span class=x>$logger-&gt;addProcessor($processor);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$processor = new Laminas\Log\Processor\Backtrace(['ignoredNamespaces' =&gt; ['Foo\\Log']]);
+$logger-&gt;addProcessor($processor);</code></pre>
 <p>Alternatively, if not separately instantiating the processor, these options can be
 passed as the third argument to the logger's <code>addProcessor()</code> function:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Assuming the default processor priority of 1</span>
-<span class=x>$logger-&gt;addProcessor(&#39;backtrace&#39;, 1, [&#39;ignoredNamespaces&#39; =&gt; [&#39;Foo\\Log&#39;]]);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// Assuming the default processor priority of 1
+$logger-&gt;addProcessor('backtrace', 1, ['ignoredNamespaces' =&gt; ['Foo\\Log']]);</code></pre>
 <h3>PsrPlaceholder</h3>
 <p><code>Laminas\Log\Processor\PsrPlaceholder</code> replaces <a href="http://www.php-fig.org/psr/psr-3/">PSR-3</a>-formatted
 message placeholders with the values found in the <code>extra</code> array.</p>
 <p>As an example:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder());</span>
-<span class=x>$logger-&gt;warn(&#39;Invalid plugin {plugin}&#39;, [&#39;plugin&#39; =&gt; &#39;My\Plugins\FooPlugin&#39;]);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder());
+$logger-&gt;warn('Invalid plugin {plugin}', ['plugin' =&gt; 'My\Plugins\FooPlugin']);</code></pre>
 <p>will output:</p>
-<p> <div class=codehilite><pre><span></span>Invalid plugin My\Plugins\FooPlugin
-</pre></div></p>
+<pre class=codehilite><code>Invalid plugin My\Plugins\FooPlugin</code></pre>
 <p>This feature allows compatibility with PSR-3, and provides a simple way to
 provide string substitutions without needing to resort to <code>sprintf()</code> in
 your userland code.</p>
@@ -333,19 +330,17 @@ identifier to inject in all log messages; typically, you will generate a new
 one for each request, to allow querying logs for the given reference
 identifier later.</p>
 <p>Given the following:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$processor = new Laminas\Log\Processor\ReferenceId();</span>
-<span class=x>$processor-&gt;setReferenceId(microtime(true) . &#39;_&#39; . uniqid());</span>
-<span class=x>$logger-&gt;addProcessor($processor);</span>
-<span class=x>$logger-&gt;info(&#39;Log event&#39;);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$processor = new Laminas\Log\Processor\ReferenceId();
+$processor-&gt;setReferenceId(microtime(true) . '_' . uniqid());
+$logger-&gt;addProcessor($processor);
+$logger-&gt;info('Log event');</code></pre>
 <p>The event will contain:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$event = [</span>
-<span class=x>    /* ... standard values ... */</span>
-<span class=x>    &#39;extra&#39; =&gt; [</span>
-<span class=x>        &#39;referenceId&#39; =&gt; &#39;1455057110.6284_56ba68ebe1244&#39;,</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$event = [
+    /* ... standard values ... */
+    'extra' =&gt; [
+        'referenceId' =&gt; '1455057110.6284_56ba68ebe1244',
+    ],
+];</code></pre>
 <h3>RequestId</h3>
 <p><code>Laminas\Log\Processor\RequestId</code> is similar to <code>ReferenceId</code> with one key
 difference: if you do not set an identifier, one is automatically
@@ -510,9 +505,10 @@ generated for you using hashed information from <code>$_SERVER</code>, including
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -549,7 +545,7 @@ generated for you using hashed information from <code>$_SERVER</code>, including
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-log//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-log/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -558,8 +554,8 @@ generated for you using hashed information from <code>$_SERVER</code>, including
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-log//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-log/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>
