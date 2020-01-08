@@ -15,4 +15,3 @@ site_description: 'Robust, composite logger with filtering, formatting, and PSR-
 repo_url: 'https://github.com/laminas/laminas-log'
 extra:
     project: Components
-    project_url: 'https://docs.laminas.dev'
