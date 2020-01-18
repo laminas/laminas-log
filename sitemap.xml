@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://docs.laminas.dev/laminas-log/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/intro/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/writers/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/filters/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/formatters/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/processors/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/service-manager/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://docs.laminas.dev/laminas-log/psr3/</loc>
-     <lastmod>2020-01-16</lastmod>
+     <lastmod>2020-01-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
