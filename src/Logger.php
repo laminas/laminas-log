@@ -551,7 +551,6 @@ class Logger implements LoggerInterface
      * @param  Logger $logger
      * @param  bool   $continueNativeHandler
      * @return mixed  Returns result of set_error_handler
-     * @throws Exception\InvalidArgumentException if logger is null
      */
     public static function registerErrorHandler(Logger $logger, $continueNativeHandler = false)
     {
@@ -654,17 +653,12 @@ class Logger implements LoggerInterface
      * @link http://www.php.net/manual/en/function.set-exception-handler.php
      * @param Logger $logger
      * @return bool
-     * @throws Exception\InvalidArgumentException if logger is null
      */
     public static function registerExceptionHandler(Logger $logger)
     {
         // Only register once per instance
         if (static::$registeredExceptionHandler) {
             return false;
-        }
-
-        if ($logger === null) {
-            throw new Exception\InvalidArgumentException('Invalid Logger specified');
         }
 
         $errorPriorityMap = static::$errorPriorityMap;
