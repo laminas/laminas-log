@@ -333,7 +333,7 @@ completion.</p>
 </ul>
 <h2 id="processor-interface">Processor interface</h2>
 <p>All processors must implement <code>Laminas\Log\Processor\ProcessorInterface</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Laminas\Log\Processor;
+<pre class="highlight"><code class="language-php">namespace Laminas\Log\Processor;
 
 interface ProcessorInterface
 {
@@ -345,15 +345,17 @@ interface ProcessorInterface
      */
     public function process(array $event);
 }</code></pre>
+
 <h2 id="adding-processors">Adding processors</h2>
 <p>To add a processor to a <code>Logger</code> instance, inject it using the <code>addProcessor()</code> method:</p>
-<pre class=codehilite><code class=language-php>$logger-&gt;addProcessor(new Laminas\Log\Processor\Backtrace());</code></pre>
+<pre class="highlight"><code class="language-php">$logger-&gt;addProcessor(new Laminas\Log\Processor\Backtrace());</code></pre>
+
 <h2 id="available-processors">Available processors</h2>
 <p>The following processors are available.</p>
 <h3>Backtrace</h3>
 <p><code>Laminas\Log\Processor\Backtrace</code> calls <code>debug_backtrace()</code> for every log event,
 injecting the details into the event's <code>extra</code> array:</p>
-<pre class=codehilite><code class=language-php>$event = [
+<pre class="highlight"><code class="language-php">$event = [
     // ... standard elements ...
     'extra' =&gt; [
         'file' =&gt; 'SomeFile.php',
@@ -362,24 +364,29 @@ injecting the details into the event's <code>extra</code> array:</p>
         'function' =&gt; 'myMethod',
     ],
 ];</code></pre>
+
 <p>By default, classes under the <code>Laminas\Log</code> namespace are excluded from the backtrace
 that is logged so that the actual application code triggering the log event can be
 identified. You can add your own excluded namespaces to the backtrace processor by
 passing options into the constructor (note the required escaping of the <code>\</code>):</p>
-<pre class=codehilite><code class=language-php>$processor = new Laminas\Log\Processor\Backtrace(['ignoredNamespaces' =&gt; ['Foo\\Log']]);
+<pre class="highlight"><code class="language-php">$processor = new Laminas\Log\Processor\Backtrace(['ignoredNamespaces' =&gt; ['Foo\\Log']]);
 $logger-&gt;addProcessor($processor);</code></pre>
+
 <p>Alternatively, if not separately instantiating the processor, these options can be
 passed as the third argument to the logger's <code>addProcessor()</code> function:</p>
-<pre class=codehilite><code class=language-php>// Assuming the default processor priority of 1
+<pre class="highlight"><code class="language-php">// Assuming the default processor priority of 1
 $logger-&gt;addProcessor('backtrace', 1, ['ignoredNamespaces' =&gt; ['Foo\\Log']]);</code></pre>
+
 <h3>PsrPlaceholder</h3>
 <p><code>Laminas\Log\Processor\PsrPlaceholder</code> replaces <a href="http://www.php-fig.org/psr/psr-3/">PSR-3</a>-formatted
 message placeholders with the values found in the <code>extra</code> array.</p>
 <p>As an example:</p>
-<pre class=codehilite><code class=language-php>$logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder());
+<pre class="highlight"><code class="language-php">$logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder());
 $logger-&gt;warn('Invalid plugin {plugin}', ['plugin' =&gt; 'My\Plugins\FooPlugin']);</code></pre>
+
 <p>will output:</p>
-<pre class=codehilite><code>Invalid plugin My\Plugins\FooPlugin</code></pre>
+<pre class="highlight"><code>Invalid plugin My\Plugins\FooPlugin</code></pre>
+
 <p>This feature allows compatibility with PSR-3, and provides a simple way to
 provide string substitutions without needing to resort to <code>sprintf()</code> in
 your userland code.</p>
@@ -389,17 +396,19 @@ identifier to inject in all log messages; typically, you will generate a new
 one for each request, to allow querying logs for the given reference
 identifier later.</p>
 <p>Given the following:</p>
-<pre class=codehilite><code class=language-php>$processor = new Laminas\Log\Processor\ReferenceId();
+<pre class="highlight"><code class="language-php">$processor = new Laminas\Log\Processor\ReferenceId();
 $processor-&gt;setReferenceId(microtime(true) . '_' . uniqid());
 $logger-&gt;addProcessor($processor);
 $logger-&gt;info('Log event');</code></pre>
+
 <p>The event will contain:</p>
-<pre class=codehilite><code class=language-php>$event = [
+<pre class="highlight"><code class="language-php">$event = [
     /* ... standard values ... */
     'extra' =&gt; [
         'referenceId' =&gt; '1455057110.6284_56ba68ebe1244',
     ],
 ];</code></pre>
+
 <h3>RequestId</h3>
 <p><code>Laminas\Log\Processor\RequestId</code> is similar to <code>ReferenceId</code> with one key
 difference: if you do not set an identifier, one is automatically
