@@ -307,7 +307,9 @@ class Logger implements LoggerInterface
     {
         foreach ($writers->toArray() as $writer) {
             if (! $writer instanceof Writer\WriterInterface) {
-                throw new Exception\InvalidArgumentException('Writers must be a SplPriorityQueue of Laminas\Log\Writer');
+                throw new Exception\InvalidArgumentException(
+                    'Writers must be a SplPriorityQueue of Laminas\Log\Writer'
+                );
             }
         }
         $this->writers = $writers;
