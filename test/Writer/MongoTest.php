@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class MongoTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (! extension_loaded('mongo')) {
             $this->markTestSkipped('The mongo PHP extension is not available');
@@ -42,7 +42,7 @@ class MongoTest extends TestCase
             ->will($this->returnValue($this->mongoCollection));
     }
 
-    public function testFormattingIsNotSupported()
+    public function testFormattingIsNotSupported(): void
     {
         $writer = new MongoWriter($this->mongo, $this->database, $this->collection);
 
@@ -50,7 +50,7 @@ class MongoTest extends TestCase
         $this->assertAttributeEmpty('formatter', $writer);
     }
 
-    public function testWriteWithDefaultSaveOptions()
+    public function testWriteWithDefaultSaveOptions(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
 
@@ -63,7 +63,7 @@ class MongoTest extends TestCase
         $writer->write($event);
     }
 
-    public function testWriteWithCustomSaveOptions()
+    public function testWriteWithCustomSaveOptions(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
         $saveOptions = ['safe' => false, 'fsync' => false, 'timeout' => 100];
@@ -77,7 +77,7 @@ class MongoTest extends TestCase
         $writer->write($event);
     }
 
-    public function testWriteConvertsDateTimeToMongoDate()
+    public function testWriteConvertsDateTimeToMongoDate(): void
     {
         $date = new DateTime();
         $event = ['timestamp' => $date];

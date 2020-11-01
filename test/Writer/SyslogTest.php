@@ -16,7 +16,10 @@ use PHPUnit\Framework\TestCase;
 
 class SyslogTest extends TestCase
 {
-    public function testWrite()
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testWrite(): void
     {
         $fields = [
             'message' => 'foo',
@@ -29,7 +32,7 @@ class SyslogTest extends TestCase
     /**
      * @group Laminas-7603
      */
-    public function testThrowExceptionValueNotPresentInFacilities()
+    public function testThrowExceptionValueNotPresentInFacilities(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid log facility provided');
@@ -40,7 +43,7 @@ class SyslogTest extends TestCase
     /**
      * @group Laminas-7603
      */
-    public function testThrowExceptionIfFacilityInvalidInWindows()
+    public function testThrowExceptionIfFacilityInvalidInWindows(): void
     {
         if ('WIN' != strtoupper(substr(PHP_OS, 0, 3))) {
             $this->markTestSkipped('Run only in windows');
@@ -54,7 +57,7 @@ class SyslogTest extends TestCase
     /**
      * @group Laminas-8953
      */
-    public function testFluentInterface()
+    public function testFluentInterface(): void
     {
         $writer   = new SyslogWriter();
         $instance = $writer->setFacility(LOG_USER)
@@ -66,7 +69,7 @@ class SyslogTest extends TestCase
     /**
      * @group Laminas-10769
      */
-    public function testPastFacilityViaConstructor()
+    public function testPastFacilityViaConstructor(): void
     {
         $writer = new CustomSyslogWriter(['facility' => LOG_USER]);
         $this->assertEquals(LOG_USER, $writer->getFacility());
@@ -74,8 +77,9 @@ class SyslogTest extends TestCase
 
     /**
      * @group Laminas-8382
+     * @doesNotPerformAssertions
      */
-    public function testWriteWithFormatter()
+    public function testWriteWithFormatter(): void
     {
         $event = [
             'message' => 'tottakai',
@@ -92,13 +96,13 @@ class SyslogTest extends TestCase
     /**
      * @group Laminas-534
      */
-    public function testPassApplicationNameViaConstructor()
+    public function testPassApplicationNameViaConstructor(): void
     {
         $writer   = new CustomSyslogWriter(['application' => 'test_app']);
         $this->assertEquals('test_app', $writer->getApplicationName());
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $formatter = new \Laminas\Log\Formatter\Simple();
         $filter    = new \Laminas\Log\Filter\Mock();
@@ -108,16 +112,16 @@ class SyslogTest extends TestCase
                 'application'  => 'test_app',
         ]);
         $this->assertEquals('test_app', $writer->getApplicationName());
-        $this->assertAttributeEquals($formatter, 'formatter', $writer);
+        $this->assertEquals($formatter, $writer->getFormatter());
 
-        $filters = self::readAttribute($writer, 'filters');
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }
 
-    public function testDefaultFormatter()
+    public function testDefaultFormatter(): void
     {
         $writer   = new CustomSyslogWriter(['application' => 'test_app']);
-        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\Simple', 'formatter', $writer);
+        $this->assertInstanceOf('Laminas\Log\Formatter\Simple', $writer->getFormatter());
     }
 }

@@ -14,10 +14,13 @@ use Laminas\Log\ProcessorPluginManager;
 use Laminas\Log\ProcessorPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ProcessorPluginManagerFactoryTest extends TestCase
 {
-    public function testFactoryReturnsPluginManager()
+    use ProphecyTrait;
+
+    public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $factory = new ProcessorPluginManagerFactory();
@@ -27,7 +30,10 @@ class ProcessorPluginManagerFactoryTest extends TestCase
 
         if (method_exists($processors, 'configure')) {
             // laminas-servicemanager v3
-            $this->assertAttributeSame($container, 'creationContext', $processors);
+            $creationContext = \Closure::bind(function () {
+                return $this->creationContext;
+            }, $processors, ProcessorPluginManager::class)();
+            $this->assertSame($container, $creationContext);
         } else {
             // laminas-servicemanager v2
             $this->assertSame($container, $processors->getServiceLocator());
@@ -37,7 +43,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop()
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
@@ -54,7 +60,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2()
+    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -72,7 +78,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $this->assertSame($processor, $processors->get('test'));
     }
 
-    public function testConfiguresProcessorServicesWhenFound()
+    public function testConfiguresProcessorServicesWhenFound(): void
     {
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
         $config = [
@@ -105,7 +111,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $this->assertSame($processor, $processors->get('test-too'));
     }
 
-    public function testDoesNotConfigureProcessorServicesWhenServiceListenerPresent()
+    public function testDoesNotConfigureProcessorServicesWhenServiceListenerPresent(): void
     {
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
         $config = [
@@ -136,7 +142,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $this->assertFalse($processors->has('test-too'));
     }
 
-    public function testDoesNotConfigureProcessorServicesWhenConfigServiceNotPresent()
+    public function testDoesNotConfigureProcessorServicesWhenConfigServiceNotPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -151,7 +157,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
     }
 
-    public function testDoesNotConfigureProcessorServicesWhenConfigServiceDoesNotContainProcessorsConfig()
+    public function testDoesNotConfigureProcessorServicesWhenConfigServiceDoesNotContainProcessorsConfig(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);

@@ -27,37 +27,37 @@ class LoggerTest extends TestCase
      */
     private $logger;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logger = new Logger;
     }
 
-    public function testUsesWriterPluginManagerByDefault()
+    public function testUsesWriterPluginManagerByDefault(): void
     {
         $this->assertInstanceOf('Laminas\Log\WriterPluginManager', $this->logger->getWriterPluginManager());
     }
 
-    public function testPassingShortNameToPluginReturnsWriterByThatName()
+    public function testPassingShortNameToPluginReturnsWriterByThatName(): void
     {
         $writer = $this->logger->writerPlugin('mock');
         $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writer);
     }
 
-    public function testPassWriterAsString()
+    public function testPassWriterAsString(): void
     {
         $this->logger->addWriter('mock');
         $writers = $this->logger->getWriters();
         $this->assertInstanceOf('Laminas\Stdlib\SplPriorityQueue', $writers);
     }
 
-    public function testEmptyWriter()
+    public function testEmptyWriter(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No log writer specified');
         $this->logger->log(Logger::INFO, 'test');
     }
 
-    public function testSetWriters()
+    public function testSetWriters(): void
     {
         $writer1 = $this->logger->writerPlugin('mock');
         $writer2 = $this->logger->writerPlugin('null');
@@ -74,7 +74,7 @@ class LoggerTest extends TestCase
         $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writer);
     }
 
-    public function testAddWriterWithPriority()
+    public function testAddWriterWithPriority(): void
     {
         $writer1 = $this->logger->writerPlugin('mock');
         $this->logger->addWriter($writer1, 1);
@@ -89,7 +89,7 @@ class LoggerTest extends TestCase
         $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writer);
     }
 
-    public function testAddWithSamePriority()
+    public function testAddWithSamePriority(): void
     {
         $writer1 = $this->logger->writerPlugin('mock');
         $this->logger->addWriter($writer1, 1);
@@ -104,27 +104,27 @@ class LoggerTest extends TestCase
         $this->assertInstanceOf('Laminas\Log\Writer\Noop', $writer);
     }
 
-    public function testLogging()
+    public function testLogging(): void
     {
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
         $this->logger->log(Logger::INFO, 'tottakai');
 
         $this->assertEquals(count($writer->events), 1);
-        $this->assertContains('tottakai', $writer->events[0]['message']);
+        $this->assertStringContainsString('tottakai', $writer->events[0]['message']);
     }
 
-    public function testLoggingArray()
+    public function testLoggingArray(): void
     {
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
         $this->logger->log(Logger::INFO, ['test']);
 
         $this->assertEquals(count($writer->events), 1);
-        $this->assertContains('test', $writer->events[0]['message']);
+        $this->assertStringContainsString('test', $writer->events[0]['message']);
     }
 
-    public function testAddFilter()
+    public function testAddFilter(): void
     {
         $writer = new MockWriter;
         $filter = new MockFilter;
@@ -133,10 +133,10 @@ class LoggerTest extends TestCase
         $this->logger->log(Logger::INFO, ['test']);
 
         $this->assertEquals(count($filter->events), 1);
-        $this->assertContains('test', $filter->events[0]['message']);
+        $this->assertStringContainsString('test', $filter->events[0]['message']);
     }
 
-    public function testAddFilterByName()
+    public function testAddFilterByName(): void
     {
         $writer = new MockWriter;
         $writer->addFilter('mock');
@@ -144,7 +144,7 @@ class LoggerTest extends TestCase
         $this->logger->log(Logger::INFO, ['test']);
 
         $this->assertEquals(count($writer->events), 1);
-        $this->assertContains('test', $writer->events[0]['message']);
+        $this->assertStringContainsString('test', $writer->events[0]['message']);
     }
 
     /**
@@ -169,7 +169,7 @@ class LoggerTest extends TestCase
     /**
      * @dataProvider provideTestFilters
      */
-    public function testAddFilterByNameWithParams($filter, $options)
+    public function testAddFilterByNameWithParams($filter, $options): void
     {
         $writer = new MockWriter;
         $writer->addFilter($filter, $options);
@@ -177,7 +177,7 @@ class LoggerTest extends TestCase
 
         $this->logger->log(Logger::INFO, '123');
         $this->assertEquals(count($writer->events), 1);
-        $this->assertContains('123', $writer->events[0]['message']);
+        $this->assertStringContainsString('123', $writer->events[0]['message']);
     }
 
     public static function provideAttributes()
@@ -192,14 +192,14 @@ class LoggerTest extends TestCase
     /**
      * @dataProvider provideAttributes
      */
-    public function testLoggingCustomAttributesForUserContext($extra)
+    public function testLoggingCustomAttributesForUserContext($extra): void
     {
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
         $this->logger->log(Logger::ERR, 'tottakai', $extra);
 
         $this->assertEquals(count($writer->events), 1);
-        $this->assertInternalType('array', $writer->events[0]['extra']);
+        $this->assertIsArray($writer->events[0]['extra']);
         $this->assertEquals(count($writer->events[0]['extra']), count($extra));
     }
 
@@ -218,13 +218,13 @@ class LoggerTest extends TestCase
     /**
      * @dataProvider provideInvalidArguments
      */
-    public function testPassingInvalidArgumentToLogRaisesException($message, $extra)
+    public function testPassingInvalidArgumentToLogRaisesException($message, $extra): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->logger->log(Logger::ERR, $message, $extra);
     }
 
-    public function testRegisterErrorHandler()
+    public function testRegisterErrorHandler(): void
     {
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
@@ -241,10 +241,14 @@ class LoggerTest extends TestCase
 
         Logger::unregisterErrorHandler();
 
-        $this->assertEquals($writer->events[0]['message'], 'Undefined variable: test');
+        if (PHP_VERSION_ID < 80000) {
+            $this->assertEquals('Undefined variable: test', $writer->events[0]['message']);
+        } else {
+            $this->assertEquals('Undefined variable $test', $writer->events[0]['message']);
+        }
     }
 
-    public function testOptionsWithMock()
+    public function testOptionsWithMock(): void
     {
         $options = ['writers' => [
                              'first_writer' => [
@@ -258,7 +262,7 @@ class LoggerTest extends TestCase
         $this->assertInstanceOf('Laminas\Log\Writer\Mock', $writers[0]);
     }
 
-    public function testOptionsWithWriterOptions()
+    public function testOptionsWithWriterOptions(): void
     {
         $options = ['writers' => [
                               [
@@ -277,7 +281,7 @@ class LoggerTest extends TestCase
         $this->assertEquals('foo', $writers[0]->getLogSeparator());
     }
 
-    public function testOptionsWithMockAndProcessor()
+    public function testOptionsWithMockAndProcessor(): void
     {
         $options = [
             'writers' => [
@@ -297,7 +301,7 @@ class LoggerTest extends TestCase
         $this->assertInstanceOf('Laminas\Log\Processor\RequestId', $processors[0]);
     }
 
-    public function testAddProcessor()
+    public function testAddProcessor(): void
     {
         $processor = new Backtrace();
         $this->logger->addProcessor($processor);
@@ -306,7 +310,7 @@ class LoggerTest extends TestCase
         $this->assertEquals($processor, $processors[0]);
     }
 
-    public function testAddProcessorByName()
+    public function testAddProcessorByName(): void
     {
         $this->logger->addProcessor('backtrace');
 
@@ -318,7 +322,7 @@ class LoggerTest extends TestCase
         $this->logger->log(Logger::ERR, 'foo');
     }
 
-    public function testProcessorOutputAdded()
+    public function testProcessorOutputAdded(): void
     {
         $processor = new Backtrace();
         $this->logger->addProcessor($processor);
@@ -329,7 +333,7 @@ class LoggerTest extends TestCase
         $this->assertEquals(__FILE__, $writer->events[0]['extra']['file']);
     }
 
-    public function testExceptionHandler()
+    public function testExceptionHandler(): void
     {
         $writer = new MockWriter;
         $this->logger->addWriter($writer);
@@ -367,7 +371,7 @@ class LoggerTest extends TestCase
         }
     }
 
-    public function testLogExtraArrayKeyWithNonArrayValue()
+    public function testLogExtraArrayKeyWithNonArrayValue(): void
     {
         $stream = fopen("php://memory", "r+");
         $options = [
@@ -389,7 +393,7 @@ class LoggerTest extends TestCase
     /**
      * @group 5383
      */
-    public function testErrorHandlerWithStreamWriter()
+    public function testErrorHandlerWithStreamWriter(): void
     {
         $options      = ['errorhandler' => true];
         $logger       = new Logger($options);
@@ -406,14 +410,14 @@ class LoggerTest extends TestCase
 
         rewind($stream);
         $contents = stream_get_contents($stream);
-        $this->assertContains('test', $contents);
-        $this->assertContains('second', $contents);
+        $this->assertStringContainsString('test', $contents);
+        $this->assertStringContainsString('second', $contents);
     }
 
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterFatalShutdownFunction()
+    public function testRegisterFatalShutdownFunction(): void
     {
         if (PHP_VERSION_ID >= 70000) {
             $this->markTestSkipped('PHP7: cannot test as code now raises E_ERROR');
@@ -444,7 +448,7 @@ class LoggerTest extends TestCase
      *
      * @group 6424
      */
-    public function testRegisterFatalErrorShutdownFunctionHandlesCompileTimeErrors()
+    public function testRegisterFatalErrorShutdownFunctionHandlesCompileTimeErrors(): void
     {
         if (PHP_VERSION_ID >= 70000) {
             $this->markTestSkipped('PHP7: cannot test as code now raises E_ERROR');
@@ -473,7 +477,7 @@ class LoggerTest extends TestCase
     /**
      * @group Laminas-7238
      */
-    public function testCatchExceptionNotValidPriority()
+    public function testCatchExceptionNotValidPriority(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('$priority must be an integer >= 0 and < 8; received -1');

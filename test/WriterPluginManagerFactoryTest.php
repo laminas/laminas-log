@@ -14,10 +14,13 @@ use Laminas\Log\WriterPluginManager;
 use Laminas\Log\WriterPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class WriterPluginManagerFactoryTest extends TestCase
 {
-    public function testFactoryReturnsPluginManager()
+    use ProphecyTrait;
+
+    public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $factory = new WriterPluginManagerFactory();
@@ -27,7 +30,10 @@ class WriterPluginManagerFactoryTest extends TestCase
 
         if (method_exists($writers, 'configure')) {
             // laminas-servicemanager v3
-            $this->assertAttributeSame($container, 'creationContext', $writers);
+            $creationContext = \Closure::bind(function () {
+                return $this->creationContext;
+            }, $writers, WriterPluginManager::class)();
+            $this->assertSame($container, $creationContext);
         } else {
             // laminas-servicemanager v2
             $this->assertSame($container, $writers->getServiceLocator());
@@ -37,7 +43,7 @@ class WriterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop()
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $writer = $this->prophesize(WriterInterface::class)->reveal();
@@ -54,7 +60,7 @@ class WriterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2()
+    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -72,7 +78,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $this->assertSame($writer, $writers->get('test'));
     }
 
-    public function testConfiguresWriterServicesWhenFound()
+    public function testConfiguresWriterServicesWhenFound(): void
     {
         $writer = $this->prophesize(WriterInterface::class)->reveal();
         $config = [
@@ -105,7 +111,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $this->assertSame($writer, $writers->get('test-too'));
     }
 
-    public function testDoesNotConfigureWriterServicesWhenServiceListenerPresent()
+    public function testDoesNotConfigureWriterServicesWhenServiceListenerPresent(): void
     {
         $writer = $this->prophesize(WriterInterface::class)->reveal();
         $config = [
@@ -136,7 +142,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $this->assertFalse($writers->has('test-too'));
     }
 
-    public function testDoesNotConfigureWriterServicesWhenConfigServiceNotPresent()
+    public function testDoesNotConfigureWriterServicesWhenConfigServiceNotPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -151,7 +157,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(WriterPluginManager::class, $writers);
     }
 
-    public function testDoesNotConfigureWriterServicesWhenConfigServiceDoesNotContainWritersConfig()
+    public function testDoesNotConfigureWriterServicesWhenConfigServiceDoesNotContainWritersConfig(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);

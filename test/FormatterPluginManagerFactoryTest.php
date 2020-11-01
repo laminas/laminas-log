@@ -14,10 +14,13 @@ use Laminas\Log\FormatterPluginManager;
 use Laminas\Log\FormatterPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class FormatterPluginManagerFactoryTest extends TestCase
 {
-    public function testFactoryReturnsPluginManager()
+    use ProphecyTrait;
+
+    public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $factory = new FormatterPluginManagerFactory();
@@ -27,7 +30,10 @@ class FormatterPluginManagerFactoryTest extends TestCase
 
         if (method_exists($formatters, 'configure')) {
             // laminas-servicemanager v3
-            $this->assertAttributeSame($container, 'creationContext', $formatters);
+            $creationContext = \Closure::bind(function () {
+                return $this->creationContext;
+            }, $formatters, FormatterPluginManager::class)();
+            $this->assertSame($container, $creationContext);
         } else {
             // laminas-servicemanager v2
             $this->assertSame($container, $formatters->getServiceLocator());
@@ -37,7 +43,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop()
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
@@ -54,7 +60,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2()
+    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -72,7 +78,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $this->assertSame($formatter, $formatters->get('test'));
     }
 
-    public function testConfiguresFormatterServicesWhenFound()
+    public function testConfiguresFormatterServicesWhenFound(): void
     {
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
         $config = [
@@ -105,7 +111,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $this->assertSame($formatter, $formatters->get('test-too'));
     }
 
-    public function testDoesNotConfigureFormatterServicesWhenServiceListenerPresent()
+    public function testDoesNotConfigureFormatterServicesWhenServiceListenerPresent(): void
     {
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
         $config = [
@@ -136,7 +142,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $this->assertFalse($formatters->has('test-too'));
     }
 
-    public function testDoesNotConfigureFormatterServicesWhenConfigServiceNotPresent()
+    public function testDoesNotConfigureFormatterServicesWhenConfigServiceNotPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -151,7 +157,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
     }
 
-    public function testDoesNotConfigureFormatterServicesWhenConfigServiceDoesNotContainFormattersConfig()
+    public function testDoesNotConfigureFormatterServicesWhenConfigServiceDoesNotContainFormattersConfig(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);

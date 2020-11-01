@@ -17,14 +17,14 @@ class FirePhpTest extends TestCase
 {
     protected $firephp;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->firephp = new MockFirePhp();
     }
     /**
      * Test get FirePhp
      */
-    public function testGetFirePhp()
+    public function testGetFirePhp(): void
     {
         $writer = new FirePhp($this->firephp);
         $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
@@ -32,7 +32,7 @@ class FirePhpTest extends TestCase
     /**
      * Test set firephp
      */
-    public function testSetFirePhp()
+    public function testSetFirePhp(): void
     {
         $writer   = new FirePhp($this->firephp);
         $firephp2 = new MockFirePhp();
@@ -44,7 +44,7 @@ class FirePhpTest extends TestCase
     /**
      * Test write
      */
-    public function testWrite()
+    public function testWrite(): void
     {
         $writer = new FirePhp($this->firephp);
         $writer->write([
@@ -56,7 +56,7 @@ class FirePhpTest extends TestCase
     /**
      * Test write with FirePhp disabled
      */
-    public function testWriteDisabled()
+    public function testWriteDisabled(): void
     {
         $firephp = new MockFirePhp(false);
         $writer = new FirePhp($firephp);
@@ -67,31 +67,40 @@ class FirePhpTest extends TestCase
         $this->assertEmpty($this->firephp->calls);
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $formatter = new \Laminas\Log\Formatter\Simple();
         $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new FirePhp([
-                'filters'   => $filter,
-                'formatter' => $formatter,
-                'instance'  => $this->firephp,
-        ]);
-        $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
-        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\FirePhp', 'formatter', $writer);
+        $writer = new class([
+            'filters'   => $filter,
+            'formatter' => $formatter,
+            'instance'  => $this->firephp,
+        ]) extends FirePhp {
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
 
-        $filters = self::readAttribute($writer, 'filters');
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+        $this->assertInstanceOf('Laminas\Log\Writer\FirePhp\FirePhpInterface', $writer->getFirePhp());
+        $this->assertInstanceOf('Laminas\Log\Formatter\FirePhp', $writer->getFormatter());
+
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }
 
     /**
      * Verify behavior of __construct when 'instance' is not an FirePhpInterface
-     *
-     * @expectedException Laminas\Log\Exception\InvalidArgumentException
-     * @expectedExceptionMessage You must pass a valid FirePhp\FirePhpInterface
      */
-    public function testConstructWithInvalidInstance()
+    public function testConstructWithInvalidInstance(): void
     {
+        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('You must pass a valid FirePhp\FirePhpInterface');
         new FirePhp(new \StdClass());
     }
 }

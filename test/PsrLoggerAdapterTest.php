@@ -67,7 +67,7 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
         }, $this->mockWriter->events);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->mockWriter);
     }
@@ -77,21 +77,19 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
      * @covers ::__construct
      * @covers ::getLogger
      */
-    public function testSetLogger()
+    public function testSetLogger(): void
     {
         $logger = new Logger;
 
         $adapter = new PsrLoggerAdapter($logger);
-        $this->assertAttributeEquals($logger, 'logger', $adapter);
-
-        $this->assertSame($logger, $adapter->getLogger($logger));
+        $this->assertSame($logger, $adapter->getLogger());
     }
 
     /**
      * @covers ::log
      * @dataProvider logLevelsToPriorityProvider
      */
-    public function testPsrLogLevelsMapsToPriorities($logLevel, $priority)
+    public function testPsrLogLevelsMapsToPriorities($logLevel, $priority): void
     {
         $message = 'foo';
         $context = ['bar' => 'baz'];
@@ -123,5 +121,12 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
             $return[] = [$level, $priority];
         }
         return $return;
+    }
+
+    public function testThrowsOnInvalidLevel()
+    {
+        $logger = $this->getLogger();
+        $this->expectException(\Psr\Log\InvalidArgumentException::class);
+        $logger->log('invalid level', 'Foo');
     }
 }

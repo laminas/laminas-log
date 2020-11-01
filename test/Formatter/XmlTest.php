@@ -15,44 +15,44 @@ use PHPUnit\Framework\TestCase;
 
 class XmlTest extends TestCase
 {
-    public function testDefaultFormat()
+    public function testDefaultFormat(): void
     {
         $date = new DateTime();
         $f = new XmlFormatter();
         $line = $f->format(['timestamp' => $date, 'message' => 'foo', 'priority' => 42]);
 
-        $this->assertContains($date->format('c'), $line);
-        $this->assertContains('foo', $line);
-        $this->assertContains((string)42, $line);
+        $this->assertStringContainsString($date->format('c'), $line);
+        $this->assertStringContainsString('foo', $line);
+        $this->assertStringContainsString((string)42, $line);
     }
 
-    public function testConfiguringElementMapping()
+    public function testConfiguringElementMapping(): void
     {
         $f = new XmlFormatter('log', ['foo' => 'bar']);
         $line = $f->format(['bar' => 'baz']);
-        $this->assertContains('<log><foo>baz</foo></log>', $line);
+        $this->assertStringContainsString('<log><foo>baz</foo></log>', $line);
     }
 
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testConfiguringDateTimeFormat($dateTimeFormat)
+    public function testConfiguringDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
         $f = new XmlFormatter('log', null, 'UTF-8', $dateTimeFormat);
-        $this->assertContains($date->format($dateTimeFormat), $f->format(['timestamp' => $date]));
+        $this->assertStringContainsString($date->format($dateTimeFormat), $f->format(['timestamp' => $date]));
     }
 
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
         $f = new XmlFormatter();
         $this->assertSame($f, $f->setDateTimeFormat($dateTimeFormat));
-        $this->assertContains($dateTimeFormat, $f->getDateTimeFormat());
-        $this->assertContains($date->format($dateTimeFormat), $f->format(['timestamp' => $date]));
+        $this->assertStringContainsString($dateTimeFormat, $f->getDateTimeFormat());
+        $this->assertStringContainsString($date->format($dateTimeFormat), $f->format(['timestamp' => $date]));
     }
 
     public function provideDateTimeFormats()
@@ -63,15 +63,15 @@ class XmlTest extends TestCase
         ];
     }
 
-    public function testXmlDeclarationIsStripped()
+    public function testXmlDeclarationIsStripped(): void
     {
         $f = new XmlFormatter();
         $line = $f->format(['message' => 'foo', 'priority' => 42]);
 
-        $this->assertNotContains('<\?xml version=', $line);
+        $this->assertStringNotContainsString('<\?xml version=', $line);
     }
 
-    public function testXmlValidates()
+    public function testXmlValidates(): void
     {
         $f = new XmlFormatter();
         $line = $f->format(['message' => 'foo', 'priority' => 42]);
@@ -84,12 +84,12 @@ class XmlTest extends TestCase
      * @group Laminas-2062
      * @group Laminas-4190
      */
-    public function testHtmlSpecialCharsInMessageGetEscapedForValidXml()
+    public function testHtmlSpecialCharsInMessageGetEscapedForValidXml(): void
     {
         $f = new XmlFormatter();
         $line = $f->format(['message' => '&key1=value1&key2=value2', 'priority' => 42]);
 
-        $this->assertContains("&amp;", $line);
+        $this->assertStringContainsString("&amp;", $line);
         $this->assertEquals(2, substr_count($line, "&amp;"));
     }
 
@@ -97,15 +97,15 @@ class XmlTest extends TestCase
      * @group Laminas-2062
      * @group Laminas-4190
      */
-    public function testFixingBrokenCharsSoXmlIsValid()
+    public function testFixingBrokenCharsSoXmlIsValid(): void
     {
         $f = new XmlFormatter();
         $line = $f->format(['message' => '&amp', 'priority' => 42]);
 
-        $this->assertContains('&amp;amp', $line);
+        $this->assertStringContainsString('&amp;amp', $line);
     }
 
-    public function testConstructorWithArray()
+    public function testConstructorWithArray(): void
     {
         $date = new DateTime();
         $options = [
@@ -129,14 +129,14 @@ class XmlTest extends TestCase
 
         $formatter = new XmlFormatter($options);
         $output = $formatter->format($event);
-        $this->assertContains($expected, $output);
+        $this->assertStringContainsString($expected, $output);
         $this->assertEquals('UTF-8', $formatter->getEncoding());
     }
 
     /**
      * @group Laminas-11161
      */
-    public function testNonScalarValuesAreExcludedFromFormattedString()
+    public function testNonScalarValuesAreExcludedFromFormattedString(): void
     {
         $options = [
             'rootElement' => 'log'
@@ -151,13 +151,13 @@ class XmlTest extends TestCase
 
         $formatter = new XmlFormatter($options);
         $output = $formatter->format($event);
-        $this->assertContains($expected, $output);
+        $this->assertStringContainsString($expected, $output);
     }
 
     /**
      * @group Laminas-11161
      */
-    public function testObjectsWithStringSerializationAreIncludedInFormattedString()
+    public function testObjectsWithStringSerializationAreIncludedInFormattedString(): void
     {
         $options = [
             'rootElement' => 'log'
@@ -173,13 +173,13 @@ class XmlTest extends TestCase
 
         $formatter = new XmlFormatter($options);
         $output = $formatter->format($event);
-        $this->assertContains($expected, $output);
+        $this->assertStringContainsString($expected, $output);
     }
 
     /**
      * @group Laminas-453
      */
-    public function testFormatWillRemoveExtraEmptyArrayFromEvent()
+    public function testFormatWillRemoveExtraEmptyArrayFromEvent(): void
     {
         $formatter = new XmlFormatter;
         $d = new DateTime('2001-01-01T12:00:00-06:00');
@@ -196,7 +196,7 @@ class XmlTest extends TestCase
         $this->assertEquals($expected, $formatter->format($event));
     }
 
-    public function testFormatWillAcceptSimpleArrayFromExtra()
+    public function testFormatWillAcceptSimpleArrayFromExtra(): void
     {
         $formatter = new XmlFormatter;
         $d = new DateTime('2001-01-01T12:00:00-06:00');
@@ -219,7 +219,7 @@ class XmlTest extends TestCase
         $this->assertEquals($expected, $formatter->format($event));
     }
 
-    public function testFormatWillAcceptNestedArrayFromExtraEvent()
+    public function testFormatWillAcceptNestedArrayFromExtraEvent(): void
     {
         $formatter = new XmlFormatter;
 
@@ -262,7 +262,7 @@ class XmlTest extends TestCase
         $this->assertEquals($expected, $formatter->format($event));
     }
 
-    public function testFormatWillEscapeAmpersand()
+    public function testFormatWillEscapeAmpersand(): void
     {
         $formatter = new XmlFormatter;
 

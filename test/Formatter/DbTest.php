@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class DbTest extends TestCase
 {
-    public function testDefaultDateTimeFormat()
+    public function testDefaultDateTimeFormat(): void
     {
         $formatter = new DbFormatter();
         $this->assertEquals(DbFormatter::DEFAULT_DATETIME_FORMAT, $formatter->getDateTimeFormat());
@@ -23,7 +23,7 @@ class DbTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $formatter = new DbFormatter();
         $formatter->setDateTimeFormat($dateTimeFormat);
@@ -46,14 +46,14 @@ class DbTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testAllowsSpecifyingDateTimeFormatAsConstructorArgument($dateTimeFormat)
+    public function testAllowsSpecifyingDateTimeFormatAsConstructorArgument($dateTimeFormat): void
     {
         $formatter = new DbFormatter($dateTimeFormat);
 
         $this->assertEquals($dateTimeFormat, $formatter->getDateTimeFormat());
     }
 
-    public function testFormatDateTimeInEvent()
+    public function testFormatDateTimeInEvent(): void
     {
         $datetime = new DateTime();
         $event = ['timestamp' => $datetime];

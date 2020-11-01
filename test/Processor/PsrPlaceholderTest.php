@@ -21,7 +21,7 @@ class PsrPlaceholderTest extends TestCase
      * @dataProvider pairsProvider
      * @covers ::process
      */
-    public function testReplacement($val, $expected)
+    public function testReplacement($val, $expected): void
     {
         $psrProcessor = new PsrPlaceholder;
         $event = $psrProcessor->process([

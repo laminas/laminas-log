@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PriorityTest extends TestCase
 {
-    public function testComparisonDefaultsToLessThanOrEqual()
+    public function testComparisonDefaultsToLessThanOrEqual(): void
     {
         // accept at or below priority 2
         $filter = new Priority(2);
@@ -26,7 +26,7 @@ class PriorityTest extends TestCase
         $this->assertFalse($filter->filter(['priority' => 3]));
     }
 
-    public function testComparisonOperatorCanBeChanged()
+    public function testComparisonOperatorCanBeChanged(): void
     {
         // accept above priority 2
         $filter = new Priority(2, '>');
@@ -36,14 +36,14 @@ class PriorityTest extends TestCase
         $this->assertFalse($filter->filter(['priority' => 1]));
     }
 
-    public function testConstructorThrowsOnInvalidPriority()
+    public function testConstructorThrowsOnInvalidPriority(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('must be a number');
         new Priority('foo');
     }
 
-    public function testComparisonStringSupport()
+    public function testComparisonStringSupport(): void
     {
         // accept at or below priority '2'
         $filter = new Priority('2');

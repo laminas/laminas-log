@@ -61,56 +61,57 @@ class TimestampTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
-     */
-    public function testConstructorThrowsOnInvalidValue()
+    public function testConstructorThrowsOnInvalidValue(): void
     {
+        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
         new TimestampFilter('foo');
     }
 
-    /**
-     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
-     */
-    public function testConstructorThrowsWhenDateFormatCharIsMissing()
+    public function testConstructorThrowsWhenDateFormatCharIsMissing(): void
     {
+        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
         new TimestampFilter(3);
     }
 
-    /**
-     * @expectedException \Laminas\Log\Exception\InvalidArgumentException
-     */
-    public function testConstructorThrowsOnUnsupportedComparisonOperator()
+    public function testConstructorThrowsOnUnsupportedComparisonOperator(): void
     {
+        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
         new TimestampFilter(10, 'H', 'foobar');
     }
 
-    public function testFilterCreatedFromArray()
+    /**
+     * @dataProvider filterCreationDataProvider
+     */
+    public function testFilterCreatedFromArray($config): void
     {
-        $config = [
-            'value' => 10,
-            'dateFormatChar' => 'm',
-            'operator' => '==',
-        ];
-        $filter = new TimestampFilter($config);
+        $filter = new class($config) extends TimestampFilter {
+            public function getDateFormatChar(): ?string
+            {
+                return $this->dateFormatChar;
+            }
 
-        $this->assertAttributeEquals($config['value'], 'value', $filter);
-        $this->assertAttributeEquals($config['dateFormatChar'], 'dateFormatChar', $filter);
-        $this->assertAttributeEquals($config['operator'], 'operator', $filter);
+            public function getOperator(): string
+            {
+                return $this->operator;
+            }
+
+            public function getValue()
+            {
+                return $this->value;
+            }
+        };
+
+        $this->assertSame($config['value'], $filter->getValue());
+        $this->assertSame($config['dateFormatChar'], $filter->getDateFormatChar());
+        $this->assertSame($config['operator'], $filter->getOperator());
     }
 
-    public function testFilterCreatedFromTraversable()
+    public function filterCreationDataProvider(): array
     {
-        $config = new ArrayObject([
-            'value' => 10,
-            'dateFormatChar' => 'm',
-            'operator' => '==',
-        ]);
-        $filter = new TimestampFilter($config);
-
-        $this->assertAttributeEquals($config['value'], 'value', $filter);
-        $this->assertAttributeEquals($config['dateFormatChar'], 'dateFormatChar', $filter);
-        $this->assertAttributeEquals($config['operator'], 'operator', $filter);
+        return [
+            'array'       => [['value' => 10, 'dateFormatChar' => 'm', 'operator' => '==',]],
+            'traversable' => [new ArrayObject(['value' => 10, 'dateFormatChar' => 'm', 'operator' => '==',])],
+        ];
     }
 
     /**
@@ -118,7 +119,7 @@ class TimestampTest extends TestCase
      *
      * @dataProvider ignoredMessages
      */
-    public function testIgnoresMessagesWithoutTimestamp(array $message)
+    public function testIgnoresMessagesWithoutTimestamp(array $message): void
     {
         $filter = new TimestampFilter(new DateTime('-10 years'));
 

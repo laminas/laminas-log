@@ -2,7 +2,8 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="./vendor/autoload.php"
-         colors="true">
+         colors="true"
+         convertWarningsToExceptions="true">
     <testsuites>
         <testsuite name="laminas-log Test Suite">
             <directory>./test/</directory>
@@ -15,11 +16,11 @@
         </exclude>
     </groups>
 
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
 
     <php>
         <ini name="date.timezone" value="UTC"/>

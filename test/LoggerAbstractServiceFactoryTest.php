@@ -31,7 +31,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     /**
      * Set up LoggerAbstractServiceFactory and loggers configuration.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serviceManager = new ServiceManager();
         $config = new Config([
@@ -75,7 +75,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
      * @param string $service
      * @dataProvider providerValidLoggerService
      */
-    public function testValidLoggerService($service)
+    public function testValidLoggerService($service): void
     {
         $actual = $this->serviceManager->get($service);
         $this->assertInstanceOf('Laminas\Log\Logger', $actual);
@@ -86,7 +86,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
      *
      * @param string $service
      */
-    public function testInvalidLoggerService($service)
+    public function testInvalidLoggerService($service): void
     {
         $this->expectException(ServiceNotFoundException::class);
         $this->serviceManager->get($service);
@@ -95,7 +95,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     /**
      * @group 5254
      */
-    public function testRetrievesDatabaseServiceFromServiceManagerWhenEncounteringDbWriter()
+    public function testRetrievesDatabaseServiceFromServiceManagerWhenEncounteringDbWriter(): void
     {
         $db = $this->getMockBuilder('Laminas\Db\Adapter\Adapter')
             ->disableOriginalConstructor()
@@ -141,10 +141,15 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         }
 
         $this->assertTrue($found, 'Did not find expected DB writer');
-        $this->assertAttributeSame($db, 'db', $writer);
+
+        $writerDb = \Closure::bind(function () {
+            return $this->db;
+        }, $writer, DbWriter::class)();
+
+        $this->assertSame($db, $writerDb);
     }
 
-    public function testRetrievesMongoServiceFromServiceManagerWhenEncounteringMongoWriter()
+    public function testRetrievesMongoServiceFromServiceManagerWhenEncounteringMongoWriter(): void
     {
         if (! extension_loaded('mongo')) {
             $this->markTestSkipped('The mongo PHP extension is not available');
@@ -199,7 +204,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $this->assertTrue($found, 'Did not find expected mongo writer');
     }
 
-    public function testRetrievesMongoDBServiceFromServiceManagerWhenEncounteringMongoDbWriter()
+    public function testRetrievesMongoDBServiceFromServiceManagerWhenEncounteringMongoDbWriter(): void
     {
         if (! extension_loaded('mongodb')) {
             $this->markTestSkipped('The mongodb PHP extension is not available');
@@ -251,7 +256,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     /**
      * @group 4455
      */
-    public function testWillInjectWriterPluginManagerIfAvailable()
+    public function testWillInjectWriterPluginManagerIfAvailable(): void
     {
         $writers = new WriterPluginManager(new ServiceManager());
         $mockWriter = $this->createMock('Laminas\Log\Writer\WriterInterface');
@@ -283,7 +288,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     /**
      * @group 4455
      */
-    public function testWillInjectProcessorPluginManagerIfAvailable()
+    public function testWillInjectProcessorPluginManagerIfAvailable(): void
     {
         $processors = new ProcessorPluginManager(new ServiceManager());
         $mockProcessor = $this->createMock('Laminas\Log\Processor\ProcessorInterface');

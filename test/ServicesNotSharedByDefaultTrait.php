@@ -12,7 +12,7 @@ use ReflectionProperty;
 
 trait ServicesNotSharedByDefaultTrait
 {
-    public function testServicesShouldNotBeSharedByDefault()
+    public function testServicesShouldNotBeSharedByDefault(): void
     {
         $plugins = $this->getPluginManager();
 

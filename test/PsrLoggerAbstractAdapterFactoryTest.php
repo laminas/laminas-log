@@ -24,7 +24,7 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
     /**
      * Set up LoggerAbstractServiceFactory and loggers configuration.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serviceManager = new ServiceManager();
         $config = new Config([
@@ -68,7 +68,7 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
      * @param string $service
      * @dataProvider providerValidLoggerService
      */
-    public function testValidLoggerService($service)
+    public function testValidLoggerService($service): void
     {
         $actual = $this->serviceManager->get($service);
         $this->assertInstanceOf('Laminas\Log\PsrLoggerAdapter', $actual);
@@ -79,7 +79,7 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
      *
      * @param string $service
      */
-    public function testInvalidLoggerService($service)
+    public function testInvalidLoggerService($service): void
     {
         $this->expectException(ServiceNotFoundException::class);
         $this->serviceManager->get($service);

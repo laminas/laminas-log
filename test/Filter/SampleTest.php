@@ -13,14 +13,14 @@ use PHPUnit\Framework\TestCase;
 
 class SampleTest extends TestCase
 {
-    public function testConstructorThrowsOnInvalidSampleRate()
+    public function testConstructorThrowsOnInvalidSampleRate(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('must be numeric');
         new Sample('bar');
     }
 
-    public function testSampleLimit0()
+    public function testSampleLimit0(): void
     {
         // Should log nothing.
         $filter = new Sample(0);
@@ -37,7 +37,7 @@ class SampleTest extends TestCase
         $this->assertFalse($ret);
     }
 
-    public function testSampleLimit1()
+    public function testSampleLimit1(): void
     {
         // Should log all events.
         $filter = new Sample(1);

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class JsonTest extends TestCase
 {
-    public function testDefaultFormat()
+    public function testDefaultFormat(): void
     {
         $date = new DateTime();
         $f = new Json();
@@ -37,7 +37,7 @@ class JsonTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
         $f = new Json();

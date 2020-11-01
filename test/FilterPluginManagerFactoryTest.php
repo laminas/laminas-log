@@ -14,10 +14,13 @@ use Laminas\Log\FilterPluginManager;
 use Laminas\Log\FilterPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class FilterPluginManagerFactoryTest extends TestCase
 {
-    public function testFactoryReturnsPluginManager()
+    use ProphecyTrait;
+
+    public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $factory = new FilterPluginManagerFactory();
@@ -27,7 +30,10 @@ class FilterPluginManagerFactoryTest extends TestCase
 
         if (method_exists($filters, 'configure')) {
             // laminas-servicemanager v3
-            $this->assertAttributeSame($container, 'creationContext', $filters);
+            $creationContext = \Closure::bind(function () {
+                return $this->creationContext;
+            }, $filters, FilterPluginManager::class)();
+            $this->assertSame($container, $creationContext);
         } else {
             // laminas-servicemanager v2
             $this->assertSame($container, $filters->getServiceLocator());
@@ -37,7 +43,7 @@ class FilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop()
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $filter = $this->prophesize(FilterInterface::class)->reveal();
@@ -54,7 +60,7 @@ class FilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2()
+    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -72,7 +78,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $this->assertSame($filter, $filters->get('test'));
     }
 
-    public function testConfiguresFilterServicesWhenFound()
+    public function testConfiguresFilterServicesWhenFound(): void
     {
         $filter = $this->prophesize(FilterInterface::class)->reveal();
         $config = [
@@ -105,7 +111,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $this->assertSame($filter, $filters->get('test-too'));
     }
 
-    public function testDoesNotConfigureFilterServicesWhenServiceListenerPresent()
+    public function testDoesNotConfigureFilterServicesWhenServiceListenerPresent(): void
     {
         $filter = $this->prophesize(FilterInterface::class)->reveal();
         $config = [
@@ -136,7 +142,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $this->assertFalse($filters->has('test-too'));
     }
 
-    public function testDoesNotConfigureFilterServicesWhenConfigServiceNotPresent()
+    public function testDoesNotConfigureFilterServicesWhenConfigServiceNotPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -151,7 +157,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(FilterPluginManager::class, $filters);
     }
 
-    public function testDoesNotConfigureFilterServicesWhenConfigServiceDoesNotContainFiltersConfig()
+    public function testDoesNotConfigureFilterServicesWhenConfigServiceDoesNotContainFiltersConfig(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);

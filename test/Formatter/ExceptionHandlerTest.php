@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class ExceptionHandlerTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $date = new DateTime();
 
@@ -79,7 +79,7 @@ class ExceptionHandlerTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
 

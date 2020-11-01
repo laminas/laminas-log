@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class RequestIdTest extends TestCase
 {
-    public function testProcess()
+    public function testProcess(): void
     {
         $processor = new RequestId();
 
@@ -34,7 +34,7 @@ class RequestIdTest extends TestCase
         $this->assertEquals($eventA['extra']['requestId'], $eventB['extra']['requestId']);
     }
 
-    public function testProcessDoesNotOverwriteExistingRequestId()
+    public function testProcessDoesNotOverwriteExistingRequestId(): void
     {
         $processor = new RequestId();
 

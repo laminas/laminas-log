@@ -8,6 +8,9 @@
 
 namespace LaminasTest\Log\Writer;
 
+use Interop\Container\ContainerInterface;
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Filter\Priority;
 use Laminas\Log\Filter\Regex as RegexFilter;
 use Laminas\Log\FilterPluginManager;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
@@ -24,18 +27,21 @@ class AbstractTest extends TestCase
 {
     protected $writer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->writer = new ConcreteWriter();
     }
 
-    public function testSetSimpleFormatterByName()
+    public function testSetSimpleFormatterByName(): void
     {
         $instance = $this->writer->setFormatter('simple');
-        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\Simple', 'formatter', $instance);
+        $formatter = \Closure::bind(function () {
+            return $this->getFormatter();
+        }, $instance, ConcreteWriter::class)();
+        $this->assertInstanceOf(SimpleFormatter::class, $formatter);
     }
 
-    public function testAddFilter()
+    public function testAddFilter(): void
     {
         $this->writer->addFilter(1);
         $this->writer->addFilter(new RegexFilter('/mess/'));
@@ -43,13 +49,13 @@ class AbstractTest extends TestCase
         $this->writer->addFilter(new \stdClass());
     }
 
-    public function testAddMockFilterByName()
+    public function testAddMockFilterByName(): void
     {
         $instance = $this->writer->addFilter('mock');
         $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
     }
 
-    public function testAddRegexFilterWithParamsByName()
+    public function testAddRegexFilterWithParamsByName(): void
     {
         $instance = $this->writer->addFilter('regex', [ 'regex' => '/mess/' ]);
         $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
@@ -58,7 +64,7 @@ class AbstractTest extends TestCase
     /**
      * @group Laminas-8953
      */
-    public function testFluentInterface()
+    public function testFluentInterface(): void
     {
         $instance = $this->writer->addFilter(1)
                                   ->setFormatter(new SimpleFormatter());
@@ -66,18 +72,18 @@ class AbstractTest extends TestCase
         $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
     }
 
-    public function testConvertErrorsToException()
+    public function testConvertErrorsToException(): void
     {
         $writer = new ErrorGeneratingWriter();
         $this->expectException('Laminas\Log\Exception\RuntimeException');
         $writer->write(['message' => 'test']);
 
         $writer->setConvertWriteErrorsToExceptions(false);
-        $this->expectException('PHPUnit_Framework_Error_Warning');
+        $this->expectWarning();
         $writer->write(['message' => 'test']);
     }
 
-    public function testConstructorWithOptions()
+    public function testConstructorWithOptions(): void
     {
         $options = ['filters' => [
                              [
@@ -95,41 +101,73 @@ class AbstractTest extends TestCase
                          ],
                     ];
 
-        $writer = new ConcreteWriter($options);
+        $writer = new class($options) extends ConcreteWriter {
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
 
-        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\Base', 'formatter', $writer);
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
 
-        $filters = $this->readAttribute($writer, 'filters');
+        $this->assertInstanceOf(\Laminas\Log\Formatter\Base::class, $writer->getFormatter());
+
+        $filters = $writer->getFilters();
         $this->assertCount(2, $filters);
 
-        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[1]);
-        $this->assertEquals(3, $this->readAttribute($filters[1], 'priority'));
+        $priorityFilter = $filters[1];
+        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $priorityFilter);
+
+        $priority = \Closure::bind(function () {
+            return $this->priority;
+        }, $priorityFilter, Priority::class)();
+
+        $this->assertEquals(3, $priority);
     }
 
-    public function testConstructorWithPriorityFilter()
+    public function testConstructorWithPriorityFilter(): void
     {
         // Accept an int as a PriorityFilter
-        $writer = new ConcreteWriter(['filters' => 3]);
-        $filters = $this->readAttribute($writer, 'filters');
+        $writer = new class(['filters' => 3]) extends ConcreteWriter {
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
-        $this->assertEquals(3, $this->readAttribute($filters[0], 'priority'));
+        $priority = \Closure::bind(function () {
+            return $this->priority;
+        }, $filters[0], Priority::class)();
+        $this->assertEquals(3, $priority);
 
         // Accept an int in an array of filters as a PriorityFilter
         $options = ['filters' => [3, ['name' => 'mock']]];
 
-        $writer = new ConcreteWriter($options);
-        $filters = $this->readAttribute($writer, 'filters');
+        $writer = new class($options) extends ConcreteWriter {
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+        $filters = $writer->getFilters();
         $this->assertCount(2, $filters);
         $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
-        $this->assertEquals(3, $this->readAttribute($filters[0], 'priority'));
+        $priority = \Closure::bind(function () {
+            return $this->priority;
+        }, $filters[0], Priority::class)();
+        $this->assertEquals(3, $priority);
         $this->assertInstanceOf('Laminas\Log\Filter\Mock', $filters[1]);
     }
 
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
      */
-    public function testConstructorWithFormatterManager()
+    public function testConstructorWithFormatterManager(): void
     {
         // Arrange
         $pluginManager = new FormatterPluginManager(new ServiceManager());
@@ -145,27 +183,23 @@ class AbstractTest extends TestCase
 
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
-     * @expectedException Laminas\Log\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Writer plugin manager must extend Laminas\Log\FormatterPluginManager; received integer
      */
-    public function testConstructorWithInvalidFormatterManager()
+    public function testConstructorWithInvalidFormatterManager(): void
     {
-        // Arrange
-        // There is nothing to arrange.
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Writer plugin manager must extend Laminas\Log\FormatterPluginManager; received integer'
+        );
 
-        // Act
-        $writer = new ConcreteWriter([
+        new ConcreteWriter([
             'formatter_manager' => 123,
         ]);
-
-        // Assert
-        // No assert needed, expecting an exception.
     }
 
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
      */
-    public function testConstructorWithLegacyFormatterManager()
+    public function testConstructorWithLegacyFormatterManager(): void
     {
         // Arrange
         $pluginManager = new LegacyFormatterPluginManager(new ServiceManager());
@@ -182,7 +216,7 @@ class AbstractTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
      */
-    public function testConstructorWithFilterManager()
+    public function testConstructorWithFilterManager(): void
     {
         // Arrange
         $pluginManager = new FilterPluginManager(new ServiceManager());
@@ -198,27 +232,23 @@ class AbstractTest extends TestCase
 
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
-     * @expectedException Laminas\Log\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Writer plugin manager must extend Laminas\Log\FilterPluginManager; received integer
      */
-    public function testConstructorWithInvalidFilterManager()
+    public function testConstructorWithInvalidFilterManager(): void
     {
-        // Arrange
-        // There is nothing to arrange.
+        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Writer plugin manager must extend Laminas\Log\FilterPluginManager; received integer'
+        );
 
-        // Act
-        $writer = new ConcreteWriter([
+        new ConcreteWriter([
             'filter_manager' => 123,
         ]);
-
-        // Assert
-        // Nothing to assert, expecting an exception.
     }
 
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::__construct
      */
-    public function testConstructorWithLegacyFilterManager()
+    public function testConstructorWithLegacyFilterManager(): void
     {
         // Arrange
         $pluginManager = new LegacyFilterPluginManager(new ServiceManager());
@@ -235,7 +265,7 @@ class AbstractTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::getFormatter
      */
-    public function testFormatterDefaultsToNull()
+    public function testFormatterDefaultsToNull(): void
     {
         $r = new ReflectionObject($this->writer);
         $m = $r->getMethod('getFormatter');
@@ -247,7 +277,7 @@ class AbstractTest extends TestCase
      * @covers \Laminas\Log\Writer\AbstractWriter::getFormatter
      * @covers \Laminas\Log\Writer\AbstractWriter::setFormatter
      */
-    public function testCanSetFormatter()
+    public function testCanSetFormatter(): void
     {
         $formatter = new SimpleFormatter;
         $this->writer->setFormatter($formatter);
@@ -261,7 +291,7 @@ class AbstractTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\AbstractWriter::hasFormatter
      */
-    public function testHasFormatter()
+    public function testHasFormatter(): void
     {
         $r = new ReflectionObject($this->writer);
         $m = $r->getMethod('hasFormatter');

@@ -9,6 +9,7 @@
 namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Log\Formatter\FormatterInterface;
 use Laminas\Log\Writer\Db as DbWriter;
 use LaminasTest\Log\TestAsset\MockDbAdapter;
@@ -17,7 +18,7 @@ use ReflectionMethod;
 
 class DbTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tableName = 'db-table-name';
 
@@ -25,21 +26,21 @@ class DbTest extends TestCase
         $this->writer = new DbWriter($this->db, $this->tableName);
     }
 
-    public function testNotPassingTableNameToConstructorThrowsException()
+    public function testNotPassingTableNameToConstructorThrowsException(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('table name');
         $writer = new DbWriter($this->db);
     }
 
-    public function testNotPassingDbToConstructorThrowsException()
+    public function testNotPassingDbToConstructorThrowsException(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Adapter');
         $writer = new DbWriter([]);
     }
 
-    public function testPassingTableNameAsArgIsOK()
+    public function testPassingTableNameAsArgIsOK(): void
     {
         $options = [
             'db'    => $this->db,
@@ -47,10 +48,13 @@ class DbTest extends TestCase
         ];
         $writer = new DbWriter($options);
         $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
-        $this->assertAttributeEquals($this->tableName, 'tableName', $writer);
+        $tableName = \Closure::bind(function () {
+            return $this->tableName;
+        }, $writer, DbWriter::class)();
+        $this->assertSame($this->tableName, $tableName);
     }
 
-    public function testWriteWithDefaults()
+    public function testWriteWithDefaults(): void
     {
         // log to the mock db adapter
         $fields = [
@@ -68,7 +72,7 @@ class DbTest extends TestCase
         $this->assertEquals([$fields], $this->db->calls['execute'][0]);
     }
 
-    public function testWriteWithDefaultsUsingArray()
+    public function testWriteWithDefaultsUsingArray(): void
     {
         // log to the mock db adapter
         $message  = 'message-to-log';
@@ -94,7 +98,7 @@ class DbTest extends TestCase
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
 
-    public function testWriteWithDefaultsUsingArrayAndSeparator()
+    public function testWriteWithDefaultsUsingArrayAndSeparator(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, null, '-');
 
@@ -122,7 +126,7 @@ class DbTest extends TestCase
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
 
-    public function testWriteUsesOptionalCustomColumnNames()
+    public function testWriteUsesOptionalCustomColumnNames(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, [
             'message' => 'new-message-field',
@@ -149,7 +153,7 @@ class DbTest extends TestCase
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
 
-    public function testWriteUsesParamsWithArray()
+    public function testWriteUsesParamsWithArray(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, [
             'message' => 'new-message-field',
@@ -184,7 +188,7 @@ class DbTest extends TestCase
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
 
-    public function testShutdownRemovesReferenceToDatabaseInstance()
+    public function testShutdownRemovesReferenceToDatabaseInstance(): void
     {
         $this->writer->write(['message' => 'this should not fail']);
         $this->writer->shutdown();
@@ -194,7 +198,7 @@ class DbTest extends TestCase
         $this->writer->write(['message' => 'this should fail']);
     }
 
-    public function testWriteDateTimeAsTimestamp()
+    public function testWriteDateTimeAsTimestamp(): void
     {
         $date = new DateTime();
         $event = ['timestamp' => $date];
@@ -208,7 +212,7 @@ class DbTest extends TestCase
         ]], $this->db->calls['execute'][0]);
     }
 
-    public function testWriteDateTimeAsExtraValue()
+    public function testWriteDateTimeAsExtraValue(): void
     {
         $date = new DateTime();
         $event = [
@@ -226,35 +230,54 @@ class DbTest extends TestCase
         ]], $this->db->calls['execute'][0]);
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $formatter = new \Laminas\Log\Formatter\Simple();
         $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new DbWriter([
+        $writer = new class([
             'filters'   => $filter,
             'formatter' => $formatter,
             'table'     => $this->tableName,
             'db'        => $this->db,
+        ]) extends DbWriter {
+            public function getTableName(): string
+            {
+                return $this->tableName;
+            }
 
-        ]);
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
+
+            public function getDb(): Adapter
+            {
+                return $this->db;
+            }
+        };
         $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
-        $this->assertAttributeEquals($this->tableName, 'tableName', $writer);
+        $this->assertSame($this->tableName, $writer->getTableName());
 
-        $filters = self::readAttribute($writer, 'filters');
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
 
-        $registeredFormatter = self::readAttribute($writer, 'formatter');
+        $registeredFormatter = $writer->getFormatter();
         $this->assertSame($formatter, $registeredFormatter);
 
-        $registeredDb = self::readAttribute($writer, 'db');
+        $registeredDb = $writer->getDb();
         $this->assertSame($this->db, $registeredDb);
     }
 
     /**
      * @group 2589
      */
-    public function testMapEventIntoColumnDoesNotTriggerArrayToStringConversion()
+    public function testMapEventIntoColumnDoesNotTriggerArrayToStringConversion(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, [
             'priority' => 'new-priority-field',
@@ -293,15 +316,15 @@ class DbTest extends TestCase
         $this->assertEquals(1, count($this->db->calls['query']));
 
         foreach ($this->db->calls['execute'][0][0] as $fieldName => $fieldValue) {
-            $this->assertInternalType('string', $fieldName);
-            $this->assertInternalType('string', (string) $fieldValue);
+            $this->assertIsString($fieldName);
+            $this->assertIsString((string) $fieldValue);
         }
     }
 
     /**
      * @group 2589
      */
-    public function testMapEventIntoColumnMustReturnScalarValues()
+    public function testMapEventIntoColumnMustReturnScalarValues(): void
     {
         $event = [
             'priority' => 2,
@@ -337,14 +360,14 @@ class DbTest extends TestCase
         $data = $method->invoke($this->writer, $event, $columnMap);
 
         foreach ($data as $field => $value) {
-            $this->assertInternalType('scalar', $value, sprintf(
+            $this->assertIsScalar($value, sprintf(
                 'Value of column "%s" should be scalar',
                 $field
             ));
         }
     }
 
-    public function testEventIntoColumnMustReturnScalarValues()
+    public function testEventIntoColumnMustReturnScalarValues(): void
     {
         $event = [
             'priority' => 2,
@@ -370,7 +393,7 @@ class DbTest extends TestCase
         $data = $method->invoke($this->writer, $event);
 
         foreach ($data as $field => $value) {
-            $this->assertInternalType('scalar', $value, sprintf(
+            $this->assertIsScalar($value, sprintf(
                 'Value of column "%s" should be scalar',
                 $field
             ));

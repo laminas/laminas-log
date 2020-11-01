@@ -13,52 +13,52 @@ use PHPUnit\Framework\TestCase;
 
 class SuppressFilterTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->filter = new SuppressFilter();
     }
 
-    public function testSuppressIsInitiallyOff()
+    public function testSuppressIsInitiallyOff(): void
     {
         $this->assertTrue($this->filter->filter([]));
     }
 
-    public function testSuppressByConstructorBoolean()
+    public function testSuppressByConstructorBoolean(): void
     {
         $this->filter = new SuppressFilter(true);
         $this->assertFalse($this->filter->filter([]));
         $this->assertFalse($this->filter->filter([]));
     }
 
-    public function testSuppressByConstructorArray()
+    public function testSuppressByConstructorArray(): void
     {
         $this->filter = new SuppressFilter(['suppress' => true]);
         $this->assertFalse($this->filter->filter([]));
         $this->assertFalse($this->filter->filter([]));
     }
 
-    public function testConstructorThrowsOnInvalidSuppressValue()
+    public function testConstructorThrowsOnInvalidSuppressValue(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Suppress must be a boolean');
         new SuppressFilter('foo');
     }
 
-    public function testSuppressOn()
+    public function testSuppressOn(): void
     {
         $this->filter->suppress(true);
         $this->assertFalse($this->filter->filter([]));
         $this->assertFalse($this->filter->filter([]));
     }
 
-    public function testSuppressOff()
+    public function testSuppressOff(): void
     {
         $this->filter->suppress(false);
         $this->assertTrue($this->filter->filter([]));
         $this->assertTrue($this->filter->filter([]));
     }
 
-    public function testSuppressCanBeReset()
+    public function testSuppressCanBeReset(): void
     {
         $this->filter->suppress(true);
         $this->assertFalse($this->filter->filter([]));
