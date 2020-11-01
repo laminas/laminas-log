@@ -60,6 +60,13 @@ class Stream extends AbstractWriter
             $mode = 'a';
         }
 
+        if (!is_string($streamOrUrl) && !is_resource($streamOrUrl)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Resource is not a stream nor a string; received "%s',
+                gettype($streamOrUrl)
+            ));
+        }
+
         if (is_resource($streamOrUrl)) {
             if ('stream' != get_resource_type($streamOrUrl)) {
                 throw new Exception\InvalidArgumentException(sprintf(
@@ -76,21 +83,21 @@ class Stream extends AbstractWriter
             }
 
             $this->stream = $streamOrUrl;
-        } else {
-            ErrorHandler::start();
-            if (isset($filePermissions) && ! file_exists($streamOrUrl) && is_writable(dirname($streamOrUrl))) {
-                touch($streamOrUrl);
-                chmod($streamOrUrl, $filePermissions);
-            }
-            $this->stream = fopen($streamOrUrl, $mode, false);
-            $error = ErrorHandler::stop();
-            if (! $this->stream) {
-                throw new Exception\RuntimeException(sprintf(
-                    '"%s" cannot be opened with mode "%s"',
-                    $streamOrUrl,
-                    $mode
-                ), 0, $error);
-            }
+        }
+
+        ErrorHandler::start();
+        if (isset($filePermissions) && ! file_exists($streamOrUrl) && is_writable(dirname($streamOrUrl))) {
+            touch($streamOrUrl);
+            chmod($streamOrUrl, $filePermissions);
+        }
+        $this->stream = fopen($streamOrUrl, $mode, false);
+        $error = ErrorHandler::stop();
+        if (! $this->stream) {
+            throw new Exception\RuntimeException(sprintf(
+                '"%s" cannot be opened with mode "%s"',
+                $streamOrUrl,
+                $mode
+            ), 0, $error);
         }
 
         if (null !== $logSeparator) {
