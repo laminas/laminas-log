@@ -20,10 +20,6 @@
         "sort-packages": true
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "2.12.x-dev",
-            "dev-develop": "2.13.x-dev"
-        },
         "laminas": {
             "component": "Laminas\\Log",
             "config-provider": "Laminas\\Log\\ConfigProvider"
