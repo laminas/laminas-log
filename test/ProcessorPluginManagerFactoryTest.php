@@ -28,16 +28,10 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $processors = $factory($container, ProcessorPluginManagerFactory::class);
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
 
-        if (method_exists($processors, 'configure')) {
-            // laminas-servicemanager v3
-            $creationContext = \Closure::bind(function () {
-                return $this->creationContext;
-            }, $processors, ProcessorPluginManager::class)();
-            $this->assertSame($container, $creationContext);
-        } else {
-            // laminas-servicemanager v2
-            $this->assertSame($container, $processors->getServiceLocator());
-        }
+        $creationContext = \Closure::bind(function () {
+            return $this->creationContext;
+        }, $processors, ProcessorPluginManager::class)();
+        $this->assertSame($container, $creationContext);
     }
 
     /**
@@ -54,27 +48,6 @@ class ProcessorPluginManagerFactoryTest extends TestCase
                 'test' => $processor,
             ],
         ]);
-        $this->assertSame($processor, $processors->get('test'));
-    }
-
-    /**
-     * @depends testFactoryReturnsPluginManager
-     */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
-    {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $processor = $this->prophesize(ProcessorInterface::class)->reveal();
-
-        $factory = new ProcessorPluginManagerFactory();
-        $factory->setCreationOptions([
-            'services' => [
-                'test' => $processor,
-            ],
-        ]);
-
-        $processors = $factory->createService($container->reveal());
         $this->assertSame($processor, $processors->get('test'));
     }
 

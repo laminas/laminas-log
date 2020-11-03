@@ -28,16 +28,10 @@ class FilterPluginManagerFactoryTest extends TestCase
         $filters = $factory($container, FilterPluginManagerFactory::class);
         $this->assertInstanceOf(FilterPluginManager::class, $filters);
 
-        if (method_exists($filters, 'configure')) {
-            // laminas-servicemanager v3
-            $creationContext = \Closure::bind(function () {
-                return $this->creationContext;
-            }, $filters, FilterPluginManager::class)();
-            $this->assertSame($container, $creationContext);
-        } else {
-            // laminas-servicemanager v2
-            $this->assertSame($container, $filters->getServiceLocator());
-        }
+        $creationContext = \Closure::bind(function () {
+            return $this->creationContext;
+        }, $filters, FilterPluginManager::class)();
+        $this->assertSame($container, $creationContext);
     }
 
     /**
@@ -54,27 +48,6 @@ class FilterPluginManagerFactoryTest extends TestCase
                 'test' => $filter,
             ],
         ]);
-        $this->assertSame($filter, $filters->get('test'));
-    }
-
-    /**
-     * @depends testFactoryReturnsPluginManager
-     */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
-    {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $filter = $this->prophesize(FilterInterface::class)->reveal();
-
-        $factory = new FilterPluginManagerFactory();
-        $factory->setCreationOptions([
-            'services' => [
-                'test' => $filter,
-            ],
-        ]);
-
-        $filters = $factory->createService($container->reveal());
         $this->assertSame($filter, $filters->get('test'));
     }
 

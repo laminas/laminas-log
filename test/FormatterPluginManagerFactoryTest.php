@@ -28,16 +28,10 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $formatters = $factory($container, FormatterPluginManagerFactory::class);
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
 
-        if (method_exists($formatters, 'configure')) {
-            // laminas-servicemanager v3
-            $creationContext = \Closure::bind(function () {
-                return $this->creationContext;
-            }, $formatters, FormatterPluginManager::class)();
-            $this->assertSame($container, $creationContext);
-        } else {
-            // laminas-servicemanager v2
-            $this->assertSame($container, $formatters->getServiceLocator());
-        }
+        $creationContext = \Closure::bind(function () {
+            return $this->creationContext;
+        }, $formatters, FormatterPluginManager::class)();
+        $this->assertSame($container, $creationContext);
     }
 
     /**
@@ -54,27 +48,6 @@ class FormatterPluginManagerFactoryTest extends TestCase
                 'test' => $formatter,
             ],
         ]);
-        $this->assertSame($formatter, $formatters->get('test'));
-    }
-
-    /**
-     * @depends testFactoryReturnsPluginManager
-     */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
-    {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $formatter = $this->prophesize(FormatterInterface::class)->reveal();
-
-        $factory = new FormatterPluginManagerFactory();
-        $factory->setCreationOptions([
-            'services' => [
-                'test' => $formatter,
-            ],
-        ]);
-
-        $formatters = $factory->createService($container->reveal());
         $this->assertSame($formatter, $formatters->get('test'));
     }
 

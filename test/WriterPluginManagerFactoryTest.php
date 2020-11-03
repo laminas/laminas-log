@@ -28,16 +28,10 @@ class WriterPluginManagerFactoryTest extends TestCase
         $writers = $factory($container, WriterPluginManagerFactory::class);
         $this->assertInstanceOf(WriterPluginManager::class, $writers);
 
-        if (method_exists($writers, 'configure')) {
-            // laminas-servicemanager v3
-            $creationContext = \Closure::bind(function () {
-                return $this->creationContext;
-            }, $writers, WriterPluginManager::class)();
-            $this->assertSame($container, $creationContext);
-        } else {
-            // laminas-servicemanager v2
-            $this->assertSame($container, $writers->getServiceLocator());
-        }
+        $creationContext = \Closure::bind(function () {
+            return $this->creationContext;
+        }, $writers, WriterPluginManager::class)();
+        $this->assertSame($container, $creationContext);
     }
 
     /**
@@ -54,27 +48,6 @@ class WriterPluginManagerFactoryTest extends TestCase
                 'test' => $writer,
             ],
         ]);
-        $this->assertSame($writer, $writers->get('test'));
-    }
-
-    /**
-     * @depends testFactoryReturnsPluginManager
-     */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(): void
-    {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $writer = $this->prophesize(WriterInterface::class)->reveal();
-
-        $factory = new WriterPluginManagerFactory();
-        $factory->setCreationOptions([
-            'services' => [
-                'test' => $writer,
-            ],
-        ]);
-
-        $writers = $factory->createService($container->reveal());
         $this->assertSame($writer, $writers->get('test'));
     }
 
