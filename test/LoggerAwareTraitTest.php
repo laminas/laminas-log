@@ -13,16 +13,16 @@ use PHPUnit\Framework\TestCase;
 
 class LoggerAwareTraitTest extends TestCase
 {
-    public function testSetLogger()
+    public function testSetLogger(): void
     {
-        $object = $this->getObjectForTrait('\Laminas\Log\LoggerAwareTrait');
+        $object = $this->getObjectForTrait(\Laminas\Log\LoggerAwareTrait::class);
 
-        $this->assertAttributeEquals(null, 'logger', $object);
+        $this->assertNull($object->getLogger());
 
         $logger = new Logger;
 
         $object->setLogger($logger);
 
-        $this->assertAttributeEquals($logger, 'logger', $object);
+        $this->assertSame($logger, $object->getLogger());
     }
 }

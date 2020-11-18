@@ -8,13 +8,15 @@
 
 namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Filter\Priority;
 use Laminas\Log\Writer\FingersCrossed as FingersCrossedWriter;
 use Laminas\Log\Writer\Mock as MockWriter;
+use Laminas\Log\Writer\WriterInterface;
 use PHPUnit\Framework\TestCase;
 
 class FingersCrossedTest extends TestCase
 {
-    public function testBuffering()
+    public function testBuffering(): void
     {
         $wrappedWriter = new MockWriter();
         $writer = new FingersCrossedWriter($wrappedWriter, 2);
@@ -24,7 +26,7 @@ class FingersCrossedTest extends TestCase
         $this->assertSame(count($wrappedWriter->events), 0);
     }
 
-    public function testFlushing()
+    public function testFlushing(): void
     {
         $wrappedWriter = new MockWriter();
         $writer = new FingersCrossedWriter($wrappedWriter, 2);
@@ -35,7 +37,7 @@ class FingersCrossedTest extends TestCase
         $this->assertSame(count($wrappedWriter->events), 2);
     }
 
-    public function testAfterFlushing()
+    public function testAfterFlushing(): void
     {
         $wrappedWriter = new MockWriter();
         $writer = new FingersCrossedWriter($wrappedWriter, 2);
@@ -49,28 +51,51 @@ class FingersCrossedTest extends TestCase
 
     public function setWriterByName()
     {
-        $writer = new FingersCrossedWriter('mock');
-        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
+        $writer = new class('mock') extends FingersCrossedWriter {
+            public function getWriter(): WriterInterface
+            {
+                return $this->writer;
+            }
+        };
+        $this->assertInstanceOf(\Laminas\Log\Writer\Mock::class, $writer->getWriter());
     }
 
-    public function testConstructorOptions()
+    public function testConstructorOptions(): void
     {
         $options = ['writer' => 'mock', 'priority' => 3];
-        $writer = new FingersCrossedWriter($options);
-        $this->assertAttributeInstanceOf('Laminas\Log\Writer\Mock', 'writer', $writer);
+        $writer = new class($options) extends FingersCrossedWriter {
+            public function getWriter(): WriterInterface
+            {
+                return $this->writer;
+            }
 
-        $filters = $this->readAttribute($writer, 'filters');
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+        $this->assertInstanceOf(\Laminas\Log\Writer\Mock::class, $writer->getWriter());
+
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
-        $this->assertAttributeEquals(3, 'priority', $filters[0]);
+        $priority = \Closure::bind(function () {
+            return $this->priority;
+        }, $filters[0], Priority::class)();
+        $this->assertEquals(3, $priority);
     }
 
-    public function testFormattingIsNotSupported()
+    public function testFormattingIsNotSupported(): void
     {
         $options = ['writer' => 'mock', 'priority' => 3];
-        $writer = new FingersCrossedWriter($options);
+        $writer = new class($options) extends FingersCrossedWriter {
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
+        };
 
         $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
-        $this->assertAttributeEmpty('formatter', $writer);
+        $this->assertEmpty($writer->getFormatter());
     }
 }

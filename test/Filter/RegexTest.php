@@ -16,14 +16,14 @@ use PHPUnit\Framework\TestCase;
  */
 class RegexTest extends TestCase
 {
-    public function testMessageFilterRecognizesInvalidRegularExpression()
+    public function testMessageFilterRecognizesInvalidRegularExpression(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('invalid reg');
         new Regex('invalid regexp');
     }
 
-    public function testMessageFilter()
+    public function testMessageFilter(): void
     {
         $filter = new Regex('/accept/');
         $this->assertTrue($filter->filter(['message' => 'foo accept bar']));

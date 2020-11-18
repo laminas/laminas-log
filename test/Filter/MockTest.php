@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MockTest extends TestCase
 {
-    public function testWrite()
+    public function testWrite(): void
     {
         $filter = new MockFilter();
         $this->assertSame([], $filter->events);

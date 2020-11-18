@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class FirePhpTest extends TestCase
 {
-    public function testFormatWithExtraData()
+    public function testFormatWithExtraData(): void
     {
         $fields = [ 'message' => 'foo',
                 'extra' => new \stdClass() ];
@@ -21,22 +21,22 @@ class FirePhpTest extends TestCase
         $f = new FirePhp();
         list($line, $label) = $f->format($fields);
 
-        $this->assertContains($fields['message'], $label);
+        $this->assertStringContainsString($fields['message'], $label);
         $this->assertEquals($fields['extra'], $line);
     }
 
-    public function testFormatWithoutExtra()
+    public function testFormatWithoutExtra(): void
     {
         $fields = [ 'message' => 'foo' ];
 
         $f = new FirePhp();
         list($line, $label) = $f->format($fields);
 
-        $this->assertContains($fields['message'], $line);
+        $this->assertStringContainsString($fields['message'], $line);
         $this->assertNull($label);
     }
 
-    public function testFormatWithEmptyExtra()
+    public function testFormatWithEmptyExtra(): void
     {
         $fields = [ 'message' => 'foo',
                 'extra' => [] ];
@@ -44,11 +44,11 @@ class FirePhpTest extends TestCase
         $f = new FirePhp();
         list($line, $label) = $f->format($fields);
 
-        $this->assertContains($fields['message'], $line);
+        $this->assertStringContainsString($fields['message'], $line);
         $this->assertNull($label);
     }
 
-    public function testSetDateTimeFormatDoesNothing()
+    public function testSetDateTimeFormatDoesNothing(): void
     {
         $formatter = new FirePhp();
 

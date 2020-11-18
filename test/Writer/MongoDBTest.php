@@ -34,7 +34,7 @@ class MongoDBTest extends TestCase
      */
     protected $collection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (! extension_loaded('mongodb')) {
             $this->markTestSkipped('The mongodb PHP extension is not available');
@@ -46,14 +46,14 @@ class MongoDBTest extends TestCase
         $this->manager = new Manager('mongodb://localhost:27017');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (extension_loaded('mongodb')) {
             $this->manager->executeCommand($this->database, new Command(['dropDatabase' => 1]));
         }
     }
 
-    public function testFormattingIsNotSupported()
+    public function testFormattingIsNotSupported(): void
     {
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection);
 
@@ -61,7 +61,7 @@ class MongoDBTest extends TestCase
         $this->assertAttributeEmpty('formatter', $writer);
     }
 
-    public function testWriteWithDefaultSaveOptions()
+    public function testWriteWithDefaultSaveOptions(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
 
@@ -77,7 +77,7 @@ class MongoDBTest extends TestCase
         }
     }
 
-    public function testWriteWithCustomWriteConcern()
+    public function testWriteWithCustomWriteConcern(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
         $writeConcern = ['journal' => false, 'wtimeout' => 100, 'wstring' => 1];
@@ -94,7 +94,7 @@ class MongoDBTest extends TestCase
         }
     }
 
-    public function testWriteWithCustomWriteConcernInstance()
+    public function testWriteWithCustomWriteConcernInstance(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
         $writeConcern = new WriteConcern(1, 100, false);
@@ -111,7 +111,7 @@ class MongoDBTest extends TestCase
         }
     }
 
-    public function testWriteWithoutCollectionNameWhenNamespaceIsGivenAsDatabase()
+    public function testWriteWithoutCollectionNameWhenNamespaceIsGivenAsDatabase(): void
     {
         $event = ['message' => 'foo', 'priority' => 42];
 
@@ -127,7 +127,7 @@ class MongoDBTest extends TestCase
         }
     }
 
-    public function testWriteConvertsDateTimeToMongoDate()
+    public function testWriteConvertsDateTimeToMongoDate(): void
     {
         $date = new DateTime();
         $event = ['timestamp' => $date];

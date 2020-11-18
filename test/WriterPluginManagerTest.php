@@ -19,12 +19,12 @@ class WriterPluginManagerTest extends TestCase
      */
     protected $plugins;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->plugins = new WriterPluginManager(new ServiceManager());
     }
 
-    public function testInvokableClassFirephp()
+    public function testInvokableClassFirephp(): void
     {
         $firephp = $this->plugins->get('firephp');
         $this->assertInstanceOf('Laminas\Log\Writer\Firephp', $firephp);

@@ -15,12 +15,12 @@ class BacktraceTest extends TestCase
 {
     private $processor;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->processor = new Backtrace();
     }
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $event = [
                 'timestamp'    => '',
@@ -38,7 +38,7 @@ class BacktraceTest extends TestCase
         $this->assertArrayHasKey('function', $event['extra']);
     }
 
-    public function testConstructorAcceptsOptionalIgnoredNamespaces()
+    public function testConstructorAcceptsOptionalIgnoredNamespaces(): void
     {
         $this->assertSame(['Laminas\\Log'], $this->processor->getIgnoredNamespaces());
 

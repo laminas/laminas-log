@@ -13,7 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 class NoopTest extends TestCase
 {
-    public function testWrite()
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testWrite(): void
     {
         $writer = new NoopWriter();
         $writer->write(['message' => 'foo', 'priority' => 42]);

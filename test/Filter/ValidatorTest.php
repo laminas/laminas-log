@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class ValidatorTest extends TestCase
 {
-    public function testValidatorFilter()
+    public function testValidatorFilter(): void
     {
         $filter = new Validator(new DigitsFilter());
         $this->assertTrue($filter->filter(['message' => '123']));
@@ -25,7 +25,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($filter->filter(['message' => '(%$']));
     }
 
-    public function testValidatorChain()
+    public function testValidatorChain(): void
     {
         $validatorChain = new ValidatorChain();
         $validatorChain->attach(new NotEmptyFilter());

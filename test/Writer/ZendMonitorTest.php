@@ -15,8 +15,9 @@ class ZendMonitorTest extends TestCase
 {
     /**
      * @group Laminas-10081
+     * @doesNotPerformAssertions
      */
-    public function testWrite()
+    public function testWrite(): void
     {
         $writer = new ZendMonitor();
         $writer->write([
@@ -25,9 +26,9 @@ class ZendMonitorTest extends TestCase
         ]);
     }
 
-    public function testIsEnabled()
+    public function testIsEnabled(): void
     {
         $writer = new ZendMonitor();
-        $this->assertInternalType('boolean', $writer->isEnabled());
+        $this->assertIsBool($writer->isEnabled());
     }
 }

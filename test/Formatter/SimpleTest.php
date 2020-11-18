@@ -15,7 +15,7 @@ use RuntimeException;
 
 class SimpleTest extends TestCase
 {
-    public function testConstructorThrowsOnBadFormatString()
+    public function testConstructorThrowsOnBadFormatString(): void
     {
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('must be a string');
@@ -25,16 +25,21 @@ class SimpleTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testConstructorWithOptions($dateTimeFormat)
+    public function testConstructorWithOptions($dateTimeFormat): void
     {
         $options = ['dateTimeFormat' => $dateTimeFormat, 'format' => '%timestamp%'];
-        $formatter = new Simple($options);
+        $formatter = new class($options) extends Simple {
+            public function getFormat(): string
+            {
+                return $this->format;
+            }
+        };
 
         $this->assertEquals($dateTimeFormat, $formatter->getDateTimeFormat());
-        $this->assertAttributeEquals('%timestamp%', 'format', $formatter);
+        $this->assertSame('%timestamp%', $formatter->getFormat());
     }
 
-    public function testDefaultFormat()
+    public function testDefaultFormat(): void
     {
         $date = new DateTime('2012-08-28T18:15:00Z');
         $fields = [
@@ -54,7 +59,7 @@ class SimpleTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testCustomDateTimeFormat($dateTimeFormat)
+    public function testCustomDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
         $event = ['timestamp' => $date];
@@ -66,7 +71,7 @@ class SimpleTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $date = new DateTime();
         $event = ['timestamp' => $date];
@@ -88,7 +93,7 @@ class SimpleTest extends TestCase
     /**
      * @group Laminas-10427
      */
-    public function testDefaultFormatShouldDisplayExtraInformations()
+    public function testDefaultFormatShouldDisplayExtraInformations(): void
     {
         $message = 'custom message';
         $exception = new RuntimeException($message);
@@ -103,10 +108,10 @@ class SimpleTest extends TestCase
         $formatter = new Simple();
         $output = $formatter->format($event);
 
-        $this->assertContains($message, $output);
+        $this->assertStringContainsString($message, $output);
     }
 
-    public function testAllowsSpecifyingFormatAsConstructorArgument()
+    public function testAllowsSpecifyingFormatAsConstructorArgument(): void
     {
         $format = '[%timestamp%] %message%';
         $formatter = new Simple($format);

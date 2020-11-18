@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class ReferenceIdTest extends TestCase
 {
-    public function testProcessMixesInReferenceId()
+    public function testProcessMixesInReferenceId(): void
     {
         $processor      = new ReferenceId();
         $processedEvent = $processor->process([
@@ -24,13 +24,13 @@ class ReferenceIdTest extends TestCase
         ]);
 
         $this->assertArrayHasKey('extra', $processedEvent);
-        $this->assertInternalType('array', $processedEvent['extra']);
+        $this->assertIsArray($processedEvent['extra']);
         $this->assertArrayHasKey('referenceId', $processedEvent['extra']);
 
         $this->assertNotNull($processedEvent['extra']['referenceId']);
     }
 
-    public function testProcessDoesNotOverwriteReferenceId()
+    public function testProcessDoesNotOverwriteReferenceId(): void
     {
         $processor      = new ReferenceId();
         $referenceId    = 'bar';
@@ -45,13 +45,13 @@ class ReferenceIdTest extends TestCase
         ]);
 
         $this->assertArrayHasKey('extra', $processedEvent);
-        $this->assertInternalType('array', $processedEvent['extra']);
+        $this->assertIsArray($processedEvent['extra']);
         $this->assertArrayHasKey('referenceId', $processedEvent['extra']);
 
         $this->assertSame($referenceId, $processedEvent['extra']['referenceId']);
     }
 
-    public function testCanSetAndGetReferenceId()
+    public function testCanSetAndGetReferenceId(): void
     {
         $processor   = new ReferenceId();
         $referenceId = 'foo';
@@ -61,7 +61,7 @@ class ReferenceIdTest extends TestCase
         $this->assertSame($referenceId, $processor->getReferenceId());
     }
 
-    public function testProcessUsesSetReferenceId()
+    public function testProcessUsesSetReferenceId(): void
     {
         $referenceId = 'foo';
         $processor   = new ReferenceId();
@@ -76,7 +76,7 @@ class ReferenceIdTest extends TestCase
         ]);
 
         $this->assertArrayHasKey('extra', $processedEvent);
-        $this->assertInternalType('array', $processedEvent['extra']);
+        $this->assertIsArray($processedEvent['extra']);
         $this->assertArrayHasKey('referenceId', $processedEvent['extra']);
 
         $this->assertSame($referenceId, $processedEvent['extra']['referenceId']);

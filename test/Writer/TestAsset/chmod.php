@@ -21,7 +21,7 @@ namespace Laminas\Log\Writer;
 function chmod($filename, $mode)
 {
     if (! empty($GLOBALS['chmod_throw_error'])) {
-        trigger_error('some_error', E_WARNING);
+        trigger_error('some_error', E_USER_WARNING);
         return false;
     }
 

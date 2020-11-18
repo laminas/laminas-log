@@ -28,7 +28,7 @@ class MailTest extends TestCase
      */
     protected $log;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $message = new MailMessage();
         $transport = new Transport\File();
@@ -45,7 +45,7 @@ class MailTest extends TestCase
         $this->log->addWriter($this->writer);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (file_exists(__DIR__. '/' . self::FILENAME)) {
             unlink(__DIR__. '/' . self::FILENAME);
@@ -57,18 +57,18 @@ class MailTest extends TestCase
      *
      * @return void
      */
-    public function testNormalLoggingMultiplePerLevel()
+    public function testNormalLoggingMultiplePerLevel(): void
     {
         $this->log->info('an info message');
         $this->log->info('a second info message');
         unset($this->log);
 
         $contents = file_get_contents(__DIR__ . '/' . self::FILENAME);
-        $this->assertContains('an info message', $contents);
-        $this->assertContains('a second info message', $contents);
+        $this->assertStringContainsString('an info message', $contents);
+        $this->assertStringContainsString('a second info message', $contents);
     }
 
-    public function testSetSubjectPrependText()
+    public function testSetSubjectPrependText(): void
     {
         $this->writer->setSubjectPrependText('test');
 
@@ -77,11 +77,11 @@ class MailTest extends TestCase
         unset($this->log);
 
         $contents = file_get_contents(__DIR__ . '/' . self::FILENAME);
-        $this->assertContains('an info message', $contents);
-        $this->assertContains('Subject: test', $contents);
+        $this->assertStringContainsString('an info message', $contents);
+        $this->assertStringContainsString('Subject: test', $contents);
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $message   = new MailMessage();
         $transport = new Transport\File();
@@ -95,23 +95,43 @@ class MailTest extends TestCase
 
         $formatter = new \Laminas\Log\Formatter\Simple();
         $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new MailWriter([
-                'filters'   => $filter,
-                'formatter' => $formatter,
-                'mail'      => $message,
-                'transport' => $transport,
-        ]);
+        $writer = new class([
+            'filters'   => $filter,
+            'formatter' => $formatter,
+            'mail'      => $message,
+            'transport' => $transport,
+        ]) extends MailWriter {
+            public function getMail(): MailMessage
+            {
+                return $this->mail;
+            }
 
-        $this->assertAttributeEquals($message, 'mail', $writer);
-        $this->assertAttributeEquals($transport, 'transport', $writer);
-        $this->assertAttributeEquals($formatter, 'formatter', $writer);
+            public function getTransport(): Transport\TransportInterface
+            {
+                return $this->transport;
+            }
 
-        $filters = self::readAttribute($writer, 'filters');
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
+
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+
+        $this->assertEquals($message, $writer->getMail());
+        $this->assertEquals($transport, $writer->getTransport());
+        $this->assertEquals($formatter, $writer->getFormatter());
+
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }
 
-    public function testConstructWithMailAsArrayOptions()
+    public function testConstructWithMailAsArrayOptions(): void
     {
         $messageOptions = [
             'encoding'  => 'UTF-8',
@@ -121,14 +141,19 @@ class MailTest extends TestCase
             'body'      => 'body',
         ];
 
-        $writer = new MailWriter([
+        $writer = new class([
             'mail' => $messageOptions,
-        ]);
+        ]) extends MailWriter {
+            public function getMail(): MailMessage
+            {
+                return $this->mail;
+            }
+        };
 
-        $this->assertAttributeInstanceOf('Laminas\Mail\Message', 'mail', $writer);
+        $this->assertInstanceOf('Laminas\Mail\Message', $writer->getMail());
     }
 
-    public function testConstructWithMailTransportAsArrayOptions()
+    public function testConstructWithMailTransportAsArrayOptions(): void
     {
         $messageOptions = [
             'encoding'  => 'UTF-8',
@@ -151,11 +176,16 @@ class MailTest extends TestCase
             ]
         ];
 
-        $writer = new MailWriter([
+        $writer = new class([
             'mail' => $messageOptions,
             'transport' => $transportOptions,
-        ]);
+        ]) extends MailWriter {
+            public function getTransport(): Transport\TransportInterface
+            {
+                return $this->transport;
+            }
+        };
 
-        $this->assertAttributeInstanceOf('Laminas\Mail\Transport\Smtp', 'transport', $writer);
+        $this->assertInstanceOf('Laminas\Mail\Transport\Smtp', $writer->getTransport());
     }
 }

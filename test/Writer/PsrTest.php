@@ -10,6 +10,7 @@ namespace LaminasTest\Log\Writer;
 
 use Laminas\Log\Filter\Mock as MockFilter;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
+use Laminas\Log\FormatterPluginManager;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Psr as PsrWriter;
 use PHPUnit\Framework\TestCase;
@@ -26,31 +27,49 @@ class PsrTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructWithPsrLogger()
+    public function testConstructWithPsrLogger(): void
     {
         $psrLogger = $this->createMock(LoggerInterface::class);
         $writer    = new PsrWriter($psrLogger);
-        $this->assertAttributeSame($psrLogger, 'logger', $writer);
+        $logger = \Closure::bind(function () {
+            return $this->logger;
+        }, $writer, PsrWriter::class)();
+        $this->assertSame($psrLogger, $logger);
     }
 
     /**
      * @covers ::__construct
      */
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $psrLogger = $this->createMock(LoggerInterface::class);
         $formatter = new SimpleFormatter();
         $filter    = new MockFilter();
-        $writer = new PsrWriter([
+        $writer = new class([
             'filters'   => $filter,
             'formatter' => $formatter,
             'logger'    => $psrLogger,
-        ]);
+        ]) extends PsrWriter {
+            public function getLogger(): LoggerInterface
+            {
+                return $this->logger;
+            }
 
-        $this->assertAttributeSame($psrLogger, 'logger', $writer);
-        $this->assertAttributeSame($formatter, 'formatter', $writer);
+            public function getFormatter()
+            {
+                return $this->formatter;
+            }
 
-        $filters = self::readAttribute($writer, 'filters');
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
+
+        $this->assertSame($psrLogger, $writer->getLogger());
+        $this->assertSame($formatter, $writer->getFormatter());
+
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }
@@ -58,16 +77,21 @@ class PsrTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testFallbackLoggerIsNullLogger()
+    public function testFallbackLoggerIsNullLogger(): void
     {
-        $writer = new PsrWriter;
-        $this->assertAttributeInstanceOf(NullLogger::class, 'logger', $writer);
+        $writer = new class extends PsrWriter {
+            public function getLogger(): LoggerInterface
+            {
+                return $this->logger;
+            }
+        };
+        $this->assertInstanceOf(NullLogger::class, $writer->getLogger());
     }
 
     /**
      * @dataProvider priorityToLogLevelProvider
      */
-    public function testWriteLogMapsLevelsProperly($priority, $logLevel)
+    public function testWriteLogMapsLevelsProperly($priority, $logLevel): void
     {
         $message = 'foo';
         $extra   = ['bar' => 'baz'];

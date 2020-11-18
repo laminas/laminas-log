@@ -21,17 +21,17 @@ class StreamWriterTest extends TestCase
      */
     private static $ranSuite = false;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->root = vfsStream::setup('laminas-log');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::$ranSuite = true;
     }
 
-    public function testConstructorThrowsWhenResourceIsNotStream()
+    public function testConstructorThrowsWhenResourceIsNotStream(): void
     {
         $resource = xml_parser_create();
         try {
@@ -39,23 +39,29 @@ class StreamWriterTest extends TestCase
             $this->fail();
         } catch (\Exception $e) {
             $this->assertInstanceOf('Laminas\Log\Exception\InvalidArgumentException', $e);
-            $this->assertRegExp('/not a stream/i', $e->getMessage());
+            $this->assertMatchesRegularExpression('/not a stream/i', $e->getMessage());
         }
         xml_parser_free($resource);
     }
 
-    public function testConstructorWithValidStream()
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testConstructorWithValidStream(): void
     {
         $stream = fopen('php://memory', 'w+');
         new StreamWriter($stream);
     }
 
-    public function testConstructorWithValidUrl()
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testConstructorWithValidUrl(): void
     {
         new StreamWriter('php://memory');
     }
 
-    public function testConstructorThrowsWhenModeSpecifiedForExistingStream()
+    public function testConstructorThrowsWhenModeSpecifiedForExistingStream(): void
     {
         $stream = fopen('php://memory', 'w+');
         $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
@@ -63,14 +69,17 @@ class StreamWriterTest extends TestCase
         new StreamWriter($stream, 'w+');
     }
 
-    public function testConstructorThrowsWhenStreamCannotBeOpened()
+    /**
+     * @requires PHP < 8.0
+     */
+    public function testConstructorThrowsWhenStreamCannotBeOpened(): void
     {
         $this->expectException('Laminas\Log\Exception\RuntimeException');
         $this->expectExceptionMessage('cannot be opened');
         new StreamWriter('');
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $stream = fopen('php://memory', 'w+');
         $fields = ['message' => 'message-to-log'];
@@ -82,10 +91,13 @@ class StreamWriterTest extends TestCase
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        $this->assertContains($fields['message'], $contents);
+        $this->assertStringContainsString($fields['message'], $contents);
     }
 
-    public function testWriteThrowsWhenStreamWriteFails()
+    /**
+     * @requires PHP < 8.0
+     */
+    public function testWriteThrowsWhenStreamWriteFails(): void
     {
         $stream = fopen('php://memory', 'w+');
         $writer = new StreamWriter($stream);
@@ -96,7 +108,10 @@ class StreamWriterTest extends TestCase
         $writer->write(['message' => 'foo']);
     }
 
-    public function testShutdownClosesStreamResource()
+    /**
+     * @requires PHP < 8.0
+     */
+    public function testShutdownClosesStreamResource(): void
     {
         $writer = new StreamWriter('php://memory', 'w+');
         $writer->write(['message' => 'this write should succeed']);
@@ -108,7 +123,7 @@ class StreamWriterTest extends TestCase
         $writer->write(['message' => 'this write should fail']);
     }
 
-    public function testSettingNewFormatter()
+    public function testSettingNewFormatter(): void
     {
         $stream = fopen('php://memory', 'w+');
         $writer = new StreamWriter($stream);
@@ -122,10 +137,10 @@ class StreamWriterTest extends TestCase
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        $this->assertContains($expected, $contents);
+        $this->assertStringContainsString($expected, $contents);
     }
 
-    public function testAllowSpecifyingLogSeparator()
+    public function testAllowSpecifyingLogSeparator(): void
     {
         $stream = fopen('php://memory', 'w+');
         $writer = new StreamWriter($stream);
@@ -140,17 +155,17 @@ class StreamWriterTest extends TestCase
         $contents = stream_get_contents($stream);
         fclose($stream);
 
-        $this->assertRegexp('/message1.*?::.*?message2/', $contents);
-        $this->assertNotContains(PHP_EOL, $contents);
+        $this->assertMatchesRegularExpression('/message1.*?::.*?message2/', $contents);
+        $this->assertStringNotContainsString(PHP_EOL, $contents);
     }
 
-    public function testAllowsSpecifyingLogSeparatorAsConstructorArgument()
+    public function testAllowsSpecifyingLogSeparatorAsConstructorArgument(): void
     {
         $writer = new StreamWriter('php://memory', 'w+', '::');
         $this->assertEquals('::', $writer->getLogSeparator());
     }
 
-    public function testAllowsSpecifyingLogSeparatorWithinArrayPassedToConstructor()
+    public function testAllowsSpecifyingLogSeparatorWithinArrayPassedToConstructor(): void
     {
         $options = [
             'stream'        => 'php://memory',
@@ -161,34 +176,50 @@ class StreamWriterTest extends TestCase
         $this->assertEquals('::', $writer->getLogSeparator());
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $formatter = new SimpleFormatter();
         $filter    = new MockFilter();
 
-        $writer = new StreamWriter([
+        $writer = new class([
             'filters'       => $filter,
             'formatter'     => $formatter,
             'stream'        => 'php://memory',
             'mode'          => 'w+',
             'log_separator' => '::',
-        ]);
+        ]) extends StreamWriter {
+            public function getFormatter(): SimpleFormatter
+            {
+                return $this->formatter;
+            }
+
+            public function getFilters(): array
+            {
+                return $this->filters;
+            }
+        };
 
         $this->assertEquals('::', $writer->getLogSeparator());
-        $this->assertAttributeEquals($formatter, 'formatter', $writer);
+        $this->assertEquals($formatter, $writer->getFormatter());
 
-        $filters = self::readAttribute($writer, 'filters');
+        $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }
 
-    public function testDefaultFormatter()
+    public function testDefaultFormatter(): void
     {
-        $writer = new StreamWriter('php://memory');
-        $this->assertAttributeInstanceOf(SimpleFormatter::class, 'formatter', $writer);
+        $writer = new class('php://memory') extends StreamWriter {
+            public function getFormatter(): SimpleFormatter
+            {
+                return $this->formatter;
+            }
+        };
+
+        $this->assertInstanceOf(SimpleFormatter::class, $writer->getFormatter());
     }
 
-    public function testCanSpecifyFilePermsViaChmodOption()
+    public function testCanSpecifyFilePermsViaChmodOption(): void
     {
         $filter    = new MockFilter();
         $formatter = new SimpleFormatter();
@@ -205,7 +236,7 @@ class StreamWriterTest extends TestCase
         $this->assertEquals(0664, $this->root->getChild('foo')->getPermissions());
     }
 
-    public function testFilePermsDoNotThrowErrors()
+    public function testFilePermsDoNotThrowErrors(): void
     {
         // Make the chmod() override emit a warning.
         $GLOBALS['chmod_throw_error'] = true;
@@ -224,7 +255,7 @@ class StreamWriterTest extends TestCase
         $this->assertEquals(0666, $this->root->getChild('foo')->getPermissions());
     }
 
-    public function testCanSpecifyFilePermsViaConstructorArgument()
+    public function testCanSpecifyFilePermsViaConstructorArgument(): void
     {
         if (self::$ranSuite) {
             $this->markTestSkipped(sprintf(

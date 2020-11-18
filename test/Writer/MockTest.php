@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class MockTest extends TestCase
 {
-    public function testWrite()
+    public function testWrite(): void
     {
         $writer = new MockWriter();
         $this->assertSame([], $writer->events);

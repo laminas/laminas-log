@@ -18,7 +18,7 @@ use stdClass;
 
 class BaseTest extends TestCase
 {
-    public function testDefaultDateTimeFormat()
+    public function testDefaultDateTimeFormat(): void
     {
         $formatter = new BaseFormatter();
         $this->assertEquals(BaseFormatter::DEFAULT_DATETIME_FORMAT, $formatter->getDateTimeFormat());
@@ -27,7 +27,7 @@ class BaseTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testAllowsSpecifyingDateTimeFormatAsConstructorArgument($dateTimeFormat)
+    public function testAllowsSpecifyingDateTimeFormatAsConstructorArgument($dateTimeFormat): void
     {
         $formatter = new BaseFormatter($dateTimeFormat);
 
@@ -49,7 +49,7 @@ class BaseTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormat($dateTimeFormat)
+    public function testSetDateTimeFormat($dateTimeFormat): void
     {
         $formatter = new BaseFormatter();
         $formatter->setDateTimeFormat($dateTimeFormat);
@@ -60,7 +60,7 @@ class BaseTest extends TestCase
     /**
      * @dataProvider provideDateTimeFormats
      */
-    public function testSetDateTimeFormatInConstructor($dateTimeFormat)
+    public function testSetDateTimeFormatInConstructor($dateTimeFormat): void
     {
         $options = ['dateTimeFormat' => $dateTimeFormat];
         $formatter = new BaseFormatter($options);
@@ -68,7 +68,7 @@ class BaseTest extends TestCase
         $this->assertEquals($dateTimeFormat, $formatter->getDateTimeFormat());
     }
 
-    public function testFormatAllTypes()
+    public function testFormatAllTypes(): void
     {
         $datetime = new DateTime();
         $object = new stdClass();
@@ -115,7 +115,7 @@ class BaseTest extends TestCase
         $this->assertEquals($outputExpected, $formatter->format($event));
     }
 
-    public function testFormatNoInfiniteLoopOnSelfReferencingArrayValues()
+    public function testFormatNoInfiniteLoopOnSelfReferencingArrayValues(): void
     {
         $datetime  = new DateTime();
         $formatter = new BaseFormatter();
@@ -144,7 +144,7 @@ class BaseTest extends TestCase
         $this->assertEquals($outputExpected, $formatter->format($event));
     }
 
-    public function testFormatExtraArrayKeyWithNonArrayValue()
+    public function testFormatExtraArrayKeyWithNonArrayValue(): void
     {
         $formatter = new BaseFormatter();
 

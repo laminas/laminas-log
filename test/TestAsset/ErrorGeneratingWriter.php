@@ -14,8 +14,6 @@ class ErrorGeneratingWriter extends AbstractWriter
 {
     protected function doWrite(array $event)
     {
-        $stream = fopen("php://memory", "r");
-        fclose($stream);
-        fwrite($stream, "test");
+        trigger_error('test', E_USER_WARNING);
     }
 }

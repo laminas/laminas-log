@@ -15,9 +15,12 @@ use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use LaminasTest\Log\Writer\TestAsset\InvokableObject;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class WriterFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     protected function createServiceManagerMock()
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
@@ -28,7 +31,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::setCreationOptions
      */
-    public function testSetCreationOptions()
+    public function testSetCreationOptions(): void
     {
         // Arrange
         $container = $this->prophesize(ServiceLocatorInterface::class);
@@ -54,7 +57,7 @@ class WriterFactoryTest extends TestCase
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
-    public function testCreateServiceWithoutCreationOptions()
+    public function testCreateServiceWithoutCreationOptions(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -77,7 +80,7 @@ class WriterFactoryTest extends TestCase
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
-    public function testCreateServiceWithCreationOptions()
+    public function testCreateServiceWithCreationOptions(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -100,7 +103,7 @@ class WriterFactoryTest extends TestCase
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
-    public function testCreateServiceWithValidRequestName()
+    public function testCreateServiceWithValidRequestName(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -123,7 +126,7 @@ class WriterFactoryTest extends TestCase
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__construct
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::createService
      */
-    public function testCreateServiceInvalidNames()
+    public function testCreateServiceInvalidNames(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -145,7 +148,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithoutOptions()
+    public function testInvokeWithoutOptions(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -162,7 +165,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithInvalidFilterManagerAsString()
+    public function testInvokeWithInvalidFilterManagerAsString(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -183,7 +186,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithValidFilterManagerAsString()
+    public function testInvokeWithValidFilterManagerAsString(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -208,7 +211,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithoutFilterManager()
+    public function testInvokeWithoutFilterManager(): void
     {
         // Arrange
         $container = $this->createServiceManagerMock();
@@ -231,7 +234,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithInvalidFormatterManagerAsString()
+    public function testInvokeWithInvalidFormatterManagerAsString(): void
     {
         // Arrange
         $container = $this->prophesize(ContainerInterface::class);
@@ -252,7 +255,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithValidFormatterManagerAsString()
+    public function testInvokeWithValidFormatterManagerAsString(): void
     {
         // Arrange
         $container = $this->prophesize(ContainerInterface::class);
@@ -276,7 +279,7 @@ class WriterFactoryTest extends TestCase
     /**
      * @covers \Laminas\Log\Writer\Factory\WriterFactory::__invoke
      */
-    public function testInvokeWithoutFormatterManager()
+    public function testInvokeWithoutFormatterManager(): void
     {
         // Arrange
         $container = $this->prophesize(ContainerInterface::class);

@@ -17,18 +17,18 @@ class ChromePhpTest extends TestCase
 {
     protected $chromephp;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->chromephp = new MockChromePhp();
     }
 
-    public function testGetChromePhp()
+    public function testGetChromePhp(): void
     {
         $writer = new ChromePhp($this->chromephp);
         $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
     }
 
-    public function testSetChromePhp()
+    public function testSetChromePhp(): void
     {
         $writer   = new ChromePhp($this->chromephp);
         $chromephp2 = new MockChromePhp();
@@ -38,7 +38,7 @@ class ChromePhpTest extends TestCase
         $this->assertEquals($chromephp2, $writer->getChromePhp());
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $writer = new ChromePhp($this->chromephp);
         $writer->write([
@@ -48,7 +48,7 @@ class ChromePhpTest extends TestCase
         $this->assertEquals('my msg', $this->chromephp->calls['trace'][0]);
     }
 
-    public function testWriteDisabled()
+    public function testWriteDisabled(): void
     {
         $chromephp = new MockChromePhp(false);
         $writer = new ChromePhp($chromephp);
@@ -59,7 +59,7 @@ class ChromePhpTest extends TestCase
         $this->assertEmpty($this->chromephp->calls);
     }
 
-    public function testConstructWithOptions()
+    public function testConstructWithOptions(): void
     {
         $formatter = new \Laminas\Log\Formatter\Simple();
         $filter    = new \Laminas\Log\Filter\Mock();
@@ -69,9 +69,15 @@ class ChromePhpTest extends TestCase
             'instance'  => $this->chromephp,
         ]);
         $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
-        $this->assertAttributeInstanceOf('Laminas\Log\Formatter\ChromePhp', 'formatter', $writer);
+        $formatter = \Closure::bind(function () {
+            return $this->getFormatter();
+        }, $writer, ChromePhp::class)();
+        $this->assertInstanceOf(\Laminas\Log\Formatter\ChromePhp::class, $formatter);
 
-        $filters = self::readAttribute($writer, 'filters');
+        $filters = \Closure::bind(function () {
+            return $this->filters;
+        }, $writer, ChromePhp::class)();
+
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);
     }

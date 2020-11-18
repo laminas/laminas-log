@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class ErrorHandlerTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $date = new DateTime();
 
@@ -38,7 +38,7 @@ class ErrorHandlerTest extends TestCase
         $this->assertEquals($date->format('c') . ' CRIT (1) test (errno 1) in test.php on line 1', $output);
     }
 
-    public function testSetDateTimeFormat()
+    public function testSetDateTimeFormat(): void
     {
         $formatter = new ErrorHandler();
 
@@ -47,7 +47,7 @@ class ErrorHandlerTest extends TestCase
         $this->assertEquals('r', $formatter->getDateTimeFormat());
     }
 
-    public function testComplexEvent()
+    public function testComplexEvent(): void
     {
         $date = new DateTime();
         $stringObject = new StringObject();
