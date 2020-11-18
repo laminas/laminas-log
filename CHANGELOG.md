@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#14](https://github.com/laminas/laminas-log/pull/14) Adds PHP 8.0 support
 
 ### Changed
 
@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#14](https://github.com/laminas/laminas-log/pull/14) Removes the `Null` Writer as it was replaced by the `Noop` Writer 6 years ago and won't work under PHP 7 as its a reserved word.
 
 ### Fixed
 
