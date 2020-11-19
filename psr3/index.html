@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -332,7 +332,6 @@ anywhere <code>Psr\Log\LoggerInterface</code> is expected.</p>
 
 $psrLogger = new Laminas\Log\PsrLoggerAdapter($laminasLogLogger);
 $psrLogger-&gt;log(Psr\Log\LogLevel::INFO, 'We have a PSR-compatible logger');</code></pre>
-
 <h2 id="psr-3-log-writer">PSR-3 log writer</h2>
 <p><code>Laminas\Log\Writer\Psr</code> allows log messages and extras to be forwared to any
 PSR-3 compatible logger. As with any log writer, this has the added benefit
@@ -349,7 +348,6 @@ $writer = new Laminas\Log\Writer\Psr(['logger' =&gt; $psrLogger]);
 // Via setter injection:
 $writer = new Laminas\Log\Writer\Psr();
 $writer-&gt;setLogger($psrLogger);</code></pre>
-
 <h2 id="psr-3-placeholder-processor">PSR-3 placeholder processor</h2>
 <p><code>Laminas\Log\Processor\PsrPlaceholder</code> adds support for <a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message">PSR-3 message placeholders</a>.
 Placeholder names correspond to keys in the "extra" array passed when logging
@@ -362,7 +360,6 @@ $logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder);
 
 $logger-&gt;info('User with email {email} registered', ['email' =&gt; 'user@example.org']);
 // logs message 'User with email user@example.org registered'</code></pre>
-
 <h2 id="usage-with-laminas-servicemanager">Usage with laminas-servicemanager</h2>
 <p>For usage with laminas-servicemanager, read the <a href="../service-manager/#psrloggerabstractservicefactory"><code>PsrLoggerAbstractServiceFactory</code>
 documentation</a>.</p>

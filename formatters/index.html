@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -334,7 +334,6 @@ in the event array are formatted properly for the writer.</p>
 specify no formatter. The default configuration is equivalent to the following:</p>
 <pre class="highlight"><code class="language-php">$format = '%timestamp% %priorityName% (%priority%): %message%' . PHP_EOL;
 $formatter = new Laminas\Log\Formatter\Simple($format);</code></pre>
-
 <p>A formatter is set on an individual writer object using the writer's <code>setFormatter()</code> method:</p>
 <pre class="highlight"><code class="language-php">$writer = new Laminas\Log\Writer\Stream('php://output');
 $formatter = new Laminas\Log\Formatter\Simple('hello %message%' . PHP_EOL);
@@ -346,7 +345,6 @@ $logger-&gt;addWriter($writer);
 $logger-&gt;info('there');
 
 // outputs "hello there"</code></pre>
-
 <p>The constructor of <code>Laminas\Log\Formatter\Simple</code> accepts a single parameter: the
 format string. This string contains keys surrounded by percent signs (e.g.
 <code>%message%</code>). The format string may contain any key from the event data array.
@@ -365,7 +363,6 @@ $logger-&gt;addWriter($writer);
 $logger-&gt;info('there');
 
 // outputs "{"timestamp":"2016-09-07T13:58:01+00:00","priority":6,"priorityName":"INFO","message":"there","extra":[]}"</code></pre>
-
 <h2 id="formatting-to-xml">Formatting to XML</h2>
 <p><code>Laminas\Log\Formatter\Xml</code> formats log data into XML strings. By default, it
 automatically logs all items in the event array:</p>
@@ -377,7 +374,6 @@ $logger = new Laminas\Log\Logger();
 $logger-&gt;addWriter($writer);
 
 $logger-&gt;info('informational message');</code></pre>
-
 <p>The code above outputs the following XML (space added for clarity):</p>
 <pre class="highlight"><code class="language-php">&lt;logEntry&gt;
   &lt;timestamp&gt;2007-04-06T07:24:37-07:00&lt;/timestamp&gt;
@@ -385,7 +381,6 @@ $logger-&gt;info('informational message');</code></pre>
   &lt;priority&gt;6&lt;/priority&gt;
   &lt;priorityName&gt;INFO&lt;/priorityName&gt;
 &lt;/logEntry&gt;</code></pre>
-
 <p>It's possible to customize the root element, as well as specify a mapping of
 XML elements to the items in the event data array. The constructor of
 <code>Laminas\Log\Formatter\Xml</code> accepts a string with the name of the root element as
@@ -402,7 +397,6 @@ $logger = new Laminas\Log\Logger();
 $logger-&gt;addWriter($writer);
 
 $logger-&gt;info('informational message');</code></pre>
-
 <p>The code above changes the root element from its default of <code>logEntry</code> to
 <code>log</code>. It also maps the element <code>msg</code> to the event data item <code>message</code>. This
 results in the following output:</p>
@@ -410,7 +404,6 @@ results in the following output:</p>
   &lt;msg&gt;informational message&lt;/msg&gt;
   &lt;level&gt;INFO&lt;/level&gt;
 &lt;/log&gt;</code></pre>
-
 <h2 id="formatting-to-firephp">Formatting to FirePhp</h2>
 <p><code>Laminas\Log\Formatter\FirePhp</code> formats log data for the <a href="http://getfirebug.com/">Firebug</a> extension
 for Firefox.</p>

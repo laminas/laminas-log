@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -336,7 +336,6 @@ return [
         ],
     ],
 ];</code></pre>
-
 <blockquote>
 <h3>Users of laminas-component-installer</h3>
 <p>If you are using laminas-component-installer, you will have been prompted to
@@ -387,12 +386,10 @@ return [
         ],
     ],
 ];</code></pre>
-
 <p>The logger can now be retrieved via the service manager using the key used in
 the configuration (<code>MyLogger</code>):</p>
 <pre class="highlight"><code class="language-php">/** @var \Laminas\Log\Logger $logger */
 $logger = $container-&gt;get('MyLogger');</code></pre>
-
 <p>For the formatter and the filters, only the <code>name</code> is required, the options have
 default values (the values set in this example are the default ones). When only
 the name is needed, a shorter format can be used:</p>
@@ -405,12 +402,10 @@ the name is needed, a shorter format can be used:</p>
                         ],
                     ],
 ];</code></pre>
-
 <p>Because the main filter is <code>Priority</code>, it can be set directly too:</p>
 <pre class="highlight"><code class="language-php">// module.config.php
                         'filters' =&gt; \Laminas\Log\Logger::INFO,
 ];</code></pre>
-
 <h2 id="psrloggerabstractservicefactory">PsrLoggerAbstractServiceFactory</h2>
 <p>As with the <a href="#loggerabstractservicefactory"><code>LoggerAbstractServiceFactory</code> above</a>,
 you can use <code>PsrLoggerAbstractServiceFactory</code> to create <a href="../psr3/">PSR-3-conforming
@@ -427,7 +422,6 @@ return [
         ],
     ],
 ];</code></pre>
-
 <p>Additionally, instead of using the <code>log</code> configuration key, you will use the key
 <code>psr_log</code>:</p>
 <pre class="highlight"><code class="language-php">// module.config.php
@@ -472,7 +466,6 @@ return [
         ],
     ],
 ];</code></pre>
-
 <h2 id="custom-writers-formatters-filters-and-processors">Custom Writers, Formatters, Filters, and Processors</h2>
 <p>In the <code>LoggerAbstractServiceFactory</code> example above, a custom formatter (called
 <code>MyFormatter</code>) and a custom filter (called <code>MyFilter</code>) are used. These classes

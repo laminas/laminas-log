@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -350,7 +350,6 @@ objects:</p>
 $writer = new Laminas\Log\Writer\Stream('php://output');
 
 $logger-&gt;addWriter($writer);</code></pre>
-
 <p>It is important to note that the logger must have at least one writer. You can
 add any number of writers using the logger's <code>addWriter()</code> method.</p>
 <p>You can also add a priority to each writer. The priority is specified as an
@@ -360,14 +359,12 @@ follow:</p>
 <pre class="highlight"><code class="language-php">$logger = new Laminas\Log\Logger;
 
 $logger-&gt;addWriter('stream', null, ['stream' =&gt; 'php://output']);</code></pre>
-
 <p>In this example we passed the stream <code>php://output</code> as a parameter (via an
 options array).</p>
 <h2 id="logging-messages">Logging Messages</h2>
 <p>To log a message, call the <code>log()</code> method of a <code>Logger</code> instance and pass it the
 message priority and the message:</p>
 <pre class="highlight"><code class="language-php">$logger-&gt;log(Laminas\Log\Logger::INFO, 'Informational message');</code></pre>
-
 <p>The first parameter of the <code>log()</code> method is the integer <code>priority</code> and the
 second parameter is the string <code>message</code>. The priority must be one of the
 priorities recognized by the <code>Logger</code> instance (explained in the next section).
@@ -381,13 +378,11 @@ $logger-&gt;info('Informational message');
 
 $logger-&gt;log(Laminas\Log\Logger::EMERG, 'Emergency message');
 $logger-&gt;emerg('Emergency message');</code></pre>
-
 <h2 id="destroying-a-log">Destroying a Log</h2>
 <p>If the <code>Logger</code> instance is no longer needed, set the variable containing it to
 <code>NULL</code> to destroy it.  This will automatically call the <code>shutdown()</code> instance
 method of each attached writer before the <code>Logger</code> instance is destroyed.</p>
 <pre class="highlight"><code class="language-php">$logger = null;</code></pre>
-
 <p>Explicitly destroying the log in this way is optional and is performed
 automatically at PHP shutdown.</p>
 <h2 id="using-built-in-priorities">Using Built-in Priorities</h2>
@@ -400,7 +395,6 @@ WARN    = 4;  // Warning: warning conditions
 NOTICE  = 5;  // Notice: normal but significant condition
 INFO    = 6;  // Informational: informational messages
 DEBUG   = 7;  // Debug: debug messages</code></pre>
-
 <p>These priorities are always available, and a convenience method of the same name
 (but lowercased) is available for each one.</p>
 <p>The priorities are not arbitrary. They come from the BSD syslog protocol, which
@@ -438,7 +432,6 @@ $writer = new Laminas\Log\Writer\Stream('php://output');
 $logger-&gt;addWriter($writer);
 
 Laminas\Log\Logger::registerErrorHandler($logger);</code></pre>
-
 <p>If you want to unregister the error handler, can use the <code>unregisterErrorHandler()</code> static
 method.</p>
 <p>You can also configure a logger to intercept exceptions using the static method
