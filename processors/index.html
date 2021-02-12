@@ -379,7 +379,7 @@ message placeholders with the values found in the <code>extra</code> array.</p>
 <pre class="highlight"><code class="language-php">$logger-&gt;addProcessor(new Laminas\Log\Processor\PsrPlaceholder());
 $logger-&gt;warn('Invalid plugin {plugin}', ['plugin' =&gt; 'My\Plugins\FooPlugin']);</code></pre>
 <p>will output:</p>
-<pre class="highlight"><code>Invalid plugin My\Plugins\FooPlugin</code></pre>
+<pre class="highlight"><code class="language-text">Invalid plugin My\Plugins\FooPlugin</code></pre>
 <p>This feature allows compatibility with PSR-3, and provides a simple way to
 provide string substitutions without needing to resort to <code>sprintf()</code> in
 your userland code.</p>
@@ -552,6 +552,7 @@ generated for you using hashed information from <code>$_SERVER</code>, including
         </ul>
     </div>
 
+                    
                 
             </div>
         </div>
@@ -624,7 +625,7 @@ generated for you using hashed information from <code>$_SERVER</code>, including
                         <p>
                             <!--Built with love by the Laminas team with the help of our
                             <a href="https://github.com/laminas/laminas-log/graphs/contributors">contributors</a>.<br>-->
-                            &copy; 2020 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
+                            &copy; 2021 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
                         </p>
                     </div>
                 </div>
