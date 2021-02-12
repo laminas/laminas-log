@@ -92,7 +92,7 @@ $logger->warn('Invalid plugin {plugin}', ['plugin' => 'My\Plugins\FooPlugin']);
 
 will output:
 
-```
+```text
 Invalid plugin My\Plugins\FooPlugin
 ```
 
