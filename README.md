@@ -1,7 +1,6 @@
 # laminas-log
 
-[![Build Status](https://travis-ci.com/laminas/laminas-log.svg?branch=master)](https://travis-ci.com/laminas/laminas-log)
-[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-log/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-log?branch=master)
+[![Build Status](https://github.com/laminas/laminas-log/workflows/Continuous%20Integration/badge.svg)](https://github.com/laminas/laminas-log/actions?query=workflow%3A"Continuous+Integration")
 
 `Laminas\Log` is a component for general purpose logging. It supports multiple log
 backends, formatting messages sent to the log, and filtering messages from being
@@ -21,6 +20,6 @@ Browse the documentation online at https://docs.laminas.dev/laminas-log/
 
 ## Support
 
-* [Issues](https://github.com/laminas/laminas-log/issues/)
-* [Chat](https://laminas.dev/chat/)
-* [Forum](https://discourse.laminas.dev/)
+- [Issues](https://github.com/laminas/laminas-log/issues/)
+- [Chat](https://laminas.dev/chat/)
+- [Forum](https://discourse.laminas.dev/)

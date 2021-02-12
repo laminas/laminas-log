@@ -16,6 +16,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\WriteConcern;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
 class MongoDBTest extends TestCase
 {
@@ -43,7 +44,11 @@ class MongoDBTest extends TestCase
         $this->database = 'laminas_test';
         $this->collection = 'logs';
 
-        $this->manager = new Manager('mongodb://localhost:27017');
+        $this->manager = new Manager(sprintf(
+            'mongodb://%s:%s',
+            getenv('TESTS_LAMINAS_LOG_MONGODB_HOST'),
+            getenv('TESTS_LAMINAS_LOG_MONGODB_PORT')
+        ));
     }
 
     protected function tearDown(): void
@@ -58,7 +63,11 @@ class MongoDBTest extends TestCase
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection);
 
         $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
-        $this->assertAttributeEmpty('formatter', $writer);
+
+        $r = new ReflectionProperty($writer, 'formatter');
+        $r->setAccessible(true);
+
+        $this->assertEmpty($r->getValue($writer), 'Formatter property was not empty, but was expected to be');
     }
 
     public function testWriteWithDefaultSaveOptions(): void
@@ -140,7 +149,7 @@ class MongoDBTest extends TestCase
 
         foreach ($cursor as $entry) {
             $this->assertInstanceOf(UTCDatetime::class, $entry->timestamp);
-            $this->assertEquals($date, $entry->timestamp->toDateTime());
+            $this->assertEquals($date->format('c'), $entry->timestamp->toDateTime()->format('c'));
         }
     }
 }
