@@ -31,5 +31,13 @@
              in order to work. -->
         <env name="TESTS_LAMINAS_OB_ENABLED" value="false" />
 
+        <!-- Change the value of this to match your own configuration if needed;
+             this is the value used for CI. -->
+        <env name="TESTS_LAMINAS_LOG_MONGODB_HOST" value="mongodb" />
+
+        <!-- Change the value of this to match your own configuration if needed;
+             this is the value used for CI, and the default port. -->
+        <env name="TESTS_LAMINAS_LOG_MONGODB_PORT" value="27017" />
+
     </php>
 </phpunit>
