@@ -43,7 +43,11 @@ class MongoDBTest extends TestCase
         $this->database = 'laminas_test';
         $this->collection = 'logs';
 
-        $this->manager = new Manager('mongodb://localhost:27017');
+        $this->manager = new Manager(sprintf(
+            'mongodb://%s:%s',
+            getenv('TESTS_LAMINAS_LOG_MONGODB_HOST'),
+            getenv('TESTS_LAMINAS_LOG_MONGODB_PORT')
+        ));
     }
 
     protected function tearDown(): void
