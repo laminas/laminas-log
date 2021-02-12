@@ -402,7 +402,7 @@ The application name and syslog facility may be set
 Array Index | Accepted Values | Description
 ----------- | --------------- | -----------
 `application` | string | application name
-`facility` | string | syslog facility (list of facilities)[http://php.net/openlog]
+`facility` | string | syslog facility [list of facilities](http://php.net/openlog)
 `filters` | array, int, string, Laminas\Log\Filter\FilterInterface | Log filter(s)
 `formatter` | array, string, Laminas\Log\Formatter\FormatterInterface | Log formatter(s)
 
