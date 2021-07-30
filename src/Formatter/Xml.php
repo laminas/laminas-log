@@ -232,7 +232,7 @@ class Xml implements FormatterInterface
                 $value = $this->getEscaper()->escapeHtml(
                     '"Object" of type ' . get_class($value) . " does not support __toString() method"
                 );
-            } else {
+            } else if ($value) {
                 $value = $this->getEscaper()->escapeHtml($value);
             }
 
