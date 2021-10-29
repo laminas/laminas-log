@@ -110,22 +110,22 @@ Because the main filter is `Priority`, it can be set directly too:
 ];
 ```
 
-## PsrLoggerAbstractServiceFactory
+## PsrLoggerAbstractAdapterFactory
 
 As with the [`LoggerAbstractServiceFactory` above](#loggerabstractservicefactory),
-you can use `PsrLoggerAbstractServiceFactory` to create [PSR-3-conforming
+you can use `PsrLoggerAbstractAdapterFactory` to create [PSR-3-conforming
 logger instances](psr3.md). Register it as an abstract factory in your
 configuration; as an example:
 
 ```php
 // module.config.php
 
-use Laminas\Log\PsrLoggerAbstractServiceFactory;
+use Laminas\Log\PsrLoggerAbstractAdapterFactory;
 
 return [
     'service_manager' => [
         'abstract_factories' => [
-            PsrLoggerAbstractServiceFactory::class,
+            PsrLoggerAbstractAdapterFactory::class,
         ],
     ],
 ];
