@@ -869,7 +869,7 @@ $logger-&gt;addWriter($writer);
 
 // goes nowhere
 $logger-&gt;info('Informational message');</code></pre>
-<h3>Migration from 2.0-2.3 to 2.4+</h3>
+<h3 id="migration-from-20-23-to-24">Migration from 2.0-2.3 to 2.4+</h3>
 <p>Version 2.4 adds support for PHP 7. In PHP 7, <code>null</code> is a reserved keyword, which required renaming
 the <code>Null</code> log writer. If you were using the <code>Null</code> writer directly previously, you will now receive
 an <code>E_USER_DEPRECATED</code> notice on instantiation. Please update your code to refer to the <code>Noop</code> class
@@ -957,16 +957,6 @@ lower or equal (by default) to the priority (the biggest severity is 0).</p>
 </nav>
 
 
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/laminas/laminas-log/edit/master/docs/book/writers.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
 
                 
             </div>
