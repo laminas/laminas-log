@@ -271,7 +271,7 @@
                     </li>
                 
                     <li class="toc__entry">
-                        <a href="#psrloggerabstractservicefactory" class="toc__link nav-link">PsrLoggerAbstractServiceFactory</a>
+                        <a href="#psrloggerabstractadapterfactory" class="toc__link nav-link">PsrLoggerAbstractAdapterFactory</a>
                     </li>
                 
                     <li class="toc__entry">
@@ -406,19 +406,19 @@ the name is needed, a shorter format can be used:</p>
 <pre class="highlight"><code class="language-php">// module.config.php
                         'filters' =&gt; \Laminas\Log\Logger::INFO,
 ];</code></pre>
-<h2 id="psrloggerabstractservicefactory">PsrLoggerAbstractServiceFactory</h2>
+<h2 id="psrloggerabstractadapterfactory">PsrLoggerAbstractAdapterFactory</h2>
 <p>As with the <a href="#loggerabstractservicefactory"><code>LoggerAbstractServiceFactory</code> above</a>,
-you can use <code>PsrLoggerAbstractServiceFactory</code> to create <a href="../psr3/">PSR-3-conforming
+you can use <code>PsrLoggerAbstractAdapterFactory</code> to create <a href="../psr3/">PSR-3-conforming
 logger instances</a>. Register it as an abstract factory in your
 configuration; as an example:</p>
 <pre class="highlight"><code class="language-php">// module.config.php
 
-use Laminas\Log\PsrLoggerAbstractServiceFactory;
+use Laminas\Log\PsrLoggerAbstractAdapterFactory;
 
 return [
     'service_manager' =&gt; [
         'abstract_factories' =&gt; [
-            PsrLoggerAbstractServiceFactory::class,
+            PsrLoggerAbstractAdapterFactory::class,
         ],
     ],
 ];</code></pre>
