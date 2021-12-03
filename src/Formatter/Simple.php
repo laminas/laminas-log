@@ -71,7 +71,7 @@ class Simple extends Base
                 // Don't print an empty array
                 $value = '';
             }
-            $output = str_replace("%$name%", $value, $output);
+            $output = str_replace("%$name%", (string) $value, $output);
         }
 
         if (

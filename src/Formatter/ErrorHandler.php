@@ -32,7 +32,7 @@ class ErrorHandler extends Simple
         }
 
         foreach ($this->buildReplacementsFromArray($event) as $name => $value) {
-            $output = str_replace("%$name%", $value, $output);
+            $output = str_replace("%$name%", (string) $value, $output);
         }
 
         return $output;
