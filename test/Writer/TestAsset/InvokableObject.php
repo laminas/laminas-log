@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer\TestAsset;
 
 class InvokableObject
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     public $options;
 
     /**

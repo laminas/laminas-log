@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Closure;
 use Laminas\Log\Filter\Mock as MockFilter;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
-use Laminas\Log\FormatterPluginManager;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Psr as PsrWriter;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +27,7 @@ class PsrTest extends TestCase
     {
         $psrLogger = $this->createMock(LoggerInterface::class);
         $writer    = new PsrWriter($psrLogger);
-        $logger = \Closure::bind(function () {
+        $logger    = Closure::bind(function () {
             return $this->logger;
         }, $writer, PsrWriter::class)();
         $this->assertSame($psrLogger, $logger);
@@ -39,7 +41,7 @@ class PsrTest extends TestCase
         $psrLogger = $this->createMock(LoggerInterface::class);
         $formatter = new SimpleFormatter();
         $filter    = new MockFilter();
-        $writer = new class([
+        $writer    = new class ([
             'filters'   => $filter,
             'formatter' => $formatter,
             'logger'    => $psrLogger,

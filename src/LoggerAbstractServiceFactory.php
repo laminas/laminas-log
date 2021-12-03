@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+
+use function is_string;
 
 /**
  * Logger abstract service factory.
@@ -14,9 +18,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class LoggerAbstractServiceFactory implements AbstractFactoryInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $config;
 
     /**
@@ -50,7 +52,7 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $this->getConfig($container);
         $config = $config[$requestedName];
@@ -70,8 +72,6 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
 
     /**
      * Retrieve configuration for loggers, if any
-     *
-     * @param ContainerInterface $services
      *
      * @return array
      */
@@ -103,32 +103,35 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
      * Process and return the configuration from the container.
      *
      * @param array $config Passed by reference
-     * @param ContainerInterface $services
      */
     protected function processConfig(&$config, ContainerInterface $services)
     {
-        if (isset($config['writer_plugin_manager'])
+        if (
+            isset($config['writer_plugin_manager'])
             && is_string($config['writer_plugin_manager'])
             && $services->has($config['writer_plugin_manager'])
         ) {
             $config['writer_plugin_manager'] = $services->get($config['writer_plugin_manager']);
         }
 
-        if ((! isset($config['writer_plugin_manager'])
+        if (
+            (! isset($config['writer_plugin_manager'])
                 || ! $config['writer_plugin_manager'] instanceof AbstractPluginManager)
             && $services->has('LogWriterManager')
         ) {
             $config['writer_plugin_manager'] = $services->get('LogWriterManager');
         }
 
-        if (isset($config['processor_plugin_manager'])
+        if (
+            isset($config['processor_plugin_manager'])
             && is_string($config['processor_plugin_manager'])
             && $services->has($config['processor_plugin_manager'])
         ) {
             $config['processor_plugin_manager'] = $services->get($config['processor_plugin_manager']);
         }
 
-        if ((! isset($config['processor_plugin_manager'])
+        if (
+            (! isset($config['processor_plugin_manager'])
                 || ! $config['processor_plugin_manager'] instanceof AbstractPluginManager)
             && $services->has('LogProcessorManager')
         ) {
@@ -140,7 +143,8 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
         }
 
         foreach ($config['writers'] as $index => $writerConfig) {
-            if (isset($writerConfig['name'])
+            if (
+                isset($writerConfig['name'])
                 && ('db' === $writerConfig['name']
                     || Writer\Db::class === $writerConfig['name']
                     || 'laminaslogwriterdb' === $writerConfig['name']
@@ -151,12 +155,13 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
             ) {
                 // Retrieve the DB service from the service locator, and
                 // inject it into the configuration.
-                $db = $services->get($writerConfig['options']['db']);
+                $db                                         = $services->get($writerConfig['options']['db']);
                 $config['writers'][$index]['options']['db'] = $db;
                 continue;
             }
 
-            if (isset($writerConfig['name'])
+            if (
+                isset($writerConfig['name'])
                 && ('mongo' === $writerConfig['name']
                     || Writer\Mongo::class === $writerConfig['name']
                     || 'laminaslogwritermongo' === $writerConfig['name']
@@ -167,12 +172,13 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
             ) {
                 // Retrieve the Mongo service from the service locator, and
                 // inject it into the configuration.
-                $mongoClient = $services->get($writerConfig['options']['mongo']);
+                $mongoClient                                   = $services->get($writerConfig['options']['mongo']);
                 $config['writers'][$index]['options']['mongo'] = $mongoClient;
                 continue;
             }
 
-            if (isset($writerConfig['name'])
+            if (
+                isset($writerConfig['name'])
                 && ('mongodb' === $writerConfig['name']
                     || Writer\MongoDB::class === $writerConfig['name']
                     || 'laminaslogwritermongodb' === $writerConfig['name']
@@ -183,7 +189,7 @@ class LoggerAbstractServiceFactory implements AbstractFactoryInterface
             ) {
                 // Retrieve the MongoDB Manager service from the service locator, and
                 // inject it into the configuration.
-                $manager = $services->get($writerConfig['options']['manager']);
+                $manager                                         = $services->get($writerConfig['options']['manager']);
                 $config['writers'][$index]['options']['manager'] = $manager;
                 continue;
             }

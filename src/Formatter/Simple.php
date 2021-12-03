@@ -1,13 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Formatter;
 
 use Laminas\Log\Exception;
 use Traversable;
 
+use function count;
+use function is_array;
+use function is_string;
+use function iterator_to_array;
+use function rtrim;
+use function str_replace;
+use function strpos;
+
 class Simple extends Base
 {
-    const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%): %message% %extra%';
+    public const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%): %message% %extra%';
 
     /**
      * Format specifier for log messages
@@ -17,9 +27,8 @@ class Simple extends Base
     protected $format;
 
     /**
-     * Class constructor
-     *
      * @see http://php.net/manual/en/function.date.php
+     *
      * @param null|string $format Format specifier for log messages
      * @param null|string $dateTimeFormat Format specifier for DateTime objects in event data
      * @throws Exception\InvalidArgumentException
@@ -31,15 +40,15 @@ class Simple extends Base
         }
 
         if (is_array($format)) {
-            $dateTimeFormat = isset($format['dateTimeFormat']) ? $format['dateTimeFormat'] : null;
-            $format         = isset($format['format']) ? $format['format'] : null;
+            $dateTimeFormat = $format['dateTimeFormat'] ?? null;
+            $format         = $format['format'] ?? null;
         }
 
         if (isset($format) && ! is_string($format)) {
             throw new Exception\InvalidArgumentException('Format must be a string');
         }
 
-        $this->format = isset($format) ? $format : static::DEFAULT_FORMAT;
+        $this->format = $format ?? static::DEFAULT_FORMAT;
 
         parent::__construct($dateTimeFormat);
     }
@@ -56,16 +65,17 @@ class Simple extends Base
 
         $event = parent::format($event);
         foreach ($event as $name => $value) {
-            if ('extra' == $name && count($value)) {
+            if ('extra' === $name && count($value)) {
                 $value = $this->normalize($value);
-            } elseif ('extra' == $name) {
+            } elseif ('extra' === $name) {
                 // Don't print an empty array
                 $value = '';
             }
             $output = str_replace("%$name%", $value, $output);
         }
 
-        if (isset($event['extra']) && empty($event['extra'])
+        if (
+            isset($event['extra']) && empty($event['extra'])
             && false !== strpos($this->format, '%extra%')
         ) {
             $output = rtrim($output, ' ');

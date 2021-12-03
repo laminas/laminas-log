@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
+use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter\SuppressFilter;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +36,7 @@ class SuppressFilterTest extends TestCase
 
     public function testConstructorThrowsOnInvalidSuppressValue(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Suppress must be a boolean');
         new SuppressFilter('foo');
     }

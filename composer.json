@@ -26,13 +26,17 @@
         }
     },
     "require": {
-        "php": "^7.3 || ~8.0.0",
+        "php": "^7.4 || ~8.0.0",
         "laminas/laminas-servicemanager": "^3.3.0",
         "laminas/laminas-stdlib": "^3.0",
         "psr/log": "^1.1.2"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~1.0.0",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-xml": "*",
+        "firephp/firephp-core": "^0.5.3",
+        "laminas/laminas-coding-standard": "~2.3.0",
         "laminas/laminas-db": "^2.6",
         "laminas/laminas-escaper": "^2.5",
         "laminas/laminas-filter": "^2.5",
@@ -40,7 +44,7 @@
         "laminas/laminas-validator": "^2.10.1",
         "mikey179/vfsstream": "^1.6.7",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.4.1"
+        "phpunit/phpunit": "^9.5.10"
     },
     "provide": {
         "psr/log-implementation": "1.0.0"

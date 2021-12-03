@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
 use Laminas\Log\WriterPluginManager;
@@ -8,9 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class WriterPluginManagerTest extends TestCase
 {
-    /**
-     * @var WriterPluginManager
-     */
+    /** @var WriterPluginManager */
     protected $plugins;
 
     protected function setUp(): void

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
+use Closure;
 use Interop\Container\ContainerInterface;
 use Laminas\Log\Processor\ProcessorInterface;
 use Laminas\Log\ProcessorPluginManager;
@@ -17,12 +20,12 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $factory = new ProcessorPluginManagerFactory();
+        $factory   = new ProcessorPluginManagerFactory();
 
         $processors = $factory($container, ProcessorPluginManagerFactory::class);
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
 
-        $creationContext = \Closure::bind(function () {
+        $creationContext = Closure::bind(function () {
             return $this->creationContext;
         }, $processors, ProcessorPluginManager::class)();
         $this->assertSame($container, $creationContext);
@@ -36,7 +39,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
 
-        $factory = new ProcessorPluginManagerFactory();
+        $factory    = new ProcessorPluginManagerFactory();
         $processors = $factory($container, ProcessorPluginManagerFactory::class, [
             'services' => [
                 'test' => $processor,
@@ -48,9 +51,9 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     public function testConfiguresProcessorServicesWhenFound(): void
     {
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
-        $config = [
+        $config    = [
             'log_processors' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -68,7 +71,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
 
-        $factory = new ProcessorPluginManagerFactory();
+        $factory    = new ProcessorPluginManagerFactory();
         $processors = $factory($container->reveal(), 'ProcessorManager');
 
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
@@ -81,9 +84,9 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     public function testDoesNotConfigureProcessorServicesWhenServiceListenerPresent(): void
     {
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();
-        $config = [
+        $config    = [
             'log_processors' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -101,7 +104,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $container->has('config')->shouldNotBeCalled();
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new ProcessorPluginManagerFactory();
+        $factory    = new ProcessorPluginManagerFactory();
         $processors = $factory($container->reveal(), 'ProcessorManager');
 
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
@@ -118,7 +121,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(false);
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new ProcessorPluginManagerFactory();
+        $factory    = new ProcessorPluginManagerFactory();
         $processors = $factory($container->reveal(), 'ProcessorManager');
 
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
@@ -133,7 +136,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn(['foo' => 'bar']);
 
-        $factory = new ProcessorPluginManagerFactory();
+        $factory    = new ProcessorPluginManagerFactory();
         $processors = $factory($container->reveal(), 'ProcessorManager');
 
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);

@@ -1,55 +1,58 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Filter\Mock;
+use Laminas\Log\Formatter\Simple;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Mail as MailWriter;
 use Laminas\Mail\Message as MailMessage;
 use Laminas\Mail\Transport;
+use Laminas\Mail\Transport\Smtp;
 use PHPUnit\Framework\TestCase;
+
+use function file_exists;
+use function file_get_contents;
+use function unlink;
 
 class MailTest extends TestCase
 {
-    const FILENAME = 'message.txt';
+    public const FILENAME = 'message.txt';
 
-    /**
-     * @var MailWriter
-     */
+    /** @var MailWriter */
     protected $writer;
 
-    /**
-     * @var Logger
-     */
+    /** @var Logger */
     protected $log;
 
     protected function setUp(): void
     {
-        $message = new MailMessage();
+        $message   = new MailMessage();
         $transport = new Transport\File();
         $options   = new Transport\FileOptions([
-            'path'      => __DIR__,
-            'callback'  => function (Transport\File $transport) {
+            'path'     => __DIR__,
+            'callback' => function (Transport\File $transport) {
                 return MailTest::FILENAME;
             },
         ]);
         $transport->setOptions($options);
 
         $this->writer = new MailWriter($message, $transport);
-        $this->log = new Logger();
+        $this->log    = new Logger();
         $this->log->addWriter($this->writer);
     }
 
     protected function tearDown(): void
     {
-        if (file_exists(__DIR__. '/' . self::FILENAME)) {
-            unlink(__DIR__. '/' . self::FILENAME);
+        if (file_exists(__DIR__ . '/' . self::FILENAME)) {
+            unlink(__DIR__ . '/' . self::FILENAME);
         }
     }
 
     /**
      * Tests normal logging, but with multiple messages for a level.
-     *
-     * @return void
      */
     public function testNormalLoggingMultiplePerLevel(): void
     {
@@ -80,16 +83,16 @@ class MailTest extends TestCase
         $message   = new MailMessage();
         $transport = new Transport\File();
         $options   = new Transport\FileOptions([
-                'path'      => __DIR__,
-                'callback'  => function (Transport\File $transport) {
+            'path'     => __DIR__,
+            'callback' => function (Transport\File $transport) {
                     return MailTest::FILENAME;
-                },
+            },
         ]);
         $transport->setOptions($options);
 
-        $formatter = new \Laminas\Log\Formatter\Simple();
-        $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new class([
+        $formatter = new Simple();
+        $filter    = new Mock();
+        $writer    = new class ([
             'filters'   => $filter,
             'formatter' => $formatter,
             'mail'      => $message,
@@ -128,14 +131,14 @@ class MailTest extends TestCase
     public function testConstructWithMailAsArrayOptions(): void
     {
         $messageOptions = [
-            'encoding'  => 'UTF-8',
-            'from'      => 'matthew@example.com',
-            'to'        => 'api-tools-devteam@example.com',
-            'subject'   => 'subject',
-            'body'      => 'body',
+            'encoding' => 'UTF-8',
+            'from'     => 'matthew@example.com',
+            'to'       => 'api-tools-devteam@example.com',
+            'subject'  => 'subject',
+            'body'     => 'body',
         ];
 
-        $writer = new class([
+        $writer = new class ([
             'mail' => $messageOptions,
         ]) extends MailWriter {
             public function getMail(): MailMessage
@@ -144,34 +147,34 @@ class MailTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf('Laminas\Mail\Message', $writer->getMail());
+        $this->assertInstanceOf(MailMessage::class, $writer->getMail());
     }
 
     public function testConstructWithMailTransportAsArrayOptions(): void
     {
         $messageOptions = [
-            'encoding'  => 'UTF-8',
-            'from'      => 'matthew@example.com',
-            'to'        => 'api-tools-devteam@example.com',
-            'subject'   => 'subject',
-            'body'      => 'body',
+            'encoding' => 'UTF-8',
+            'from'     => 'matthew@example.com',
+            'to'       => 'api-tools-devteam@example.com',
+            'subject'  => 'subject',
+            'body'     => 'body',
         ];
 
         $transportOptions = [
-            'type' => 'smtp',
+            'type'    => 'smtp',
             'options' => [
-                'host' => 'test.dev',
-                'connection_class' => 'login',
+                'host'              => 'test.dev',
+                'connection_class'  => 'login',
                 'connection_config' => [
-                    'username' => 'foo',
+                    'username'      => 'foo',
                     'smtp_password' => 'bar',
-                    'ssl' => 'tls'
-                ]
-            ]
+                    'ssl'           => 'tls',
+                ],
+            ],
         ];
 
-        $writer = new class([
-            'mail' => $messageOptions,
+        $writer = new class ([
+            'mail'      => $messageOptions,
             'transport' => $transportOptions,
         ]) extends MailWriter {
             public function getTransport(): Transport\TransportInterface
@@ -180,6 +183,6 @@ class MailTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf('Laminas\Mail\Transport\Smtp', $writer->getTransport());
+        $this->assertInstanceOf(Smtp::class, $writer->getTransport());
     }
 }

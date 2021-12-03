@@ -1,12 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Formatter;
 
 use DateTime;
 
+use function array_merge;
+use function is_array;
+use function is_object;
+use function method_exists;
+use function str_replace;
+
 class ErrorHandler extends Simple
 {
-    const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%) %message% (errno %extra[errno]%) '
+    public const DEFAULT_FORMAT = '%timestamp% %priorityName% (%priority%) %message% (errno %extra[errno]%) '
     . 'in %extra[file]% on line %extra[line]%';
 
     /**

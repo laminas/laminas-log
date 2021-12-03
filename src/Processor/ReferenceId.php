@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Processor;
 
 class ReferenceId extends RequestId implements ProcessorInterface

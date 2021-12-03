@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Formatter;
 
 use DateTime;
@@ -17,7 +19,7 @@ class ExceptionHandlerTest extends TestCase
             'message'      => 'test',
             'priority'     => 1,
             'priorityName' => 'CRIT',
-            'extra' => [
+            'extra'        => [
                 'file'  => 'test.php',
                 'line'  => 1,
                 'trace' => [
@@ -27,7 +29,7 @@ class ExceptionHandlerTest extends TestCase
                         'function' => 'test',
                         'class'    => 'Test',
                         'type'     => '::',
-                        'args'     => [1]
+                        'args'     => [1],
                     ],
                     [
                         'file'     => 'test.php',
@@ -35,15 +37,15 @@ class ExceptionHandlerTest extends TestCase
                         'function' => 'test',
                         'class'    => 'Test',
                         'type'     => '::',
-                        'args'     => [1]
-                    ]
-                ]
-            ]
+                        'args'     => [1],
+                    ],
+                ],
+            ],
         ];
 
         // The formatter ends with unix style line endings so make sure we expect that
         // output as well:
-        $expected = $date->format('c') . " CRIT (1) test in test.php on line 1\n";
+        $expected  = $date->format('c') . " CRIT (1) test in test.php on line 1\n";
         $expected .= "[Trace]\n";
         $expected .= "File  : test.php\n";
         $expected .= "Line  : 1\n";
@@ -65,7 +67,7 @@ class ExceptionHandlerTest extends TestCase
         $expected .= ")\n\n";
 
         $formatter = new ExceptionHandler();
-        $output = $formatter->format($event);
+        $output    = $formatter->format($event);
 
         $this->assertEquals($expected, $output);
     }
@@ -82,9 +84,9 @@ class ExceptionHandlerTest extends TestCase
             'message'      => 'test',
             'priority'     => 1,
             'priorityName' => 'CRIT',
-            'extra' => [
-                'file'  => 'test.php',
-                'line'  => 1,
+            'extra'        => [
+                'file' => 'test.php',
+                'line' => 1,
             ],
         ];
 

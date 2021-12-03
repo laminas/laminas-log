@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Formatter;
 
 interface FormatterInterface
@@ -9,7 +11,7 @@ interface FormatterInterface
      *
      * @see http://php.net/manual/en/function.date.php
      */
-    const DEFAULT_DATETIME_FORMAT = 'c';
+    public const DEFAULT_DATETIME_FORMAT = 'c';
 
     /**
      * Formats data into a single line to be written by the writer.
@@ -31,6 +33,7 @@ interface FormatterInterface
      * Set the format specifier for DateTime objects
      *
      * @see http://php.net/manual/en/function.date.php
+     *
      * @param string $dateTimeFormat DateTime format
      * @return FormatterInterface
      */

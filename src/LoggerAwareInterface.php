@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 /**
@@ -10,7 +12,6 @@ interface LoggerAwareInterface
     /**
      * Set logger instance
      *
-     * @param LoggerInterface
      * @return void
      */
     public function setLogger(LoggerInterface $logger);

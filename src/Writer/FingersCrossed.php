@@ -1,10 +1,7 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-log for the canonical source repository
- * @copyright https://github.com/laminas/laminas-log/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-log/blob/master/LICENSE.md New BSD License
- */
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Log\Exception;
@@ -17,10 +14,19 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
+use function array_shift;
+use function count;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_string;
+use function sprintf;
+
 /**
  * Buffers all events until the strategy determines to flush them.
  *
- * @see        http://packages.python.org/Logbook/api/handlers.html#logbook.FingersCrossedHandler
+ * @see http://packages.python.org/Logbook/api/handlers.html#logbook.FingersCrossedHandler
  */
 class FingersCrossed extends AbstractWriter
 {
@@ -76,9 +82,9 @@ class FingersCrossed extends AbstractWriter
         }
 
         if (is_array($writer)) {
-            $filterOrPriority = isset($writer['priority']) ? $writer['priority'] : null;
-            $bufferSize       = isset($writer['bufferSize']) ? $writer['bufferSize'] : null;
-            $writer           = isset($writer['writer']) ? $writer['writer'] : null;
+            $filterOrPriority = $writer['priority'] ?? null;
+            $bufferSize       = $writer['bufferSize'] ?? null;
+            $writer           = $writer['writer'] ?? null;
         }
 
         if (null === $filterOrPriority) {
@@ -104,7 +110,7 @@ class FingersCrossed extends AbstractWriter
      * @return self
      * @throws Exception\InvalidArgumentException
      */
-    public function setWriter($writer, array $options = null)
+    public function setWriter($writer, ?array $options = null)
     {
         if (is_string($writer)) {
             $writer = $this->writerPlugin($writer, $options);
@@ -145,7 +151,7 @@ class FingersCrossed extends AbstractWriter
     public function setWriterPluginManager($plugins)
     {
         if (is_string($plugins)) {
-            $plugins = new $plugins;
+            $plugins = new $plugins();
         }
         if (! $plugins instanceof WriterPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -166,7 +172,7 @@ class FingersCrossed extends AbstractWriter
      * @param array|null $options
      * @return WriterInterface
      */
-    public function writerPlugin($name, array $options = null)
+    public function writerPlugin($name, ?array $options = null)
     {
         return $this->getWriterPluginManager()->get($name, $options);
     }
@@ -245,7 +251,7 @@ class FingersCrossed extends AbstractWriter
      * @param array|null $options (unused)
      * @return WriterInterface
      */
-    public function setFormatter($formatter, array $options = null)
+    public function setFormatter($formatter, ?array $options = null)
     {
         return $this->writer;
     }

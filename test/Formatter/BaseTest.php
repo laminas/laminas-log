@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Formatter;
 
 use ArrayIterator;
@@ -9,6 +11,9 @@ use Laminas\Log\Formatter\Base as BaseFormatter;
 use LaminasTest\Log\TestAsset\StringObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
+use function fopen;
+use function range;
 
 class BaseTest extends TestCase
 {
@@ -56,7 +61,7 @@ class BaseTest extends TestCase
      */
     public function testSetDateTimeFormatInConstructor($dateTimeFormat): void
     {
-        $options = ['dateTimeFormat' => $dateTimeFormat];
+        $options   = ['dateTimeFormat' => $dateTimeFormat];
         $formatter = new BaseFormatter($options);
 
         $this->assertEquals($dateTimeFormat, $formatter->getDateTimeFormat());
@@ -64,45 +69,45 @@ class BaseTest extends TestCase
 
     public function testFormatAllTypes(): void
     {
-        $datetime = new DateTime();
-        $object = new stdClass();
+        $datetime    = new DateTime();
+        $object      = new stdClass();
         $object->foo = 'bar';
-        $formatter = new BaseFormatter();
+        $formatter   = new BaseFormatter();
 
-        $event = [
+        $event          = [
             'timestamp' => $datetime,
-            'priority' => 1,
-            'message' => 'tottakai',
-            'extra' => [
-                'float' => 0.2,
-                'boolean' => false,
-                'array_empty' => [],
-                'array' => range(0, 4),
+            'priority'  => 1,
+            'message'   => 'tottakai',
+            'extra'     => [
+                'float'             => 0.2,
+                'boolean'           => false,
+                'array_empty'       => [],
+                'array'             => range(0, 4),
                 'traversable_empty' => new EmptyIterator(),
-                'traversable' => new ArrayIterator(['id', 42]),
-                'null' => null,
-                'object_empty' => new stdClass(),
-                'object' => $object,
-                'string object' => new StringObject(),
-                'resource' => fopen('php://stdout', 'w'),
+                'traversable'       => new ArrayIterator(['id', 42]),
+                'null'              => null,
+                'object_empty'      => new stdClass(),
+                'object'            => $object,
+                'string object'     => new StringObject(),
+                'resource'          => fopen('php://stdout', 'w'),
             ],
         ];
         $outputExpected = [
             'timestamp' => $datetime->format($formatter->getDateTimeFormat()),
-            'priority' => 1,
-            'message' => 'tottakai',
-            'extra' => [
-                'boolean' => false,
-                'float' => 0.2,
-                'array_empty' => '[]',
-                'array' => '[0,1,2,3,4]',
+            'priority'  => 1,
+            'message'   => 'tottakai',
+            'extra'     => [
+                'boolean'           => false,
+                'float'             => 0.2,
+                'array_empty'       => '[]',
+                'array'             => '[0,1,2,3,4]',
                 'traversable_empty' => '[]',
-                'traversable' => '["id",42]',
-                'null' => null,
-                'object_empty' => 'object(stdClass) {}',
-                'object' => 'object(stdClass) {"foo":"bar"}',
-                'string object' => 'Hello World',
-                'resource' => 'resource(stream)',
+                'traversable'       => '["id",42]',
+                'null'              => null,
+                'object_empty'      => 'object(stdClass) {}',
+                'object'            => 'object(stdClass) {"foo":"bar"}',
+                'string object'     => 'Hello World',
+                'resource'          => 'resource(stream)',
             ],
         ];
 
@@ -114,14 +119,14 @@ class BaseTest extends TestCase
         $datetime  = new DateTime();
         $formatter = new BaseFormatter();
 
-        $selfRefArr = [];
-        $selfRefArr['selfRefArr'] = & $selfRefArr;
+        $selfRefArr               = [];
+        $selfRefArr['selfRefArr'] = &$selfRefArr;
 
         $event = [
             'timestamp' => $datetime,
             'priority'  => 1,
             'message'   => 'tottakai',
-            'extra' => [
+            'extra'     => [
                 'selfRefArr' => $selfRefArr,
             ],
         ];
@@ -130,7 +135,7 @@ class BaseTest extends TestCase
             'timestamp' => $datetime->format($formatter->getDateTimeFormat()),
             'priority'  => 1,
             'message'   => 'tottakai',
-            'extra' => [
+            'extra'     => [
                 'selfRefArr' => '',
             ],
         ];
@@ -142,9 +147,9 @@ class BaseTest extends TestCase
     {
         $formatter = new BaseFormatter();
 
-        $event = [
-            'message'   => 'Hi',
-            'extra'     => '',
+        $event          = [
+            'message' => 'Hi',
+            'extra'   => '',
         ];
         $outputExpected = [
             'message' => 'Hi',

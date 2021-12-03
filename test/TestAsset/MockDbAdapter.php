@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\TestAsset;
 
 use Laminas\Db\Adapter\Adapter as DbAdapter;
@@ -19,14 +21,14 @@ class MockDbAdapter extends DbAdapter
 
     public function __construct()
     {
-        $this->platform = new MockDbPlatform;
-        $this->driver = new MockDbDriver;
+        $this->platform = new MockDbPlatform();
+        $this->driver   = new MockDbDriver();
     }
 
     public function query(
         $sql,
         $parametersOrQueryMode = DbAdapter::QUERY_MODE_PREPARE,
-        ResultSetInterface $resultPrototype = null
+        ?ResultSetInterface $resultPrototype = null
     ) {
         $this->calls[__FUNCTION__][] = $sql;
         return $this;

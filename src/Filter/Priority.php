@@ -1,20 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Filter;
 
 use Laminas\Log\Exception;
 use Traversable;
 
+use function ctype_digit;
+use function gettype;
+use function is_array;
+use function is_int;
+use function iterator_to_array;
+use function sprintf;
+use function version_compare;
+
 class Priority implements FilterInterface
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $priority;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $operator;
 
     /**
@@ -23,7 +29,6 @@ class Priority implements FilterInterface
      *
      * @param  int|array|Traversable $priority Priority
      * @param  string $operator Comparison operator
-     * @return Priority
      * @throws Exception\InvalidArgumentException
      */
     public function __construct($priority, $operator = null)
@@ -32,8 +37,8 @@ class Priority implements FilterInterface
             $priority = iterator_to_array($priority);
         }
         if (is_array($priority)) {
-            $operator = isset($priority['operator']) ? $priority['operator'] : null;
-            $priority = isset($priority['priority']) ? $priority['priority'] : null;
+            $operator = $priority['operator'] ?? null;
+            $priority = $priority['priority'] ?? null;
         }
         if (! is_int($priority) && ! ctype_digit($priority)) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -43,7 +48,7 @@ class Priority implements FilterInterface
         }
 
         $this->priority = (int) $priority;
-        $this->operator = $operator === null ? '<=' : $operator;
+        $this->operator = $operator ?? '<=';
     }
 
     /**
@@ -54,6 +59,6 @@ class Priority implements FilterInterface
      */
     public function filter(array $event)
     {
-        return version_compare($event['priority'], $this->priority, $this->operator);
+        return version_compare((string) $event['priority'], (string) $this->priority, $this->operator);
     }
 }

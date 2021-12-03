@@ -1,17 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Processor;
+
+use function array_merge;
+use function array_shift;
+use function debug_backtrace;
+use function strpos;
+
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 class Backtrace implements ProcessorInterface
 {
     /**
      * Maximum stack level of backtrace (PHP > 5.4.0)
+     *
      * @var int
      */
     protected $traceLimit = 10;
 
     /**
      * Classes within these namespaces in the stack are ignored
+     *
      * @var array
      */
     protected $ignoredNamespaces = ['Laminas\\Log'];
@@ -22,7 +33,7 @@ class Backtrace implements ProcessorInterface
      *
      * @param array|null $options
      */
-    public function __construct(array $options = null)
+    public function __construct(?array $options = null)
     {
         if (! empty($options['ignoredNamespaces'])) {
             $this->ignoredNamespaces = array_merge($this->ignoredNamespaces, (array) $options['ignoredNamespaces']);
@@ -34,7 +45,7 @@ class Backtrace implements ProcessorInterface
      *
      * @param array $event event data
      * @return array event data
-    */
+     */
     public function process(array $event)
     {
         $trace = $this->getBacktrace();
@@ -43,17 +54,18 @@ class Backtrace implements ProcessorInterface
         array_shift($trace); // ignore $this->process()
 
         $i = 0;
-        while (isset($trace[$i]['class'])
+        while (
+            isset($trace[$i]['class'])
                && $this->shouldIgnoreFrame($trace[$i]['class'])
         ) {
             $i++;
         }
 
         $origin = [
-            'file'     => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
-            'line'     => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
-            'class'    => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-            'function' => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+            'file'     => $trace[$i - 1]['file'] ?? null,
+            'line'     => $trace[$i - 1]['line'] ?? null,
+            'class'    => $trace[$i]['class'] ?? null,
+            'function' => $trace[$i]['function'] ?? null,
         ];
 
         $extra = $origin;

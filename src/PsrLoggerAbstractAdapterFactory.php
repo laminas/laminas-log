@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Interop\Container\ContainerInterface;
@@ -18,7 +20,7 @@ class PsrLoggerAbstractAdapterFactory extends LoggerAbstractServiceFactory
      */
     protected $configKey = 'psr_log';
 
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $logger = parent::__invoke($container, $requestedName, $options);
 

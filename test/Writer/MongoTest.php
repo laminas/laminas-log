@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Log\Formatter\FormatterInterface;
 use Laminas\Log\Writer\Mongo as MongoWriter;
 use MongoDate;
 use PHPUnit\Framework\TestCase;
+
+use function extension_loaded;
+use function phpversion;
+use function version_compare;
 
 class MongoTest extends TestCase
 {
@@ -15,7 +22,7 @@ class MongoTest extends TestCase
             $this->markTestSkipped('The mongo PHP extension is not available');
         }
 
-        $this->database = 'laminas_test';
+        $this->database   = 'laminas_test';
         $this->collection = 'logs';
 
         $mongoClass = version_compare(phpversion('mongo'), '1.3.0', '<') ? 'Mongo' : 'MongoClient';
@@ -40,7 +47,7 @@ class MongoTest extends TestCase
     {
         $writer = new MongoWriter($this->mongo, $this->database, $this->collection);
 
-        $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->createMock(FormatterInterface::class));
         $this->assertAttributeEmpty('formatter', $writer);
     }
 
@@ -59,7 +66,7 @@ class MongoTest extends TestCase
 
     public function testWriteWithCustomSaveOptions(): void
     {
-        $event = ['message' => 'foo', 'priority' => 42];
+        $event       = ['message' => 'foo', 'priority' => 42];
         $saveOptions = ['safe' => false, 'fsync' => false, 'timeout' => 100];
 
         $this->mongoCollection->expects($this->once())
@@ -73,7 +80,7 @@ class MongoTest extends TestCase
 
     public function testWriteConvertsDateTimeToMongoDate(): void
     {
-        $date = new DateTime();
+        $date  = new DateTime();
         $event = ['timestamp' => $date];
 
         $this->mongoCollection->expects($this->once())

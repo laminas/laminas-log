@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
 use Laminas\Log\Filter\Validator;

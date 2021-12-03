@@ -1,18 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 trait LoggerAwareTrait
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger = null;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * Set logger object
      *
-     * @param LoggerInterface $logger
      * @return mixed
      */
     public function setLogger(LoggerInterface $logger)

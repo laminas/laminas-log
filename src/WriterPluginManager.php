@@ -1,10 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Laminas\Log\Writer\Factory\WriterFactory;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+
+use function get_class;
+use function gettype;
+use function is_object;
+use function sprintf;
 
 /**
  * Plugin manager for log writers.
@@ -28,42 +35,43 @@ class WriterPluginManager extends AbstractPluginManager
 
         // The following are for backwards compatibility only; users
         // should update their code to use the noop writer instead.
-        'null'              => Writer\Noop::class,
-        Writer\Null::class  => Writer\Noop::class,
+        'null'                 => Writer\Noop::class,
+        Writer\Null::class     => Writer\Noop::class,
         'laminaslogwriternull' => Writer\Noop::class,
 
         // Legacy Zend Framework aliases
-        \Zend\Log\Writer\ChromePhp::class => Writer\ChromePhp::class,
-        \Zend\Log\Writer\Db::class => Writer\Db::class,
-        \Zend\Log\Writer\FirePhp::class => Writer\FirePhp::class,
-        \Zend\Log\Writer\Mail::class => Writer\Mail::class,
-        \Zend\Log\Writer\Mock::class => Writer\Mock::class,
-        \Zend\Log\Writer\Mongo::class => Writer\Mongo::class,
-        \Zend\Log\Writer\MongoDB::class => Writer\MongoDB::class,
-        \Zend\Log\Writer\Noop::class => Writer\Noop::class,
-        \Zend\Log\Writer\Psr::class => Writer\Psr::class,
-        \Zend\Log\Writer\Stream::class => Writer\Stream::class,
-        \Zend\Log\Writer\Syslog::class => Writer\Syslog::class,
+        //phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+        \Zend\Log\Writer\ChromePhp::class      => Writer\ChromePhp::class,
+        \Zend\Log\Writer\Db::class             => Writer\Db::class,
+        \Zend\Log\Writer\FirePhp::class        => Writer\FirePhp::class,
+        \Zend\Log\Writer\Mail::class           => Writer\Mail::class,
+        \Zend\Log\Writer\Mock::class           => Writer\Mock::class,
+        \Zend\Log\Writer\Mongo::class          => Writer\Mongo::class,
+        \Zend\Log\Writer\MongoDB::class        => Writer\MongoDB::class,
+        \Zend\Log\Writer\Noop::class           => Writer\Noop::class,
+        \Zend\Log\Writer\Psr::class            => Writer\Psr::class,
+        \Zend\Log\Writer\Stream::class         => Writer\Stream::class,
+        \Zend\Log\Writer\Syslog::class         => Writer\Syslog::class,
         \Zend\Log\Writer\FingersCrossed::class => Writer\FingersCrossed::class,
-        \Zend\Log\Writer\ZendMonitor::class => Writer\ZendMonitor::class,
-        \Zend\Log\Writer\Null::class => Writer\Noop::class,
+        \Zend\Log\Writer\ZendMonitor::class    => Writer\ZendMonitor::class,
+        \Zend\Log\Writer\Null::class           => Writer\Noop::class,
+        //phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         'zendlogwriternull' => Writer\Noop::class,
 
         // v2 normalized FQCNs
-        'zendlogwriterchromephp' => Writer\ChromePhp::class,
-        'zendlogwriterdb' => Writer\Db::class,
-        'zendlogwriterfirephp' => Writer\FirePhp::class,
-        'zendlogwritermail' => Writer\Mail::class,
-        'zendlogwritermock' => Writer\Mock::class,
-        'zendlogwritermongo' => Writer\Mongo::class,
-        'zendlogwritermongodb' => Writer\MongoDB::class,
-        'zendlogwriternoop' => Writer\Noop::class,
-        'zendlogwriterpsr' => Writer\Psr::class,
-        'zendlogwriterstream' => Writer\Stream::class,
-        'zendlogwritersyslog' => Writer\Syslog::class,
+        'zendlogwriterchromephp'      => Writer\ChromePhp::class,
+        'zendlogwriterdb'             => Writer\Db::class,
+        'zendlogwriterfirephp'        => Writer\FirePhp::class,
+        'zendlogwritermail'           => Writer\Mail::class,
+        'zendlogwritermock'           => Writer\Mock::class,
+        'zendlogwritermongo'          => Writer\Mongo::class,
+        'zendlogwritermongodb'        => Writer\MongoDB::class,
+        'zendlogwriternoop'           => Writer\Noop::class,
+        'zendlogwriterpsr'            => Writer\Psr::class,
+        'zendlogwriterstream'         => Writer\Stream::class,
+        'zendlogwritersyslog'         => Writer\Syslog::class,
         'zendlogwriterfingerscrossed' => Writer\FingersCrossed::class,
-        'zendlogwriterzendmonitor' => Writer\ZendMonitor::class,
-
+        'zendlogwriterzendmonitor'    => Writer\ZendMonitor::class,
     ];
 
     protected $factories = [
@@ -102,12 +110,14 @@ class WriterPluginManager extends AbstractPluginManager
 
     /**
      * Allow many writers of the same type (v2)
+     *
      * @param bool
      */
     protected $shareByDefault = false;
 
     /**
      * Allow many writers of the same type (v3)
+     *
      * @param bool
      */
     protected $sharedByDefault = false;
@@ -125,9 +135,9 @@ class WriterPluginManager extends AbstractPluginManager
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
                 '%s can only create instances of %s; %s is invalid',
-                get_class($this),
+                static::class,
                 $this->instanceOf,
-                (is_object($instance) ? get_class($instance) : gettype($instance))
+                is_object($instance) ? get_class($instance) : gettype($instance)
             ));
         }
     }
@@ -147,7 +157,7 @@ class WriterPluginManager extends AbstractPluginManager
         } catch (InvalidServiceException $e) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Plugin of type %s is invalid; must implement %s\Writer\WriterInterface',
-                (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
+                is_object($plugin) ? get_class($plugin) : gettype($plugin),
                 __NAMESPACE__
             ));
         }

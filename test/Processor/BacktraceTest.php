@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Processor;
 
 use Laminas\Log\Processor\Backtrace;
@@ -17,11 +19,11 @@ class BacktraceTest extends TestCase
     public function testProcess(): void
     {
         $event = [
-                'timestamp'    => '',
-                'priority'     => 1,
-                'priorityName' => 'ALERT',
-                'message'      => 'foo',
-                'extra'        => []
+            'timestamp'    => '',
+            'priority'     => 1,
+            'priorityName' => 'ALERT',
+            'message'      => 'foo',
+            'extra'        => [],
         ];
 
         $event = $this->processor->process($event);

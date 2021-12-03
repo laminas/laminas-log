@@ -1,12 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Filter\Mock;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\Syslog as SyslogWriter;
 use LaminasTest\Log\TestAsset\CustomSyslogWriter;
 use PHPUnit\Framework\TestCase;
+
+use function strtoupper;
+use function substr;
+
+use const LOG_AUTH;
+use const LOG_NOTICE;
+use const LOG_USER;
+use const PHP_OS;
 
 class SyslogTest extends TestCase
 {
@@ -16,8 +28,8 @@ class SyslogTest extends TestCase
     public function testWrite(): void
     {
         $fields = [
-            'message' => 'foo',
-            'priority' => LOG_NOTICE
+            'message'  => 'foo',
+            'priority' => LOG_NOTICE,
         ];
         $writer = new SyslogWriter();
         $writer->write($fields);
@@ -28,7 +40,7 @@ class SyslogTest extends TestCase
      */
     public function testThrowExceptionValueNotPresentInFacilities(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid log facility provided');
         $writer = new SyslogWriter();
         $writer->setFacility(LOG_USER * 1000);
@@ -39,10 +51,10 @@ class SyslogTest extends TestCase
      */
     public function testThrowExceptionIfFacilityInvalidInWindows(): void
     {
-        if ('WIN' != strtoupper(substr(PHP_OS, 0, 3))) {
+        if ('WIN' !== strtoupper(substr(PHP_OS, 0, 3))) {
             $this->markTestSkipped('Run only in windows');
         }
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Only LOG_USER is a valid');
         $writer = new SyslogWriter();
         $writer->setFacility(LOG_AUTH);
@@ -57,7 +69,7 @@ class SyslogTest extends TestCase
         $instance = $writer->setFacility(LOG_USER)
                            ->setApplicationName('my_app');
 
-        $this->assertInstanceOf('Laminas\Log\Writer\Syslog', $instance);
+        $this->assertInstanceOf(SyslogWriter::class, $instance);
     }
 
     /**
@@ -76,11 +88,11 @@ class SyslogTest extends TestCase
     public function testWriteWithFormatter(): void
     {
         $event = [
-            'message' => 'tottakai',
-            'priority' => Logger::ERR
+            'message'  => 'tottakai',
+            'priority' => Logger::ERR,
         ];
 
-        $writer = new SyslogWriter();
+        $writer    = new SyslogWriter();
         $formatter = new SimpleFormatter('%message% (this is a test)');
         $writer->setFormatter($formatter);
 
@@ -92,18 +104,18 @@ class SyslogTest extends TestCase
      */
     public function testPassApplicationNameViaConstructor(): void
     {
-        $writer   = new CustomSyslogWriter(['application' => 'test_app']);
+        $writer = new CustomSyslogWriter(['application' => 'test_app']);
         $this->assertEquals('test_app', $writer->getApplicationName());
     }
 
     public function testConstructWithOptions(): void
     {
-        $formatter = new \Laminas\Log\Formatter\Simple();
-        $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new CustomSyslogWriter([
-                'filters'   => $filter,
-                'formatter' => $formatter,
-                'application'  => 'test_app',
+        $formatter = new SimpleFormatter();
+        $filter    = new Mock();
+        $writer    = new CustomSyslogWriter([
+            'filters'     => $filter,
+            'formatter'   => $formatter,
+            'application' => 'test_app',
         ]);
         $this->assertEquals('test_app', $writer->getApplicationName());
         $this->assertEquals($formatter, $writer->getFormatter());
@@ -115,7 +127,7 @@ class SyslogTest extends TestCase
 
     public function testDefaultFormatter(): void
     {
-        $writer   = new CustomSyslogWriter(['application' => 'test_app']);
-        $this->assertInstanceOf('Laminas\Log\Formatter\Simple', $writer->getFormatter());
+        $writer = new CustomSyslogWriter(['application' => 'test_app']);
+        $this->assertInstanceOf(SimpleFormatter::class, $writer->getFormatter());
     }
 }

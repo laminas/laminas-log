@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
+use Closure;
 use Interop\Container\ContainerInterface;
 use Laminas\Log\Formatter\FormatterInterface;
 use Laminas\Log\FormatterPluginManager;
@@ -17,12 +20,12 @@ class FormatterPluginManagerFactoryTest extends TestCase
     public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $factory = new FormatterPluginManagerFactory();
+        $factory   = new FormatterPluginManagerFactory();
 
         $formatters = $factory($container, FormatterPluginManagerFactory::class);
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
 
-        $creationContext = \Closure::bind(function () {
+        $creationContext = Closure::bind(function () {
             return $this->creationContext;
         }, $formatters, FormatterPluginManager::class)();
         $this->assertSame($container, $creationContext);
@@ -36,7 +39,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
 
-        $factory = new FormatterPluginManagerFactory();
+        $factory    = new FormatterPluginManagerFactory();
         $formatters = $factory($container, FormatterPluginManagerFactory::class, [
             'services' => [
                 'test' => $formatter,
@@ -48,9 +51,9 @@ class FormatterPluginManagerFactoryTest extends TestCase
     public function testConfiguresFormatterServicesWhenFound(): void
     {
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
-        $config = [
+        $config    = [
             'log_formatters' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -68,7 +71,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
 
-        $factory = new FormatterPluginManagerFactory();
+        $factory    = new FormatterPluginManagerFactory();
         $formatters = $factory($container->reveal(), 'FormatterManager');
 
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
@@ -81,9 +84,9 @@ class FormatterPluginManagerFactoryTest extends TestCase
     public function testDoesNotConfigureFormatterServicesWhenServiceListenerPresent(): void
     {
         $formatter = $this->prophesize(FormatterInterface::class)->reveal();
-        $config = [
+        $config    = [
             'log_formatters' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -101,7 +104,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $container->has('config')->shouldNotBeCalled();
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new FormatterPluginManagerFactory();
+        $factory    = new FormatterPluginManagerFactory();
         $formatters = $factory($container->reveal(), 'FormatterManager');
 
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
@@ -118,7 +121,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(false);
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new FormatterPluginManagerFactory();
+        $factory    = new FormatterPluginManagerFactory();
         $formatters = $factory($container->reveal(), 'FormatterManager');
 
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
@@ -133,7 +136,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn(['foo' => 'bar']);
 
-        $factory = new FormatterPluginManagerFactory();
+        $factory    = new FormatterPluginManagerFactory();
         $formatters = $factory($container->reveal(), 'FormatterManager');
 
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);

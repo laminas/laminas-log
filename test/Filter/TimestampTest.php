@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
 use ArrayObject;
 use DateTime;
+use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter\Timestamp as TimestampFilter;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @author Nikola Posa <posa.nikola@gmail.com>
- *
  * @covers \Laminas\Log\Filter\Timestamp
  */
 class TimestampTest extends TestCase
@@ -57,19 +58,19 @@ class TimestampTest extends TestCase
 
     public function testConstructorThrowsOnInvalidValue(): void
     {
-        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new TimestampFilter('foo');
     }
 
     public function testConstructorThrowsWhenDateFormatCharIsMissing(): void
     {
-        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new TimestampFilter(3);
     }
 
     public function testConstructorThrowsOnUnsupportedComparisonOperator(): void
     {
-        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new TimestampFilter(10, 'H', 'foobar');
     }
 
@@ -78,7 +79,7 @@ class TimestampTest extends TestCase
      */
     public function testFilterCreatedFromArray($config): void
     {
-        $filter = new class($config) extends TimestampFilter {
+        $filter = new class ($config) extends TimestampFilter {
             public function getDateFormatChar(): ?string
             {
                 return $this->dateFormatChar;
@@ -103,14 +104,13 @@ class TimestampTest extends TestCase
     public function filterCreationDataProvider(): array
     {
         return [
-            'array'       => [['value' => 10, 'dateFormatChar' => 'm', 'operator' => '==',]],
-            'traversable' => [new ArrayObject(['value' => 10, 'dateFormatChar' => 'm', 'operator' => '==',])],
+            'array'       => [['value' => 10, 'dateFormatChar' => 'm', 'operator' => '==']],
+            'traversable' => [new ArrayObject(['value' => 10, 'dateFormatChar' => 'm', 'operator' => '=='])],
         ];
     }
 
     /**
      * @param array $message
-     *
      * @dataProvider ignoredMessages
      */
     public function testIgnoresMessagesWithoutTimestamp(array $message): void
@@ -127,7 +127,7 @@ class TimestampTest extends TestCase
 
         return [
             [new DateTime('2014-03-03'), new DateTime('2014-03-03'), '>=', true],
-            [new DateTime('2014-10-10'), new DateTime('2014-03-03'),'>=', true],
+            [new DateTime('2014-10-10'), new DateTime('2014-03-03'), '>=', true],
             [new DateTime('2014-03-03'), new DateTime('2014-10-10'), 'gt', false],
             [new DateTime('2013-03-03'), new DateTime('2014-03-03'), 'ge', false],
             [new DateTime('2014-03-03'), new DateTime('2014-03-03'), '==', true],

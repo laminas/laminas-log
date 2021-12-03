@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Psr\Log\AbstractLogger as PsrAbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+
+use function array_key_exists;
+use function sprintf;
+use function var_export;
 
 /**
  * PSR-3 logger adapter for Laminas\Log\LoggerInterface
@@ -39,8 +45,6 @@ class PsrLoggerAdapter extends PsrAbstractLogger
 
     /**
      * Constructor
-     *
-     * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
     {
@@ -63,15 +67,15 @@ class PsrLoggerAdapter extends PsrAbstractLogger
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     * @return null
-     * @throws InvalidArgumentException if log level is not recognized
+     * @return void
+     * @throws InvalidArgumentException If log level is not recognized.
      */
     public function log($level, $message, array $context = [])
     {
         if (! array_key_exists($level, $this->psrPriorityMap)) {
             throw new InvalidArgumentException(sprintf(
                 '$level must be one of PSR-3 log levels; received %s',
-                var_export($level, 1)
+                var_export($level, true)
             ));
         }
 

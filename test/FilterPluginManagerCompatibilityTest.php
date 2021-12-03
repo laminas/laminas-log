@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
 use Laminas\Log\Exception\InvalidArgumentException;
@@ -9,6 +11,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Traversable;
 
 class FilterPluginManagerCompatibilityTest extends TestCase
 {
@@ -36,12 +39,12 @@ class FilterPluginManagerCompatibilityTest extends TestCase
      * Iterates through aliases, and for adapters that require extensions,
      * tests if the extension is loaded, skipping that alias if not.
      *
-     * @return \Traversable
+     * @return Traversable
      */
     public function aliasProvider()
     {
         $pluginManager = $this->getPluginManager();
-        $r = new ReflectionProperty($pluginManager, 'aliases');
+        $r             = new ReflectionProperty($pluginManager, 'aliases');
         $r->setAccessible(true);
         $aliases = $r->getValue($pluginManager);
 

@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
 use Laminas\Log\PsrLoggerAbstractAdapterFactory;
+use Laminas\Log\PsrLoggerAdapter;
 use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
 class PsrLoggerAbstractAdapterFactoryTest extends TestCase
 {
-    /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
+    /** @var ServiceLocatorInterface */
     protected $serviceManager;
 
     /**
@@ -21,7 +23,7 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->serviceManager = new ServiceManager();
-        $config = new Config([
+        $config               = new Config([
             'abstract_factories' => [PsrLoggerAbstractAdapterFactory::class],
             'services'           => [
                 'config' => [
@@ -65,12 +67,11 @@ class PsrLoggerAbstractAdapterFactoryTest extends TestCase
     public function testValidLoggerService($service): void
     {
         $actual = $this->serviceManager->get($service);
-        $this->assertInstanceOf('Laminas\Log\PsrLoggerAdapter', $actual);
+        $this->assertInstanceOf(PsrLoggerAdapter::class, $actual);
     }
 
     /**
      * @dataProvider providerInvalidLoggerService
-     *
      * @param string $service
      */
     public function testInvalidLoggerService($service): void

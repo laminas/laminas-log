@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Log\Exception;
@@ -8,6 +10,10 @@ use Laminas\Log\Logger;
 use Laminas\Log\Writer\ChromePhp\ChromePhpBridge;
 use Laminas\Log\Writer\ChromePhp\ChromePhpInterface;
 use Traversable;
+
+use function class_exists;
+use function is_array;
+use function iterator_to_array;
 
 class ChromePhp extends AbstractWriter
 {
@@ -32,7 +38,7 @@ class ChromePhp extends AbstractWriter
 
         if (is_array($instance)) {
             parent::__construct($instance);
-            $instance = isset($instance['instance']) ? $instance['instance'] : null;
+            $instance = $instance['instance'] ?? null;
         }
 
         if (! ($instance instanceof ChromePhpInterface || $instance === null)) {
@@ -41,7 +47,7 @@ class ChromePhp extends AbstractWriter
             );
         }
 
-        $this->chromephp = $instance === null ? $this->getChromePhp() : $instance;
+        $this->chromephp = $instance ?? $this->getChromePhp();
         $this->formatter = new ChromePhpFormatter();
     }
 
@@ -87,7 +93,8 @@ class ChromePhp extends AbstractWriter
     {
         // Remember: class names in strings are absolute; thus the class_exists
         // here references the canonical name for the ChromePhp class
-        if (! $this->chromephp instanceof ChromePhpInterface
+        if (
+            ! $this->chromephp instanceof ChromePhpInterface
             && class_exists('ChromePhp')
         ) {
             $this->setChromePhp(new ChromePhpBridge());

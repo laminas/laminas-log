@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+
+use function is_array;
 
 class FormatterPluginManagerFactory implements FactoryInterface
 {
@@ -21,7 +25,7 @@ class FormatterPluginManagerFactory implements FactoryInterface
      *
      * @return FormatterPluginManager
      */
-    public function __invoke(ContainerInterface $container, $name, array $options = null)
+    public function __invoke(ContainerInterface $container, $name, ?array $options = null)
     {
         $pluginManager = new FormatterPluginManager($container, $options ?: []);
 

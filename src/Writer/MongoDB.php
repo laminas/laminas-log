@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use DateTimeInterface;
@@ -12,24 +14,27 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\WriteConcern;
 use Traversable;
 
+use function extension_loaded;
+use function floor;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function iterator_to_array;
+use function sprintf;
+
 /**
  * MongoDB log writer.
  */
 class MongoDB extends AbstractWriter
 {
-    /**
-     * @var Manager
-     */
+    /** @var Manager */
     protected $manager;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $database;
 
-    /**
-     * @var WriteConcern
-     */
+    /** @var WriteConcern */
     protected $writeConcern;
 
     /**
@@ -54,10 +59,10 @@ class MongoDB extends AbstractWriter
 
         if (is_array($manager)) {
             parent::__construct($manager);
-            $writeConcern = isset($manager['write_concern']) ? $manager['write_concern'] : new WriteConcern(1);
-            $collection   = isset($manager['collection']) ? $manager['collection'] : null;
-            $database     = isset($manager['database']) ? $manager['database'] : null;
-            $manager      = isset($manager['manager']) ? $manager['manager'] : null;
+            $writeConcern = $manager['write_concern'] ?? new WriteConcern(1);
+            $collection   = $manager['collection'] ?? null;
+            $database     = $manager['database'] ?? null;
+            $manager      = $manager['manager'] ?? null;
         }
 
         if (null === $database) {
@@ -71,7 +76,7 @@ class MongoDB extends AbstractWriter
         if (! $manager instanceof Manager) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Parameter of type %s is invalid; must be MongoDB\Driver\Manager',
-                (is_object($manager) ? get_class($manager) : gettype($manager))
+                is_object($manager) ? get_class($manager) : gettype($manager)
             ));
         }
 
@@ -80,9 +85,9 @@ class MongoDB extends AbstractWriter
         }
 
         if (is_array($writeConcern)) {
-            $wstring      = isset($writeConcern['wstring']) ? $writeConcern['wstring'] : 1;
-            $wtimeout     = isset($writeConcern['wtimeout']) ? $writeConcern['wtimeout'] : 0;
-            $journal      = isset($writeConcern['journal']) ? $writeConcern['journal'] : false;
+            $wstring      = $writeConcern['wstring'] ?? 1;
+            $wtimeout     = $writeConcern['wtimeout'] ?? 0;
+            $journal      = $writeConcern['journal'] ?? false;
             $writeConcern = new WriteConcern($wstring, $wtimeout, $journal);
         }
 
@@ -98,7 +103,7 @@ class MongoDB extends AbstractWriter
      * @param array|null $options (unused)
      * @return WriterInterface
      */
-    public function setFormatter($formatter, array $options = null)
+    public function setFormatter($formatter, ?array $options = null)
     {
         return $this;
     }
@@ -117,7 +122,7 @@ class MongoDB extends AbstractWriter
         }
 
         if (isset($event['timestamp']) && $event['timestamp'] instanceof DateTimeInterface) {
-            $millis = (int) floor((float) $event['timestamp']->format('U.u') * 1000);
+            $millis             = (int) floor((float) $event['timestamp']->format('U.u') * 1000);
             $event['timestamp'] = new UTCDateTime($millis);
         }
 

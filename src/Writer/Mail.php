@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Log\Exception;
@@ -9,6 +11,18 @@ use Laminas\Mail\MessageFactory as MailMessageFactory;
 use Laminas\Mail\Transport;
 use Laminas\Mail\Transport\Exception as TransportException;
 use Traversable;
+
+use function get_class;
+use function gettype;
+use function implode;
+use function is_array;
+use function is_object;
+use function iterator_to_array;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_WARNING;
+use const PHP_EOL;
 
 /**
  * Class used for writing log messages to email via Laminas\Mail.
@@ -67,7 +81,7 @@ class Mail extends AbstractWriter
      * @param  Transport\TransportInterface $transport Optional
      * @throws Exception\InvalidArgumentException
      */
-    public function __construct($mail, Transport\TransportInterface $transport = null)
+    public function __construct($mail, ?Transport\TransportInterface $transport = null)
     {
         if ($mail instanceof Traversable) {
             $mail = iterator_to_array($mail);
@@ -78,8 +92,8 @@ class Mail extends AbstractWriter
             if (isset($mail['subject_prepend_text'])) {
                 $this->setSubjectPrependText($mail['subject_prepend_text']);
             }
-            $transport = isset($mail['transport']) ? $mail['transport'] : null;
-            $mail      = isset($mail['mail']) ? $mail['mail'] : null;
+            $transport = $mail['transport'] ?? null;
+            $mail      = $mail['mail'] ?? null;
             if (is_array($mail)) {
                 $mail = MailMessageFactory::getInstance($mail);
             }
@@ -92,7 +106,7 @@ class Mail extends AbstractWriter
         if (! $mail instanceof MailMessage) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Mail parameter of type %s is invalid; must be of type Laminas\Mail\Message',
-                (is_object($mail) ? get_class($mail) : gettype($mail))
+                is_object($mail) ? get_class($mail) : gettype($mail)
             ));
         }
         $this->mail = $mail;
@@ -104,7 +118,7 @@ class Mail extends AbstractWriter
         if (! $transport instanceof Transport\TransportInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Transport parameter of type %s is invalid; must be of type Laminas\Mail\Transport\TransportInterface',
-                (is_object($transport) ? get_class($transport) : gettype($transport))
+                is_object($transport) ? get_class($transport) : gettype($transport)
             ));
         }
         $this->setTransport($transport);
@@ -117,7 +131,6 @@ class Mail extends AbstractWriter
     /**
      * Set the transport message
      *
-     * @param  Transport\TransportInterface $transport
      * @return Mail
      */
     public function setTransport(Transport\TransportInterface $transport)
@@ -191,10 +204,10 @@ class Mail extends AbstractWriter
             $this->transport->send($this->mail);
         } catch (TransportException\ExceptionInterface $e) {
             trigger_error(
-                "unable to send log entries via email; " .
-                "message = {$e->getMessage()}; " .
-                "code = {$e->getCode()}; " .
-                "exception class = " . get_class($e),
+                "unable to send log entries via email; "
+                . "message = {$e->getMessage()}; "
+                . "code = {$e->getCode()}; "
+                . "exception class = " . get_class($e),
                 E_USER_WARNING
             );
         }

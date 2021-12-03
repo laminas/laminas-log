@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
-use Interop\Container\ContainerInterface;
+use Closure;
 use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Exception\RuntimeException;
+use Laminas\Log\Filter\Mock;
 use Laminas\Log\Filter\Priority;
 use Laminas\Log\Filter\Regex as RegexFilter;
 use Laminas\Log\FilterPluginManager;
+use Laminas\Log\Formatter\Base;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\FormatterPluginManager;
 use Laminas\Log\Writer\FilterPluginManager as LegacyFilterPluginManager;
@@ -16,6 +21,7 @@ use LaminasTest\Log\TestAsset\ConcreteWriter;
 use LaminasTest\Log\TestAsset\ErrorGeneratingWriter;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
+use stdClass;
 
 class AbstractTest extends TestCase
 {
@@ -28,8 +34,8 @@ class AbstractTest extends TestCase
 
     public function testSetSimpleFormatterByName(): void
     {
-        $instance = $this->writer->setFormatter('simple');
-        $formatter = \Closure::bind(function () {
+        $instance  = $this->writer->setFormatter('simple');
+        $formatter = Closure::bind(function () {
             return $this->getFormatter();
         }, $instance, ConcreteWriter::class)();
         $this->assertInstanceOf(SimpleFormatter::class, $formatter);
@@ -39,20 +45,20 @@ class AbstractTest extends TestCase
     {
         $this->writer->addFilter(1);
         $this->writer->addFilter(new RegexFilter('/mess/'));
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
-        $this->writer->addFilter(new \stdClass());
+        $this->expectException(InvalidArgumentException::class);
+        $this->writer->addFilter(new stdClass());
     }
 
     public function testAddMockFilterByName(): void
     {
         $instance = $this->writer->addFilter('mock');
-        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
+        $this->assertInstanceOf(ConcreteWriter::class, $instance);
     }
 
     public function testAddRegexFilterWithParamsByName(): void
     {
-        $instance = $this->writer->addFilter('regex', [ 'regex' => '/mess/' ]);
-        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
+        $instance = $this->writer->addFilter('regex', ['regex' => '/mess/']);
+        $this->assertInstanceOf(ConcreteWriter::class, $instance);
     }
 
     /**
@@ -63,13 +69,13 @@ class AbstractTest extends TestCase
         $instance = $this->writer->addFilter(1)
                                   ->setFormatter(new SimpleFormatter());
 
-        $this->assertInstanceOf('LaminasTest\Log\TestAsset\ConcreteWriter', $instance);
+        $this->assertInstanceOf(ConcreteWriter::class, $instance);
     }
 
     public function testConvertErrorsToException(): void
     {
         $writer = new ErrorGeneratingWriter();
-        $this->expectException('Laminas\Log\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
         $writer->write(['message' => 'test']);
 
         $writer->setConvertWriteErrorsToExceptions(false);
@@ -79,23 +85,24 @@ class AbstractTest extends TestCase
 
     public function testConstructorWithOptions(): void
     {
-        $options = ['filters' => [
-                             [
-                                 'name' => 'mock',
-                             ],
-                             [
-                                 'name' => 'priority',
-                                 'options' => [
-                                     'priority' => 3,
-                                 ],
-                             ],
-                         ],
-                        'formatter' => [
-                             'name' => 'base',
-                         ],
-                    ];
+        $options = [
+            'filters'   => [
+                [
+                    'name' => 'mock',
+                ],
+                [
+                    'name'    => 'priority',
+                    'options' => [
+                        'priority' => 3,
+                    ],
+                ],
+            ],
+            'formatter' => [
+                'name' => 'base',
+            ],
+        ];
 
-        $writer = new class($options) extends ConcreteWriter {
+        $writer = new class ($options) extends ConcreteWriter {
             public function getFormatter()
             {
                 return $this->formatter;
@@ -107,15 +114,15 @@ class AbstractTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf(\Laminas\Log\Formatter\Base::class, $writer->getFormatter());
+        $this->assertInstanceOf(Base::class, $writer->getFormatter());
 
         $filters = $writer->getFilters();
         $this->assertCount(2, $filters);
 
         $priorityFilter = $filters[1];
-        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $priorityFilter);
+        $this->assertInstanceOf(Priority::class, $priorityFilter);
 
-        $priority = \Closure::bind(function () {
+        $priority = Closure::bind(function () {
             return $this->priority;
         }, $priorityFilter, Priority::class)();
 
@@ -125,7 +132,7 @@ class AbstractTest extends TestCase
     public function testConstructorWithPriorityFilter(): void
     {
         // Accept an int as a PriorityFilter
-        $writer = new class(['filters' => 3]) extends ConcreteWriter {
+        $writer  = new class (['filters' => 3]) extends ConcreteWriter {
             public function getFilters(): array
             {
                 return $this->filters;
@@ -133,8 +140,8 @@ class AbstractTest extends TestCase
         };
         $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
-        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
-        $priority = \Closure::bind(function () {
+        $this->assertInstanceOf(Priority::class, $filters[0]);
+        $priority = Closure::bind(function () {
             return $this->priority;
         }, $filters[0], Priority::class)();
         $this->assertEquals(3, $priority);
@@ -142,7 +149,7 @@ class AbstractTest extends TestCase
         // Accept an int in an array of filters as a PriorityFilter
         $options = ['filters' => [3, ['name' => 'mock']]];
 
-        $writer = new class($options) extends ConcreteWriter {
+        $writer  = new class ($options) extends ConcreteWriter {
             public function getFilters(): array
             {
                 return $this->filters;
@@ -150,12 +157,12 @@ class AbstractTest extends TestCase
         };
         $filters = $writer->getFilters();
         $this->assertCount(2, $filters);
-        $this->assertInstanceOf('Laminas\Log\Filter\Priority', $filters[0]);
-        $priority = \Closure::bind(function () {
+        $this->assertInstanceOf(Priority::class, $filters[0]);
+        $priority = Closure::bind(function () {
             return $this->priority;
         }, $filters[0], Priority::class)();
         $this->assertEquals(3, $priority);
-        $this->assertInstanceOf('Laminas\Log\Filter\Mock', $filters[1]);
+        $this->assertInstanceOf(Mock::class, $filters[1]);
     }
 
     /**
@@ -229,7 +236,7 @@ class AbstractTest extends TestCase
      */
     public function testConstructorWithInvalidFilterManager(): void
     {
-        $this->expectException(\Laminas\Log\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Writer plugin manager must extend Laminas\Log\FilterPluginManager; received integer'
         );
@@ -273,7 +280,7 @@ class AbstractTest extends TestCase
      */
     public function testCanSetFormatter(): void
     {
-        $formatter = new SimpleFormatter;
+        $formatter = new SimpleFormatter();
         $this->writer->setFormatter($formatter);
 
         $r = new ReflectionObject($this->writer);
@@ -292,7 +299,7 @@ class AbstractTest extends TestCase
         $m->setAccessible(true);
         $this->assertFalse($m->invoke($this->writer));
 
-        $this->writer->setFormatter(new SimpleFormatter);
+        $this->writer->setFormatter(new SimpleFormatter());
         $this->assertTrue($m->invoke($this->writer));
     }
 }

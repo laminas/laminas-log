@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
 use Laminas\Log\Writer\ZendMonitor;
@@ -15,8 +17,8 @@ class ZendMonitorTest extends TestCase
     {
         $writer = new ZendMonitor();
         $writer->write([
-            'message' => 'my mess',
-            'priority' => 1
+            'message'  => 'my mess',
+            'priority' => 1,
         ]);
     }
 
