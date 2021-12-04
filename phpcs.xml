@@ -11,15 +11,12 @@
     <!-- Show progress -->
     <arg value="p"/>
 
-    <!-- set minimal required PHP version (7.3) -->
+    <!-- set minimal required PHP version (7.4) -->
     <config name="php_version" value="70400"/>
 
     <!-- Paths to check -->
     <file>src</file>
     <file>test</file>
-
-    <exclude-pattern>src/Int.php</exclude-pattern>
-    <exclude-pattern>src/Null.php</exclude-pattern>
 
     <!-- Include all rules from Laminas Coding Standard -->
     <rule ref="LaminasCodingStandard">
