@@ -1,14 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Closure;
 use DateTime;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Exception\RuntimeException;
+use Laminas\Log\Filter\Mock;
 use Laminas\Log\Formatter\FormatterInterface;
+use Laminas\Log\Formatter\Simple;
 use Laminas\Log\Writer\Db as DbWriter;
 use LaminasTest\Log\TestAsset\MockDbAdapter;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
+
+use function array_keys;
+use function count;
+use function sprintf;
 
 class DbTest extends TestCase
 {
@@ -22,14 +33,14 @@ class DbTest extends TestCase
 
     public function testNotPassingTableNameToConstructorThrowsException(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('table name');
         $writer = new DbWriter($this->db);
     }
 
     public function testNotPassingDbToConstructorThrowsException(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Adapter');
         $writer = new DbWriter([]);
     }
@@ -40,9 +51,9 @@ class DbTest extends TestCase
             'db'    => $this->db,
             'table' => $this->tableName,
         ];
-        $writer = new DbWriter($options);
-        $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
-        $tableName = \Closure::bind(function () {
+        $writer  = new DbWriter($options);
+        $this->assertInstanceOf(DbWriter::class, $writer);
+        $tableName = Closure::bind(function () {
             return $this->tableName;
         }, $writer, DbWriter::class)();
         $this->assertSame($this->tableName, $tableName);
@@ -53,7 +64,7 @@ class DbTest extends TestCase
         // log to the mock db adapter
         $fields = [
             'message'  => 'foo',
-            'priority' => 42
+            'priority' => 42,
         ];
 
         $this->writer->write($fields);
@@ -71,23 +82,23 @@ class DbTest extends TestCase
         // log to the mock db adapter
         $message  = 'message-to-log';
         $priority = 2;
-        $events = [
+        $events   = [
             'file' => 'test',
-            'line' => 1
+            'line' => 1,
         ];
         $this->writer->write([
             'message'  => $message,
             'priority' => $priority,
-            'events'   => $events
+            'events'   => $events,
         ]);
         $this->assertContains('query', array_keys($this->db->calls));
         $this->assertEquals(1, count($this->db->calls['query']));
 
         $binds = [
-            'message' => $message,
-            'priority' => $priority,
+            'message'     => $message,
+            'priority'    => $priority,
             'events_line' => $events['line'],
-            'events_file' => $events['file']
+            'events_file' => $events['file'],
         ];
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
@@ -99,23 +110,23 @@ class DbTest extends TestCase
         // log to the mock db adapter
         $message  = 'message-to-log';
         $priority = 2;
-        $events = [
+        $events   = [
             'file' => 'test',
-            'line' => 1
+            'line' => 1,
         ];
         $this->writer->write([
             'message'  => $message,
             'priority' => $priority,
-            'events'   => $events
+            'events'   => $events,
         ]);
         $this->assertContains('query', array_keys($this->db->calls));
         $this->assertEquals(1, count($this->db->calls['query']));
 
         $binds = [
-            'message' => $message,
-            'priority' => $priority,
+            'message'     => $message,
+            'priority'    => $priority,
             'events-line' => $events['line'],
-            'events-file' => $events['file']
+            'events-file' => $events['file'],
         ];
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
@@ -123,16 +134,16 @@ class DbTest extends TestCase
     public function testWriteUsesOptionalCustomColumnNames(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, [
-            'message' => 'new-message-field',
-            'priority' => 'new-priority-field'
+            'message'  => 'new-message-field',
+            'priority' => 'new-priority-field',
         ]);
 
         // log to the mock db adapter
         $message  = 'message-to-log';
         $priority = 2;
         $this->writer->write([
-            'message' => $message,
-            'priority' => $priority
+            'message'  => $message,
+            'priority' => $priority,
         ]);
 
         // insert should be called once...
@@ -141,8 +152,8 @@ class DbTest extends TestCase
 
         // ...with the correct table and binds for the database
         $binds = [
-            'new-message-field' => $message,
-            'new-priority-field' => $priority
+            'new-message-field'  => $message,
+            'new-priority-field' => $priority,
         ];
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
@@ -150,34 +161,34 @@ class DbTest extends TestCase
     public function testWriteUsesParamsWithArray(): void
     {
         $this->writer = new DbWriter($this->db, $this->tableName, [
-            'message' => 'new-message-field',
+            'message'  => 'new-message-field',
             'priority' => 'new-priority-field',
-            'events' => [
+            'events'   => [
                 'line' => 'new-line',
-                'file' => 'new-file'
-            ]
+                'file' => 'new-file',
+            ],
         ]);
 
         // log to the mock db adapter
         $message  = 'message-to-log';
         $priority = 2;
-        $events = [
+        $events   = [
             'file' => 'test',
-            'line' => 1
+            'line' => 1,
         ];
         $this->writer->write([
             'message'  => $message,
             'priority' => $priority,
-            'events'   => $events
+            'events'   => $events,
         ]);
         $this->assertContains('query', array_keys($this->db->calls));
         $this->assertEquals(1, count($this->db->calls['query']));
         // ...with the correct table and binds for the database
         $binds = [
-            'new-message-field' => $message,
+            'new-message-field'  => $message,
             'new-priority-field' => $priority,
-            'new-line' => $events['line'],
-            'new-file' => $events['file']
+            'new-line'           => $events['line'],
+            'new-file'           => $events['file'],
         ];
         $this->assertEquals([$binds], $this->db->calls['execute'][0]);
     }
@@ -187,48 +198,52 @@ class DbTest extends TestCase
         $this->writer->write(['message' => 'this should not fail']);
         $this->writer->shutdown();
 
-        $this->expectException('Laminas\Log\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Database adapter is null');
         $this->writer->write(['message' => 'this should fail']);
     }
 
     public function testWriteDateTimeAsTimestamp(): void
     {
-        $date = new DateTime();
+        $date  = new DateTime();
         $event = ['timestamp' => $date];
         $this->writer->write($event);
 
         $this->assertContains('query', array_keys($this->db->calls));
         $this->assertEquals(1, count($this->db->calls['query']));
 
-        $this->assertEquals([[
-            'timestamp' => $date->format(FormatterInterface::DEFAULT_DATETIME_FORMAT)
-        ]], $this->db->calls['execute'][0]);
+        $this->assertEquals([
+            [
+                'timestamp' => $date->format(FormatterInterface::DEFAULT_DATETIME_FORMAT),
+            ],
+        ], $this->db->calls['execute'][0]);
     }
 
     public function testWriteDateTimeAsExtraValue(): void
     {
-        $date = new DateTime();
+        $date  = new DateTime();
         $event = [
             'extra' => [
-                'request_time' => $date
-            ]
+                'request_time' => $date,
+            ],
         ];
         $this->writer->write($event);
 
         $this->assertContains('query', array_keys($this->db->calls));
         $this->assertEquals(1, count($this->db->calls['query']));
 
-        $this->assertEquals([[
-            'extra_request_time' => $date->format(FormatterInterface::DEFAULT_DATETIME_FORMAT)
-        ]], $this->db->calls['execute'][0]);
+        $this->assertEquals([
+            [
+                'extra_request_time' => $date->format(FormatterInterface::DEFAULT_DATETIME_FORMAT),
+            ],
+        ], $this->db->calls['execute'][0]);
     }
 
     public function testConstructWithOptions(): void
     {
-        $formatter = new \Laminas\Log\Formatter\Simple();
-        $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new class([
+        $formatter = new Simple();
+        $filter    = new Mock();
+        $writer    = new class ([
             'filters'   => $filter,
             'formatter' => $formatter,
             'table'     => $this->tableName,
@@ -254,7 +269,7 @@ class DbTest extends TestCase
                 return $this->db;
             }
         };
-        $this->assertInstanceOf('Laminas\Log\Writer\Db', $writer);
+        $this->assertInstanceOf(DbWriter::class, $writer);
         $this->assertSame($this->tableName, $writer->getTableName());
 
         $filters = $writer->getFilters();
@@ -280,7 +295,7 @@ class DbTest extends TestCase
                 'file'  => 'new-file',
                 'line'  => 'new-line',
                 'trace' => 'new-trace',
-            ]
+            ],
         ]);
 
         // log to the mock db adapter
@@ -341,12 +356,12 @@ class DbTest extends TestCase
 
         $columnMap = [
             'priority' => 'new-priority-field',
-            'message'  => 'new-message-field' ,
+            'message'  => 'new-message-field',
             'extra'    => [
                 'file'  => 'new-file',
                 'line'  => 'new-line',
                 'trace' => 'new-trace',
-            ]
+            ],
         ];
 
         $method = new ReflectionMethod($this->writer, 'mapEventIntoColumn');

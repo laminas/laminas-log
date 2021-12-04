@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Log\Exception;
@@ -10,6 +12,17 @@ use Laminas\Log\FormatterPluginManager as LogFormatterPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ErrorHandler;
 use Traversable;
+
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
+use function iterator_to_array;
+use function sprintf;
+
+use const E_WARNING;
 
 /**
  * @todo Remove aliases for parent namespace's FilterPluginManager and
@@ -99,7 +112,7 @@ abstract class AbstractWriter implements WriterInterface
                                     'Options must contain a name for the filter'
                                 );
                             }
-                            $filterOptions = (isset($filter['options'])) ? $filter['options'] : null;
+                            $filterOptions = $filter['options'] ?? null;
                             $this->addFilter($filter['name'], $filterOptions);
                         }
                     }
@@ -114,7 +127,7 @@ abstract class AbstractWriter implements WriterInterface
                     if (! isset($formatter['name'])) {
                         throw new Exception\InvalidArgumentException('Options must contain a name for the formatter');
                     }
-                    $formatterOptions = (isset($formatter['options'])) ? $formatter['options'] : null;
+                    $formatterOptions = $formatter['options'] ?? null;
                     $this->setFormatter($formatter['name'], $formatterOptions);
                 }
             }
@@ -129,7 +142,7 @@ abstract class AbstractWriter implements WriterInterface
      * @return AbstractWriter
      * @throws Exception\InvalidArgumentException
      */
-    public function addFilter($filter, array $options = null)
+    public function addFilter($filter, ?array $options = null)
     {
         if (is_int($filter)) {
             $filter = new Filter\Priority($filter);
@@ -174,7 +187,7 @@ abstract class AbstractWriter implements WriterInterface
     public function setFilterPluginManager($plugins)
     {
         if (is_string($plugins)) {
-            $plugins = new $plugins;
+            $plugins = new $plugins();
         }
         if (! $plugins instanceof LogFilterPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -195,7 +208,7 @@ abstract class AbstractWriter implements WriterInterface
      * @param array|null $options
      * @return Filter\FilterInterface
      */
-    public function filterPlugin($name, array $options = null)
+    public function filterPlugin($name, ?array $options = null)
     {
         return $this->getFilterPluginManager()->get($name, $options);
     }
@@ -223,7 +236,7 @@ abstract class AbstractWriter implements WriterInterface
     public function setFormatterPluginManager($plugins)
     {
         if (is_string($plugins)) {
-            $plugins = new $plugins;
+            $plugins = new $plugins();
         }
         if (! $plugins instanceof LogFormatterPluginManager) {
             throw new Exception\InvalidArgumentException(
@@ -246,7 +259,7 @@ abstract class AbstractWriter implements WriterInterface
      * @param array|null $options
      * @return Formatter\FormatterInterface
      */
-    public function formatterPlugin($name, array $options = null)
+    public function formatterPlugin($name, ?array $options = null)
     {
         return $this->getFormatterPluginManager()->get($name, $options);
     }
@@ -297,7 +310,7 @@ abstract class AbstractWriter implements WriterInterface
      * @return self
      * @throws Exception\InvalidArgumentException
      */
-    public function setFormatter($formatter, array $options = null)
+    public function setFormatter($formatter, ?array $options = null)
     {
         if (is_string($formatter)) {
             $formatter = $this->formatterPlugin($formatter, $options);

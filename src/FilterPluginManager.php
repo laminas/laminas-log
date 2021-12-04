@@ -1,10 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+
+use function get_class;
+use function gettype;
+use function is_object;
+use function sprintf;
 
 class FilterPluginManager extends AbstractPluginManager
 {
@@ -17,18 +24,20 @@ class FilterPluginManager extends AbstractPluginManager
         'validator'      => Filter\Validator::class,
 
         // Legacy Zend Framework aliases
-        \Zend\Log\Filter\Mock::class => Filter\Mock::class,
-        \Zend\Log\Filter\Priority::class => Filter\Priority::class,
-        \Zend\Log\Filter\Regex::class => Filter\Regex::class,
+        //phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+        \Zend\Log\Filter\Mock::class           => Filter\Mock::class,
+        \Zend\Log\Filter\Priority::class       => Filter\Priority::class,
+        \Zend\Log\Filter\Regex::class          => Filter\Regex::class,
         \Zend\Log\Filter\SuppressFilter::class => Filter\SuppressFilter::class,
-        \Zend\Log\Filter\Validator::class => Filter\Validator::class,
+        \Zend\Log\Filter\Validator::class      => Filter\Validator::class,
+        //phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
 
         // v2 normalized FQCNs
-        'zendlogfiltermock' => Filter\Mock::class,
-        'zendlogfilterpriority' => Filter\Priority::class,
-        'zendlogfilterregex' => Filter\Regex::class,
+        'zendlogfiltermock'           => Filter\Mock::class,
+        'zendlogfilterpriority'       => Filter\Priority::class,
+        'zendlogfilterregex'          => Filter\Regex::class,
         'zendlogfiltersuppressfilter' => Filter\SuppressFilter::class,
-        'zendlogfiltervalidator' => Filter\Validator::class,
+        'zendlogfiltervalidator'      => Filter\Validator::class,
     ];
 
     protected $factories = [
@@ -51,12 +60,14 @@ class FilterPluginManager extends AbstractPluginManager
 
     /**
      * Allow many filters of the same type (v2)
+     *
      * @param bool
      */
     protected $shareByDefault = false;
 
     /**
      * Allow many filters of the same type (v3)
+     *
      * @param bool
      */
     protected $sharedByDefault = false;
@@ -74,9 +85,9 @@ class FilterPluginManager extends AbstractPluginManager
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
                 '%s can only create instances of %s; %s is invalid',
-                get_class($this),
+                static::class,
                 $this->instanceOf,
-                (is_object($instance) ? get_class($instance) : gettype($instance))
+                is_object($instance) ? get_class($instance) : gettype($instance)
             ));
         }
     }
@@ -96,7 +107,7 @@ class FilterPluginManager extends AbstractPluginManager
         } catch (InvalidServiceException $e) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Plugin of type %s is invalid; must implement %s\Filter\FilterInterface',
-                (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
+                is_object($plugin) ? get_class($plugin) : gettype($plugin),
                 __NAMESPACE__
             ));
         }

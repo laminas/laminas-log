@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use DateTimeInterface;
@@ -11,6 +13,13 @@ use MongoClient;
 use MongoCollection;
 use MongoDate;
 use Traversable;
+
+use function extension_loaded;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function sprintf;
 
 /**
  * Mongo log writer.
@@ -53,10 +62,10 @@ class Mongo extends AbstractWriter
         }
         if (is_array($mongo)) {
             parent::__construct($mongo);
-            $saveOptions = isset($mongo['save_options']) ? $mongo['save_options'] : [];
-            $collection  = isset($mongo['collection']) ? $mongo['collection'] : null;
-            $database    = isset($mongo['database']) ? $mongo['database'] : null;
-            $mongo       = isset($mongo['mongo']) ? $mongo['mongo'] : null;
+            $saveOptions = $mongo['save_options'] ?? [];
+            $collection  = $mongo['collection'] ?? null;
+            $database    = $mongo['database'] ?? null;
+            $mongo       = $mongo['mongo'] ?? null;
         }
 
         if (null === $collection) {
@@ -70,7 +79,7 @@ class Mongo extends AbstractWriter
         if (! ($mongo instanceof MongoClient || $mongo instanceof MongoC)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Parameter of type %s is invalid; must be MongoClient or Mongo',
-                (is_object($mongo) ? get_class($mongo) : gettype($mongo))
+                is_object($mongo) ? get_class($mongo) : gettype($mongo)
             ));
         }
 
@@ -85,7 +94,7 @@ class Mongo extends AbstractWriter
      * @param array|null $options (unused)
      * @return WriterInterface
      */
-    public function setFormatter($formatter, array $options = null)
+    public function setFormatter($formatter, ?array $options = null)
     {
         return $this;
     }

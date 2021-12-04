@@ -1,12 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Exception;
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Exception\RuntimeException;
 use Laminas\Log\Filter\Mock as MockFilter;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\Writer\Stream as StreamWriter;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+
+use function fclose;
+use function fopen;
+use function rewind;
+use function sprintf;
+use function stream_get_contents;
+use function xml_parser_create;
+use function xml_parser_free;
+
+use const PHP_EOL;
 
 class StreamWriterTest extends TestCase
 {
@@ -31,8 +46,8 @@ class StreamWriterTest extends TestCase
         try {
             new StreamWriter($resource);
             $this->fail();
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Laminas\Log\Exception\InvalidArgumentException', $e);
+        } catch (Exception $e) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
             $this->assertMatchesRegularExpression('/not a stream/i', $e->getMessage());
         }
         xml_parser_free($resource);
@@ -58,7 +73,7 @@ class StreamWriterTest extends TestCase
     public function testConstructorThrowsWhenModeSpecifiedForExistingStream(): void
     {
         $stream = fopen('php://memory', 'w+');
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('existing stream');
         new StreamWriter($stream, 'w+');
     }
@@ -68,7 +83,7 @@ class StreamWriterTest extends TestCase
      */
     public function testConstructorThrowsWhenStreamCannotBeOpened(): void
     {
-        $this->expectException('Laminas\Log\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('cannot be opened');
         new StreamWriter('');
     }
@@ -97,7 +112,7 @@ class StreamWriterTest extends TestCase
         $writer = new StreamWriter($stream);
         fclose($stream);
 
-        $this->expectException('Laminas\Log\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to write');
         $writer->write(['message' => 'foo']);
     }
@@ -112,15 +127,15 @@ class StreamWriterTest extends TestCase
 
         $writer->shutdown();
 
-        $this->expectException('Laminas\Log\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to write');
         $writer->write(['message' => 'this write should fail']);
     }
 
     public function testSettingNewFormatter(): void
     {
-        $stream = fopen('php://memory', 'w+');
-        $writer = new StreamWriter($stream);
+        $stream   = fopen('php://memory', 'w+');
+        $writer   = new StreamWriter($stream);
         $expected = 'foo';
 
         $formatter = new SimpleFormatter($expected);
@@ -166,7 +181,7 @@ class StreamWriterTest extends TestCase
             'mode'          => 'w+',
             'log_separator' => '::',
         ];
-        $writer = new StreamWriter($options);
+        $writer  = new StreamWriter($options);
         $this->assertEquals('::', $writer->getLogSeparator());
     }
 
@@ -175,7 +190,7 @@ class StreamWriterTest extends TestCase
         $formatter = new SimpleFormatter();
         $filter    = new MockFilter();
 
-        $writer = new class([
+        $writer = new class ([
             'filters'       => $filter,
             'formatter'     => $formatter,
             'stream'        => 'php://memory',
@@ -203,7 +218,7 @@ class StreamWriterTest extends TestCase
 
     public function testDefaultFormatter(): void
     {
-        $writer = new class('php://memory') extends StreamWriter {
+        $writer = new class ('php://memory') extends StreamWriter {
             public function getFormatter(): SimpleFormatter
             {
                 return $this->formatter;
@@ -218,13 +233,13 @@ class StreamWriterTest extends TestCase
         $filter    = new MockFilter();
         $formatter = new SimpleFormatter();
         $file      = $this->root->url() . '/foo';
-        $writer = new StreamWriter([
-                'filters'       => $filter,
-                'formatter'     => $formatter,
-                'stream'        => $file,
-                'mode'          => 'w+',
-                'chmod'         => 0664,
-                'log_separator' => '::',
+        $writer    = new StreamWriter([
+            'filters'       => $filter,
+            'formatter'     => $formatter,
+            'stream'        => $file,
+            'mode'          => 'w+',
+            'chmod'         => 0664,
+            'log_separator' => '::',
         ]);
 
         $this->assertEquals(0664, $this->root->getChild('foo')->getPermissions());
@@ -238,15 +253,15 @@ class StreamWriterTest extends TestCase
         $filter    = new MockFilter();
         $formatter = new SimpleFormatter();
         $file      = $this->root->url() . '/foo';
-        $writer = new StreamWriter([
-            'filters'       => $filter,
-            'formatter'     => $formatter,
-            'stream'        => $file,
-            'mode'          => 'w+',
-            'chmod'         => 0777,
+        $writer    = new StreamWriter([
+            'filters'   => $filter,
+            'formatter' => $formatter,
+            'stream'    => $file,
+            'mode'      => 'w+',
+            'chmod'     => 0777,
         ]);
 
-        $this->assertEquals(0666, $this->root->getChild('foo')->getPermissions());
+        $this->assertEquals(0777, $this->root->getChild('foo')->getPermissions());
     }
 
     public function testCanSpecifyFilePermsViaConstructorArgument(): void

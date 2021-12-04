@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
 use DateTime;
+use Laminas\Log\Formatter\FormatterInterface;
 use Laminas\Log\Writer\MongoDB as MongoDBWriter;
-use MongoDB\BSON\UTCDatetime;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
@@ -12,21 +15,19 @@ use MongoDB\Driver\WriteConcern;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
+use function extension_loaded;
+use function getenv;
+use function sprintf;
+
 class MongoDBTest extends TestCase
 {
-    /**
-     * @var Manager
-     */
+    /** @var Manager */
     protected $manager;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $database;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $collection;
 
     protected function setUp(): void
@@ -35,7 +36,7 @@ class MongoDBTest extends TestCase
             $this->markTestSkipped('The mongodb PHP extension is not available');
         }
 
-        $this->database = 'laminas_test';
+        $this->database   = 'laminas_test';
         $this->collection = 'logs';
 
         $this->manager = new Manager(sprintf(
@@ -56,7 +57,7 @@ class MongoDBTest extends TestCase
     {
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection);
 
-        $writer->setFormatter($this->createMock('Laminas\Log\Formatter\FormatterInterface'));
+        $writer->setFormatter($this->createMock(FormatterInterface::class));
 
         $r = new ReflectionProperty($writer, 'formatter');
         $r->setAccessible(true);
@@ -82,7 +83,7 @@ class MongoDBTest extends TestCase
 
     public function testWriteWithCustomWriteConcern(): void
     {
-        $event = ['message' => 'foo', 'priority' => 42];
+        $event        = ['message' => 'foo', 'priority' => 42];
         $writeConcern = ['journal' => false, 'wtimeout' => 100, 'wstring' => 1];
 
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection, $writeConcern);
@@ -99,7 +100,7 @@ class MongoDBTest extends TestCase
 
     public function testWriteWithCustomWriteConcernInstance(): void
     {
-        $event = ['message' => 'foo', 'priority' => 42];
+        $event        = ['message' => 'foo', 'priority' => 42];
         $writeConcern = new WriteConcern(1, 100, false);
 
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection, $writeConcern);
@@ -132,7 +133,7 @@ class MongoDBTest extends TestCase
 
     public function testWriteConvertsDateTimeToMongoDate(): void
     {
-        $date = new DateTime();
+        $date  = new DateTime();
         $event = ['timestamp' => $date];
 
         $writer = new MongoDBWriter($this->manager, $this->database, $this->collection);
@@ -142,7 +143,7 @@ class MongoDBTest extends TestCase
         $cursor = $this->manager->executeQuery($this->database . '.' . $this->collection, new Query([]));
 
         foreach ($cursor as $entry) {
-            $this->assertInstanceOf(UTCDatetime::class, $entry->timestamp);
+            $this->assertInstanceOf(UTCDateTime::class, $entry->timestamp);
             $this->assertEquals($date->format('c'), $entry->timestamp->toDateTime()->format('c'));
         }
     }

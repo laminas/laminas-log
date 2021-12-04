@@ -1,9 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Formatter;
 
 use DateTime;
 use Traversable;
+
+use function defined;
+use function get_class;
+use function get_resource_type;
+use function gettype;
+use function is_array;
+use function is_object;
+use function is_resource;
+use function is_scalar;
+use function iterator_to_array;
+use function json_encode;
+use function method_exists;
+use function sprintf;
+
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
 
 class Base implements FormatterInterface
 {
@@ -11,14 +29,14 @@ class Base implements FormatterInterface
      * Format specifier for DateTime objects in event data (default: ISO 8601)
      *
      * @see http://php.net/manual/en/function.date.php
+     *
      * @var string
      */
     protected $dateTimeFormat = self::DEFAULT_DATETIME_FORMAT;
 
     /**
-     * Class constructor
-     *
      * @see http://php.net/manual/en/function.date.php
+     *
      * @param null|string|array|Traversable $dateTimeFormat Format for DateTime objects
      */
     public function __construct($dateTimeFormat = null)
@@ -28,7 +46,7 @@ class Base implements FormatterInterface
         }
 
         if (is_array($dateTimeFormat)) {
-            $dateTimeFormat = isset($dateTimeFormat['dateTimeFormat']) ? $dateTimeFormat['dateTimeFormat'] : null;
+            $dateTimeFormat = $dateTimeFormat['dateTimeFormat'] ?? null;
         }
 
         if (null !== $dateTimeFormat) {
@@ -71,7 +89,7 @@ class Base implements FormatterInterface
         // better readable JSON
         static $jsonFlags;
         if ($jsonFlags === null) {
-            $jsonFlags = 0;
+            $jsonFlags  = 0;
             $jsonFlags |= defined('JSON_UNESCAPED_SLASHES') ? JSON_UNESCAPED_SLASHES : 0;
             $jsonFlags |= defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0;
         }

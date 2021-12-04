@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Formatter;
 
 use DateTime;
@@ -49,8 +51,8 @@ class DbTest extends TestCase
 
     public function testFormatDateTimeInEvent(): void
     {
-        $datetime = new DateTime();
-        $event = ['timestamp' => $datetime];
+        $datetime  = new DateTime();
+        $event     = ['timestamp' => $datetime];
         $formatter = new DbFormatter();
 
         $format = DbFormatter::DEFAULT_DATETIME_FORMAT;

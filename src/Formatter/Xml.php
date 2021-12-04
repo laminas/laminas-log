@@ -1,50 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Formatter;
 
 use DateTime;
 use DOMDocument;
 use DOMElement;
+use DOMException;
 use Laminas\Escaper\Escaper;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
+use function array_key_exists;
+use function array_shift;
+use function func_get_args;
+use function get_class;
+use function is_array;
+use function is_numeric;
+use function is_object;
+use function is_scalar;
+use function method_exists;
+use function preg_replace;
+
+use const PHP_EOL;
+
 class Xml implements FormatterInterface
 {
-    /**
-     * @var string Name of root element
-     */
+    /** @var string Name of root element */
     protected $rootElement;
 
-    /**
-     * @var array Relates XML elements to log data field keys.
-     */
+    /** @var array Relates XML elements to log data field keys. */
     protected $elementMap;
 
-    /**
-     * @var string Encoding to use in XML
-     */
+    /** @var string Encoding to use in XML */
     protected $encoding;
 
-    /**
-     * @var Escaper instance
-     */
+    /** @var Escaper instance */
     protected $escaper;
 
     /**
      * Format specifier for DateTime objects in event data (default: ISO 8601)
      *
      * @see http://php.net/manual/en/function.date.php
+     *
      * @var string
      */
     protected $dateTimeFormat = self::DEFAULT_DATETIME_FORMAT;
 
     /**
-     * Class constructor
      * (the default encoding is UTF-8)
      *
      * @param array|Traversable $options
-     * @return Xml
      */
     public function __construct($options = [])
     {
@@ -56,7 +63,7 @@ class Xml implements FormatterInterface
             $args = func_get_args();
 
             $options = [
-                'rootElement' => array_shift($args)
+                'rootElement' => array_shift($args),
             ];
 
             if (! empty($args)) {
@@ -84,7 +91,7 @@ class Xml implements FormatterInterface
         $this->setEncoding($options['encoding']);
 
         if (array_key_exists('elementMap', $options)) {
-            $this->elementMap  = $options['elementMap'];
+            $this->elementMap = $options['elementMap'];
         }
 
         if (array_key_exists('dateTimeFormat', $options)) {
@@ -117,7 +124,6 @@ class Xml implements FormatterInterface
     /**
      * Set Escaper instance
      *
-     * @param  Escaper $escaper
      * @return Xml
      */
     public function setEscaper(Escaper $escaper)
@@ -169,20 +175,21 @@ class Xml implements FormatterInterface
         $elt     = $dom->appendChild(new DOMElement($this->rootElement));
 
         foreach ($dataToInsert as $key => $value) {
-            if (empty($value)
+            if (
+                empty($value)
                 || is_scalar($value)
-                || ((is_array($value) || $value instanceof Traversable) && $key == "extra")
+                || ((is_array($value) || $value instanceof Traversable) && $key === "extra")
                 || (is_object($value) && method_exists($value, '__toString'))
             ) {
-                if ($key == "message") {
+                if ($key === "message") {
                     $value = $escaper->escapeHtml($value);
                 }
 
-                if ($key == "extra" && empty($value)) {
+                if ($key === "extra" && empty($value)) {
                     continue;
                 }
 
-                if ($key == "extra" && (is_array($value) || $value instanceof Traversable)) {
+                if ($key === "extra" && (is_array($value) || $value instanceof Traversable)) {
                     $elt->appendChild($this->buildElementTree($dom, $dom->createElement('extra'), $value));
 
                     continue;
@@ -197,10 +204,11 @@ class Xml implements FormatterInterface
 
     /**
      * Recursion function to create an xml tree structure out of array structure
-     * @param DomDocument $doc - DomDocument where the current nodes will be generated
-     * @param DomElement $rootElement - root element the tree will be attached to
-     * @param $mixedData array|Traversable - mixedData
-     * @return DomElement $domElement - DOM Element with appended child nodes
+     *
+     * @param DOMDocument $doc - DOMDocument where the current nodes will be generated
+     * @param DOMElement $rootElement - root element the tree will be attached to
+     * @param array|Traversable $mixedData - mixed data
+     * @return DOMElement $domElement - DOM Element with appended child nodes
      */
     protected function buildElementTree(DOMDocument $doc, DOMElement $rootElement, $mixedData)
     {
@@ -227,7 +235,7 @@ class Xml implements FormatterInterface
                     '"Object" of type ' . get_class($value) . " does not support __toString() method"
                 );
             } elseif ($value) {
-                $value = $this->getEscaper()->escapeHtml($value);
+                $value = $this->getEscaper()->escapeHtml((string) $value);
             }
 
             if (is_numeric($key)) {
@@ -238,7 +246,7 @@ class Xml implements FormatterInterface
 
             try {
                 $rootElement->appendChild(new DOMElement($key, empty($value) ? null : (string) $value));
-            } catch (\DOMException $e) {
+            } catch (DOMException $e) {
                 // the input name is not valid, go one.
                 continue;
             }

@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
 use Laminas\Log\Logger;
 use Laminas\Log\PsrLoggerAdapter;
 use Laminas\Log\Writer\Mock as MockWriter;
+use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 use Psr\Log\Test\LoggerInterfaceTest;
+
+use function array_flip;
+use function array_map;
 
 /**
  * @coversDefaultClass \Laminas\Log\PsrLoggerAdapter
@@ -14,9 +20,7 @@ use Psr\Log\Test\LoggerInterfaceTest;
  */
 class PsrLoggerAdapterTest extends LoggerInterfaceTest
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $psrPriorityMap = [
         LogLevel::EMERGENCY => Logger::EMERG,
         LogLevel::ALERT     => Logger::ALERT,
@@ -35,8 +39,8 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
      */
     public function getLogger()
     {
-        $this->mockWriter = new MockWriter;
-        $logger           = new Logger;
+        $this->mockWriter = new MockWriter();
+        $logger           = new Logger();
         $logger->addProcessor('psrplaceholder');
         $logger->addWriter($this->mockWriter);
         return new PsrLoggerAdapter($logger);
@@ -55,9 +59,8 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
     {
         $prefixMap = array_flip($this->psrPriorityMap);
         return array_map(function ($event) use ($prefixMap) {
-            $prefix  = $prefixMap[$event['priority']];
-            $message = $prefix . ' ' . $event['message'];
-            return $message;
+            $prefix = $prefixMap[$event['priority']];
+            return $prefix . ' ' . $event['message'];
         }, $this->mockWriter->events);
     }
 
@@ -67,13 +70,12 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
     }
 
     /**
-     *
      * @covers ::__construct
      * @covers ::getLogger
      */
     public function testSetLogger(): void
     {
-        $logger = new Logger;
+        $logger = new Logger();
 
         $adapter = new PsrLoggerAdapter($logger);
         $this->assertSame($logger, $adapter->getLogger());
@@ -120,7 +122,7 @@ class PsrLoggerAdapterTest extends LoggerInterfaceTest
     public function testThrowsOnInvalidLevel()
     {
         $logger = $this->getLogger();
-        $this->expectException(\Psr\Log\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $logger->log('invalid level', 'Foo');
     }
 }

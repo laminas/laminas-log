@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
+use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter\Priority;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +35,7 @@ class PriorityTest extends TestCase
 
     public function testConstructorThrowsOnInvalidPriority(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('must be a number');
         new Priority('foo');
     }

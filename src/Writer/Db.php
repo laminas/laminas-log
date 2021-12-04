@@ -1,11 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Log\Exception;
 use Laminas\Log\Formatter\Db as DbFormatter;
 use Traversable;
+
+use function array_keys;
+use function array_map;
+use function implode;
+use function is_array;
+use function is_scalar;
+use function iterator_to_array;
+use function var_export;
 
 class Db extends AbstractWriter
 {
@@ -48,7 +58,7 @@ class Db extends AbstractWriter
      * @param string $separator
      * @throws Exception\InvalidArgumentException
      */
-    public function __construct($db, $tableName = null, array $columnMap = null, $separator = null)
+    public function __construct($db, $tableName = null, ?array $columnMap = null, $separator = null)
     {
         if ($db instanceof Traversable) {
             $db = iterator_to_array($db);
@@ -56,10 +66,10 @@ class Db extends AbstractWriter
 
         if (is_array($db)) {
             parent::__construct($db);
-            $separator = isset($db['separator']) ? $db['separator'] : null;
-            $columnMap = isset($db['column']) ? $db['column'] : null;
-            $tableName = isset($db['table']) ? $db['table'] : null;
-            $db        = isset($db['db']) ? $db['db'] : null;
+            $separator = $db['separator'] ?? null;
+            $columnMap = $db['column'] ?? null;
+            $tableName = $db['table'] ?? null;
+            $db        = $db['db'] ?? null;
         }
 
         if (! $db instanceof Adapter) {
@@ -131,11 +141,9 @@ class Db extends AbstractWriter
     protected function prepareInsert(array $fields)
     {
         $keys = array_keys($fields);
-        $sql = 'INSERT INTO ' . $this->db->platform->quoteIdentifier($this->tableName) . ' (' .
-            implode(",", array_map([$this->db->platform, 'quoteIdentifier'], $keys)) . ') VALUES (' .
-            implode(",", array_map([$this->db->driver, 'formatParameterName'], $keys)) . ')';
-
-        return $sql;
+        return 'INSERT INTO ' . $this->db->platform->quoteIdentifier($this->tableName) . ' ('
+            . implode(",", array_map([$this->db->platform, 'quoteIdentifier'], $keys)) . ') VALUES ('
+            . implode(",", array_map([$this->db->driver, 'formatParameterName'], $keys)) . ')';
     }
 
     /**
@@ -145,7 +153,7 @@ class Db extends AbstractWriter
      * @param  array $columnMap
      * @return array
      */
-    protected function mapEventIntoColumn(array $event, array $columnMap = null)
+    protected function mapEventIntoColumn(array $event, ?array $columnMap = null)
     {
         if (empty($event)) {
             return [];

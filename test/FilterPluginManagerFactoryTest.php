@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
+use Closure;
 use Interop\Container\ContainerInterface;
 use Laminas\Log\Filter\FilterInterface;
 use Laminas\Log\FilterPluginManager;
@@ -17,12 +20,12 @@ class FilterPluginManagerFactoryTest extends TestCase
     public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $factory = new FilterPluginManagerFactory();
+        $factory   = new FilterPluginManagerFactory();
 
         $filters = $factory($container, FilterPluginManagerFactory::class);
         $this->assertInstanceOf(FilterPluginManager::class, $filters);
 
-        $creationContext = \Closure::bind(function () {
+        $creationContext = Closure::bind(function () {
             return $this->creationContext;
         }, $filters, FilterPluginManager::class)();
         $this->assertSame($container, $creationContext);
@@ -34,7 +37,7 @@ class FilterPluginManagerFactoryTest extends TestCase
     public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $filter = $this->prophesize(FilterInterface::class)->reveal();
+        $filter    = $this->prophesize(FilterInterface::class)->reveal();
 
         $factory = new FilterPluginManagerFactory();
         $filters = $factory($container, FilterPluginManagerFactory::class, [
@@ -50,7 +53,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $filter = $this->prophesize(FilterInterface::class)->reveal();
         $config = [
             'log_filters' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -83,7 +86,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $filter = $this->prophesize(FilterInterface::class)->reveal();
         $config = [
             'log_filters' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
+use Closure;
 use Interop\Container\ContainerInterface;
 use Laminas\Log\Writer\WriterInterface;
 use Laminas\Log\WriterPluginManager;
@@ -17,12 +20,12 @@ class WriterPluginManagerFactoryTest extends TestCase
     public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $factory = new WriterPluginManagerFactory();
+        $factory   = new WriterPluginManagerFactory();
 
         $writers = $factory($container, WriterPluginManagerFactory::class);
         $this->assertInstanceOf(WriterPluginManager::class, $writers);
 
-        $creationContext = \Closure::bind(function () {
+        $creationContext = Closure::bind(function () {
             return $this->creationContext;
         }, $writers, WriterPluginManager::class)();
         $this->assertSame($container, $creationContext);
@@ -34,7 +37,7 @@ class WriterPluginManagerFactoryTest extends TestCase
     public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $writer = $this->prophesize(WriterInterface::class)->reveal();
+        $writer    = $this->prophesize(WriterInterface::class)->reveal();
 
         $factory = new WriterPluginManagerFactory();
         $writers = $factory($container, WriterPluginManagerFactory::class, [
@@ -50,7 +53,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $writer = $this->prophesize(WriterInterface::class)->reveal();
         $config = [
             'log_writers' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
@@ -83,7 +86,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $writer = $this->prophesize(WriterInterface::class)->reveal();
         $config = [
             'log_writers' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [

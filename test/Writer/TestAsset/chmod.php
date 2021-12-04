@@ -1,6 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
+
+use function trigger_error;
+
+use const E_USER_WARNING;
 
 /**
  * chmod() override for emulating warnings in tests.

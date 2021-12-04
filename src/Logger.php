@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log;
 
 use DateTime;
 use ErrorException;
+use Exception;
+use Laminas\Log\Exception\InvalidArgumentException;
+use Laminas\Log\Exception\RuntimeException;
 use Laminas\Log\Processor\ProcessorInterface;
 use Laminas\Log\Writer\WriterInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
@@ -12,23 +17,60 @@ use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\SplPriorityQueue;
 use Traversable;
 
+use function array_reverse;
+use function count;
+use function error_get_last;
+use function error_reporting;
+use function get_class;
+use function gettype;
+use function in_array;
+use function is_array;
+use function is_int;
+use function is_object;
+use function is_string;
+use function method_exists;
+use function register_shutdown_function;
+use function restore_error_handler;
+use function restore_exception_handler;
+use function set_error_handler;
+use function set_exception_handler;
+use function sprintf;
+use function var_export;
+
+use const E_COMPILE_ERROR;
+use const E_COMPILE_WARNING;
+use const E_CORE_ERROR;
+use const E_CORE_WARNING;
+use const E_DEPRECATED;
+use const E_ERROR;
+use const E_NOTICE;
+use const E_PARSE;
+use const E_RECOVERABLE_ERROR;
+use const E_STRICT;
+use const E_USER_DEPRECATED;
+use const E_USER_ERROR;
+use const E_USER_NOTICE;
+use const E_USER_WARNING;
+use const E_WARNING;
+
 /**
  * Logging messages with a stack of backends
  */
 class Logger implements LoggerInterface
 {
     /**
-     * @const int defined from the BSD Syslog message severities
      * @link http://tools.ietf.org/html/rfc3164
+     *
+     * @const int defined from the BSD Syslog message severities
      */
-    const EMERG  = 0;
-    const ALERT  = 1;
-    const CRIT   = 2;
-    const ERR    = 3;
-    const WARN   = 4;
-    const NOTICE = 5;
-    const INFO   = 6;
-    const DEBUG  = 7;
+    public const EMERG  = 0;
+    public const ALERT  = 1;
+    public const CRIT   = 2;
+    public const ERR    = 3;
+    public const WARN   = 4;
+    public const NOTICE = 5;
+    public const INFO   = 6;
+    public const DEBUG  = 7;
 
     /**
      * Map native PHP errors to priority
@@ -127,8 +169,7 @@ class Logger implements LoggerInterface
      * - errorhandler: if true register this logger as errorhandler
      *
      * @param  array|Traversable $options
-     * @return Logger
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($options = null)
     {
@@ -144,20 +185,22 @@ class Logger implements LoggerInterface
         }
 
         if (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Options must be an array or an object implementing \Traversable '
             );
         }
 
         // Inject writer plugin manager, if available
-        if (isset($options['writer_plugin_manager'])
+        if (
+            isset($options['writer_plugin_manager'])
             && $options['writer_plugin_manager'] instanceof AbstractPluginManager
         ) {
             $this->setWriterPluginManager($options['writer_plugin_manager']);
         }
 
         // Inject processor plugin manager, if available
-        if (isset($options['processor_plugin_manager'])
+        if (
+            isset($options['processor_plugin_manager'])
             && $options['processor_plugin_manager'] instanceof AbstractPluginManager
         ) {
             $this->setProcessorPluginManager($options['processor_plugin_manager']);
@@ -166,11 +209,11 @@ class Logger implements LoggerInterface
         if (isset($options['writers']) && is_array($options['writers'])) {
             foreach ($options['writers'] as $writer) {
                 if (! isset($writer['name'])) {
-                    throw new Exception\InvalidArgumentException('Options must contain a name for the writer');
+                    throw new InvalidArgumentException('Options must contain a name for the writer');
                 }
 
-                $priority      = (isset($writer['priority'])) ? $writer['priority'] : null;
-                $writerOptions = (isset($writer['options'])) ? $writer['options'] : null;
+                $priority      = $writer['priority'] ?? null;
+                $writerOptions = $writer['options'] ?? null;
 
                 $this->addWriter($writer['name'], $priority, $writerOptions);
             }
@@ -179,11 +222,11 @@ class Logger implements LoggerInterface
         if (isset($options['processors']) && is_array($options['processors'])) {
             foreach ($options['processors'] as $processor) {
                 if (! isset($processor['name'])) {
-                    throw new Exception\InvalidArgumentException('Options must contain a name for the processor');
+                    throw new InvalidArgumentException('Options must contain a name for the processor');
                 }
 
-                $priority         = (isset($processor['priority'])) ? $processor['priority'] : null;
-                $processorOptions = (isset($processor['options'])) ? $processor['options'] : null;
+                $priority         = $processor['priority'] ?? null;
+                $processorOptions = $processor['options'] ?? null;
 
                 $this->addProcessor($processor['name'], $priority, $processorOptions);
             }
@@ -212,7 +255,7 @@ class Logger implements LoggerInterface
         foreach ($this->writers as $writer) {
             try {
                 $writer->shutdown();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
     }
@@ -233,8 +276,6 @@ class Logger implements LoggerInterface
     /**
      * Set writer plugin manager
      *
-     * @param WriterPluginManager $writerPlugins
-     *
      * @return Logger
      */
     public function setWriterPluginManager(WriterPluginManager $writerPlugins)
@@ -248,9 +289,9 @@ class Logger implements LoggerInterface
      *
      * @param string $name
      * @param array|null $options
-     * @return Writer\WriterInterface
+     * @return WriterInterface
      */
-    public function writerPlugin($name, array $options = null)
+    public function writerPlugin($name, ?array $options = null)
     {
         return $this->getWriterPluginManager()->get($name, $options);
     }
@@ -258,18 +299,18 @@ class Logger implements LoggerInterface
     /**
      * Add a writer to a logger
      *
-     * @param  string|Writer\WriterInterface $writer
+     * @param  string|WriterInterface $writer
      * @param  int $priority
      * @param  array|null $options
      * @return Logger
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function addWriter($writer, $priority = 1, array $options = null)
+    public function addWriter($writer, $priority = 1, ?array $options = null)
     {
         if (is_string($writer)) {
             $writer = $this->writerPlugin($writer, $options);
         } elseif (! $writer instanceof Writer\WriterInterface) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Writer must implement %s\Writer\WriterInterface; received "%s"',
                 __NAMESPACE__,
                 is_object($writer) ? get_class($writer) : gettype($writer)
@@ -293,15 +334,14 @@ class Logger implements LoggerInterface
     /**
      * Set the writers
      *
-     * @param  SplPriorityQueue $writers
      * @return Logger
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setWriters(SplPriorityQueue $writers)
     {
         foreach ($writers->toArray() as $writer) {
             if (! $writer instanceof Writer\WriterInterface) {
-                throw new Exception\InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'Writers must be a SplPriorityQueue of Laminas\Log\Writer'
                 );
             }
@@ -328,15 +368,15 @@ class Logger implements LoggerInterface
      *
      * @param  string|ProcessorPluginManager $plugins
      * @return Logger
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setProcessorPluginManager($plugins)
     {
         if (is_string($plugins)) {
-            $plugins = new $plugins;
+            $plugins = new $plugins();
         }
         if (! $plugins instanceof ProcessorPluginManager) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'processor plugin manager must extend %s\ProcessorPluginManager; received %s',
                 __NAMESPACE__,
                 is_object($plugins) ? get_class($plugins) : gettype($plugins)
@@ -352,9 +392,9 @@ class Logger implements LoggerInterface
      *
      * @param string $name
      * @param array|null $options
-     * @return Processor\ProcessorInterface
+     * @return ProcessorInterface
      */
-    public function processorPlugin($name, array $options = null)
+    public function processorPlugin($name, ?array $options = null)
     {
         return $this->getProcessorPluginManager()->get($name, $options);
     }
@@ -362,18 +402,18 @@ class Logger implements LoggerInterface
     /**
      * Add a processor to a logger
      *
-     * @param  string|Processor\ProcessorInterface $processor
+     * @param  string|ProcessorInterface $processor
      * @param  int $priority
      * @param  array|null $options
      * @return Logger
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function addProcessor($processor, $priority = 1, array $options = null)
+    public function addProcessor($processor, $priority = 1, ?array $options = null)
     {
         if (is_string($processor)) {
             $processor = $this->processorPlugin($processor, $options);
         } elseif (! $processor instanceof Processor\ProcessorInterface) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Processor must implement Laminas\Log\ProcessorInterface; received "%s"',
                 is_object($processor) ? get_class($processor) : gettype($processor)
             ));
@@ -400,27 +440,27 @@ class Logger implements LoggerInterface
      * @param  mixed $message
      * @param  array|Traversable $extra
      * @return Logger
-     * @throws Exception\InvalidArgumentException if message can't be cast to string
-     * @throws Exception\InvalidArgumentException if extra can't be iterated over
-     * @throws Exception\RuntimeException if no log writer specified
+     * @throws InvalidArgumentException If message can't be cast to string.
+     * @throws InvalidArgumentException If extra can't be iterated over.
+     * @throws RuntimeException If no log writer specified.
      */
     public function log($priority, $message, $extra = [])
     {
         if (! is_int($priority) || ($priority < 0) || ($priority >= count($this->priorities))) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 '$priority must be an integer >= 0 and < %d; received %s',
                 count($this->priorities),
-                var_export($priority, 1)
+                var_export($priority, true)
             ));
         }
         if (is_object($message) && ! method_exists($message, '__toString')) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 '$message must implement magic __toString() method'
             );
         }
 
         if (! is_array($extra) && ! $extra instanceof Traversable) {
-            throw new Exception\InvalidArgumentException(
+            throw new InvalidArgumentException(
                 '$extra must be an array or implement Traversable'
             );
         } elseif ($extra instanceof Traversable) {
@@ -428,7 +468,7 @@ class Logger implements LoggerInterface
         }
 
         if ($this->writers->count() === 0) {
-            throw new Exception\RuntimeException('No log writer specified');
+            throw new RuntimeException('No log writer specified');
         }
 
         $timestamp = new DateTime();
@@ -445,12 +485,12 @@ class Logger implements LoggerInterface
             'extra'        => $extra,
         ];
 
-        /* @var $processor ProcessorInterface */
+        /** @var ProcessorInterface $processor */
         foreach ($this->processors->toArray() as $processor) {
             $event = $processor->process($event);
         }
 
-        /* @var $writer WriterInterface */
+        /** @var WriterInterface $writer */
         foreach ($this->writers->toArray() as $writer) {
             $writer->write($event);
         }
@@ -542,7 +582,7 @@ class Logger implements LoggerInterface
      * Register logging system as an error handler to log PHP errors
      *
      * @link http://www.php.net/manual/function.set-error-handler.php
-     * @param  Logger $logger
+     *
      * @param  bool   $continueNativeHandler
      * @return mixed  Returns result of set_error_handler
      */
@@ -566,9 +606,9 @@ class Logger implements LoggerInterface
                         $priority = Logger::INFO;
                     }
                     $logger->log($priority, $message, [
-                        'errno'   => $level,
-                        'file'    => $file,
-                        'line'    => $line,
+                        'errno' => $level,
+                        'file'  => $file,
+                        'line'  => $line,
                     ]);
                 }
 
@@ -582,7 +622,6 @@ class Logger implements LoggerInterface
 
     /**
      * Unregister error handler
-     *
      */
     public static function unregisterErrorHandler()
     {
@@ -594,7 +633,7 @@ class Logger implements LoggerInterface
      * Register a shutdown handler to log fatal errors
      *
      * @link http://www.php.net/manual/function.register-shutdown-function.php
-     * @param  Logger $logger
+     *
      * @return bool
      */
     public static function registerFatalErrorShutdownFunction(Logger $logger)
@@ -609,7 +648,8 @@ class Logger implements LoggerInterface
         register_shutdown_function(function () use ($logger, $errorPriorityMap) {
             $error = error_get_last();
 
-            if (null === $error
+            if (
+                null === $error
                 || ! in_array(
                     $error['type'],
                     [
@@ -618,7 +658,7 @@ class Logger implements LoggerInterface
                         E_CORE_ERROR,
                         E_CORE_WARNING,
                         E_COMPILE_ERROR,
-                        E_COMPILE_WARNING
+                        E_COMPILE_WARNING,
                     ],
                     true
                 )
@@ -645,7 +685,7 @@ class Logger implements LoggerInterface
      * Register logging system as an exception handler to log PHP exceptions
      *
      * @link http://www.php.net/manual/en/function.set-exception-handler.php
-     * @param Logger $logger
+     *
      * @return bool
      */
     public static function registerExceptionHandler(Logger $logger)
@@ -680,7 +720,7 @@ class Logger implements LoggerInterface
                     'message'  => $exception->getMessage(),
                     'extra'    => $extra,
                 ];
-                $exception = $exception->getPrevious();
+                $exception     = $exception->getPrevious();
             } while ($exception);
 
             foreach (array_reverse($logMessages) as $logMessage) {

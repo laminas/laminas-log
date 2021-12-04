@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Formatter;
 
 use Laminas\Log\Formatter\FirePhp;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class FirePhpTest extends TestCase
 {
     public function testFormatWithExtraData(): void
     {
-        $fields = [ 'message' => 'foo',
-                'extra' => new \stdClass() ];
+        $fields = [
+            'message' => 'foo',
+            'extra'   => new stdClass(),
+        ];
 
-        $f = new FirePhp();
-        list($line, $label) = $f->format($fields);
+        $f              = new FirePhp();
+        [$line, $label] = $f->format($fields);
 
         $this->assertStringContainsString($fields['message'], $label);
         $this->assertEquals($fields['extra'], $line);
@@ -21,10 +26,10 @@ class FirePhpTest extends TestCase
 
     public function testFormatWithoutExtra(): void
     {
-        $fields = [ 'message' => 'foo' ];
+        $fields = ['message' => 'foo'];
 
-        $f = new FirePhp();
-        list($line, $label) = $f->format($fields);
+        $f              = new FirePhp();
+        [$line, $label] = $f->format($fields);
 
         $this->assertStringContainsString($fields['message'], $line);
         $this->assertNull($label);
@@ -32,11 +37,13 @@ class FirePhpTest extends TestCase
 
     public function testFormatWithEmptyExtra(): void
     {
-        $fields = [ 'message' => 'foo',
-                'extra' => [] ];
+        $fields = [
+            'message' => 'foo',
+            'extra'   => [],
+        ];
 
-        $f = new FirePhp();
-        list($line, $label) = $f->format($fields);
+        $f              = new FirePhp();
+        [$line, $label] = $f->format($fields);
 
         $this->assertStringContainsString($fields['message'], $line);
         $this->assertNull($label);

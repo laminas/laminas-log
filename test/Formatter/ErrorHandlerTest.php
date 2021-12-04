@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Formatter;
 
 use DateTime;
@@ -14,20 +16,20 @@ class ErrorHandlerTest extends TestCase
     {
         $date = new DateTime();
 
-        $event = [
+        $event     = [
             'timestamp'    => $date,
             'message'      => 'test',
             'priority'     => 1,
             'priorityName' => 'CRIT',
-            'extra' => [
-                'errno' => 1,
-                'file'  => 'test.php',
-                'line'  => 1,
-                'context' => ['object' => new DateTime(), 'string' => 'test']
-            ]
+            'extra'        => [
+                'errno'   => 1,
+                'file'    => 'test.php',
+                'line'    => 1,
+                'context' => ['object' => new DateTime(), 'string' => 'test'],
+            ],
         ];
         $formatter = new ErrorHandler();
-        $output = $formatter->format($event);
+        $output    = $formatter->format($event);
 
         $this->assertEquals($date->format('c') . ' CRIT (1) test (errno 1) in test.php on line 1', $output);
     }
@@ -43,33 +45,33 @@ class ErrorHandlerTest extends TestCase
 
     public function testComplexEvent(): void
     {
-        $date = new DateTime();
+        $date         = new DateTime();
         $stringObject = new StringObject();
-        $event = [
-                'timestamp' => $date,
-                'message' => 'test',
-                'priority' => 1,
-                'priorityName' => 'CRIT',
-                'extra' => [
-                        'errno' => 1,
-                        'file' => 'test.php',
-                        'line' => 1,
-                        'context' => [
-                                'object1' => new StringObject(),
-                                'object2' => new NotStringObject(),
-                                'string' => 'test1',
-                                'array' => [
-                                        'key' => 'test2'
-                                ]
-                        ]
-                ]
+        $event        = [
+            'timestamp'    => $date,
+            'message'      => 'test',
+            'priority'     => 1,
+            'priorityName' => 'CRIT',
+            'extra'        => [
+                'errno'   => 1,
+                'file'    => 'test.php',
+                'line'    => 1,
+                'context' => [
+                    'object1' => new StringObject(),
+                    'object2' => new NotStringObject(),
+                    'string'  => 'test1',
+                    'array'   => [
+                        'key' => 'test2',
+                    ],
+                ],
+            ],
         ];
         $formatString = '%extra[context][object1]% %extra[context][object2]% %extra[context][string]% '
-            .'%extra[context][array]% %extra[context][array][key]%';
-        $formatter = new ErrorHandler($formatString);
-        $output = $formatter->format($event);
+            . '%extra[context][array]% %extra[context][array][key]%';
+        $formatter    = new ErrorHandler($formatString);
+        $output       = $formatter->format($event);
         $this->assertEquals(
-            $stringObject->__toString() .' %extra[context][object2]% test1 %extra[context][array]% test2',
+            $stringObject->__toString() . ' %extra[context][object2]% test1 %extra[context][array]% test2',
             $output
         );
     }

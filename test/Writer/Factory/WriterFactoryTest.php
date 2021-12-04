@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer\Factory;
 
 use Interop\Container\ContainerInterface;
@@ -146,7 +148,7 @@ class WriterFactoryTest extends TestCase
     {
         // Arrange
         $container = $this->createServiceManagerMock();
-        $factory = new WriterFactory();
+        $factory   = new WriterFactory();
 
         // Act
         $object = $factory($container->reveal(), InvokableObject::class, []);
@@ -163,7 +165,7 @@ class WriterFactoryTest extends TestCase
     {
         // Arrange
         $container = $this->createServiceManagerMock();
-        $factory = new WriterFactory();
+        $factory   = new WriterFactory();
 
         // Act
         $object = $factory($container->reveal(), InvokableObject::class, [
@@ -232,7 +234,7 @@ class WriterFactoryTest extends TestCase
     {
         // Arrange
         $container = $this->prophesize(ContainerInterface::class);
-        $factory = new WriterFactory();
+        $factory   = new WriterFactory();
 
         // Act
         $object = $factory($container->reveal(), InvokableObject::class, [
@@ -290,7 +292,7 @@ class WriterFactoryTest extends TestCase
         // Assert
         $this->assertInstanceOf(InvokableObject::class, $object);
         $this->assertEquals([
-            'filter_manager' => null,
+            'filter_manager'    => null,
             'formatter_manager' => 123,
         ], $object->options);
     }

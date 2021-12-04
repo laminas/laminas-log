@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
 use ReflectionProperty;
+
+use function method_exists;
 
 trait ServicesNotSharedByDefaultTrait
 {

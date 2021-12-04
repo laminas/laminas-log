@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Processor;
+
+use function md5;
 
 class RequestId implements ProcessorInterface
 {

@@ -1,9 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Writer;
 
+use Closure;
+use Laminas\Log\Filter\Mock;
+use Laminas\Log\Formatter\Simple;
 use Laminas\Log\Logger;
 use Laminas\Log\Writer\ChromePhp;
+use Laminas\Log\Writer\ChromePhp\ChromePhpInterface;
 use LaminasTest\Log\TestAsset\MockChromePhp;
 use PHPUnit\Framework\TestCase;
 
@@ -19,16 +25,16 @@ class ChromePhpTest extends TestCase
     public function testGetChromePhp(): void
     {
         $writer = new ChromePhp($this->chromephp);
-        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
+        $this->assertInstanceOf(ChromePhpInterface::class, $writer->getChromePhp());
     }
 
     public function testSetChromePhp(): void
     {
-        $writer   = new ChromePhp($this->chromephp);
+        $writer     = new ChromePhp($this->chromephp);
         $chromephp2 = new MockChromePhp();
 
         $writer->setChromePhp($chromephp2);
-        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
+        $this->assertInstanceOf(ChromePhpInterface::class, $writer->getChromePhp());
         $this->assertEquals($chromephp2, $writer->getChromePhp());
     }
 
@@ -36,8 +42,8 @@ class ChromePhpTest extends TestCase
     {
         $writer = new ChromePhp($this->chromephp);
         $writer->write([
-            'message' => 'my msg',
-            'priority' => Logger::DEBUG
+            'message'  => 'my msg',
+            'priority' => Logger::DEBUG,
         ]);
         $this->assertEquals('my msg', $this->chromephp->calls['trace'][0]);
     }
@@ -45,30 +51,30 @@ class ChromePhpTest extends TestCase
     public function testWriteDisabled(): void
     {
         $chromephp = new MockChromePhp(false);
-        $writer = new ChromePhp($chromephp);
+        $writer    = new ChromePhp($chromephp);
         $writer->write([
-            'message' => 'my msg',
-            'priority' => Logger::DEBUG
+            'message'  => 'my msg',
+            'priority' => Logger::DEBUG,
         ]);
         $this->assertEmpty($this->chromephp->calls);
     }
 
     public function testConstructWithOptions(): void
     {
-        $formatter = new \Laminas\Log\Formatter\Simple();
-        $filter    = new \Laminas\Log\Filter\Mock();
-        $writer = new ChromePhp([
+        $formatter = new Simple();
+        $filter    = new Mock();
+        $writer    = new ChromePhp([
             'filters'   => $filter,
             'formatter' => $formatter,
             'instance'  => $this->chromephp,
         ]);
-        $this->assertInstanceOf('Laminas\Log\Writer\ChromePhp\ChromePhpInterface', $writer->getChromePhp());
-        $formatter = \Closure::bind(function () {
+        $this->assertInstanceOf(ChromePhpInterface::class, $writer->getChromePhp());
+        $formatter = Closure::bind(function () {
             return $this->getFormatter();
         }, $writer, ChromePhp::class)();
         $this->assertInstanceOf(\Laminas\Log\Formatter\ChromePhp::class, $formatter);
 
-        $filters = \Closure::bind(function () {
+        $filters = Closure::bind(function () {
             return $this->filters;
         }, $writer, ChromePhp::class)();
 

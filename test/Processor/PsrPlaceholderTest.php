@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Processor;
 
 use Laminas\Log\Processor\PsrPlaceholder;
@@ -17,10 +19,10 @@ class PsrPlaceholderTest extends TestCase
      */
     public function testReplacement($val, $expected): void
     {
-        $psrProcessor = new PsrPlaceholder;
-        $event = $psrProcessor->process([
+        $psrProcessor = new PsrPlaceholder();
+        $event        = $psrProcessor->process([
             'message' => '{foo}',
-            'extra'   => ['foo' => $val]
+            'extra'   => ['foo' => $val],
         ]);
         $this->assertEquals($expected, $event['message']);
     }
@@ -39,7 +41,7 @@ class PsrPlaceholderTest extends TestCase
             'null'       => [null, ''],
             'true'       => [true, '1'],
             'false'      => [false, ''],
-            'stdclass'   => [new stdClass, '[object stdClass]'],
+            'stdclass'   => [new stdClass(), '[object stdClass]'],
             'array'      => [[], '[array]'],
         ];
     }

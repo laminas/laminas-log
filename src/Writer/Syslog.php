@@ -1,11 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Log\Writer;
 
 use Laminas\Log\Exception;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\Logger;
 use Traversable;
+
+use function array_key_exists;
+use function closelog;
+use function constant;
+use function defined;
+use function in_array;
+use function is_array;
+use function iterator_to_array;
+use function openlog;
+use function stripos;
+use function syslog;
+
+use const LOG_ALERT;
+use const LOG_CRIT;
+use const LOG_DEBUG;
+use const LOG_EMERG;
+use const LOG_ERR;
+use const LOG_INFO;
+use const LOG_NOTICE;
+use const LOG_PID;
+use const LOG_USER;
+use const LOG_WARNING;
+use const PHP_OS;
 
 /**
  * Writes log messages to syslog
@@ -74,7 +99,6 @@ class Syslog extends AbstractWriter
      * Constructor
      *
      * @param  array $params Array of options; may include "application" and "facility" keys
-     * @return Syslog
      */
     public function __construct($params = null)
     {
@@ -132,7 +156,7 @@ class Syslog extends AbstractWriter
             'LOG_NEWS',
             'LOG_SYSLOG',
             'LOG_USER',
-            'LOG_UUCP'
+            'LOG_UUCP',
         ];
 
         foreach ($constants as $constant) {
@@ -159,7 +183,7 @@ class Syslog extends AbstractWriter
      *
      * @param int $facility Syslog facility
      * @return Syslog
-     * @throws Exception\InvalidArgumentException for invalid log facility
+     * @throws Exception\InvalidArgumentException For invalid log facility.
      */
     public function setFacility($facility)
     {
@@ -177,7 +201,8 @@ class Syslog extends AbstractWriter
             );
         }
 
-        if (0 === stripos(PHP_OS, 'WIN')
+        if (
+            0 === stripos(PHP_OS, 'WIN')
             && ($facility !== LOG_USER)
         ) {
             throw new Exception\InvalidArgumentException(
@@ -231,7 +256,8 @@ class Syslog extends AbstractWriter
             $priority = $this->defaultPriority;
         }
 
-        if ($this->appName !== static::$lastApplication
+        if (
+            $this->appName !== static::$lastApplication
             || $this->facility !== static::$lastFacility
         ) {
             $this->initializeSyslog();

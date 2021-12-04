@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
+use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter\Sample;
 use PHPUnit\Framework\TestCase;
 
@@ -9,7 +12,7 @@ class SampleTest extends TestCase
 {
     public function testConstructorThrowsOnInvalidSampleRate(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('must be numeric');
         new Sample('bar');
     }
@@ -21,10 +24,10 @@ class SampleTest extends TestCase
 
         // Since sampling is a random process, let's test several times.
         $ret = false;
-        for ($i = 0; $i < 100; $i ++) {
+        for ($i = 0; $i < 100; $i++) {
             if ($filter->filter([])) {
-                break;
                 $ret = true;
+                break;
             }
         }
 
@@ -38,10 +41,10 @@ class SampleTest extends TestCase
 
         // Since sampling is a random process, let's test several times.
         $ret = true;
-        for ($i = 0; $i < 100; $i ++) {
+        for ($i = 0; $i < 100; $i++) {
             if (! $filter->filter([])) {
-                break;
                 $ret = false;
+                break;
             }
         }
 

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log\Filter;
 
+use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter\Regex;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +15,7 @@ class RegexTest extends TestCase
 {
     public function testMessageFilterRecognizesInvalidRegularExpression(): void
     {
-        $this->expectException('Laminas\Log\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('invalid reg');
         new Regex('invalid regexp');
     }

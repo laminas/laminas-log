@@ -1,25 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\Log;
 
+use Closure;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Log\Logger;
 use Laminas\Log\LoggerAbstractServiceFactory;
+use Laminas\Log\Processor\ProcessorInterface;
 use Laminas\Log\ProcessorPluginManager;
 use Laminas\Log\Writer\Db as DbWriter;
 use Laminas\Log\Writer\Mongo as MongoWriter;
 use Laminas\Log\Writer\MongoDB as MongoDBWriter;
 use Laminas\Log\Writer\Noop;
+use Laminas\Log\Writer\WriterInterface;
 use Laminas\Log\WriterPluginManager;
 use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\Exception\ServiceNotFoundException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use MongoDB\Driver\Manager;
 use PHPUnit\Framework\TestCase;
 
+use function count;
+use function extension_loaded;
+
+use const PHP_VERSION_ID;
+
 class LoggerAbstractServiceFactoryTest extends TestCase
 {
-    /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface
-     */
+    /** @var ServiceLocatorInterface */
     protected $serviceManager;
 
     /**
@@ -28,9 +39,9 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->serviceManager = new ServiceManager();
-        $config = new Config([
+        $config               = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'config' => [
                     'log' => [
                         'Application\Frontend' => [],
@@ -72,12 +83,11 @@ class LoggerAbstractServiceFactoryTest extends TestCase
     public function testValidLoggerService($service): void
     {
         $actual = $this->serviceManager->get($service);
-        $this->assertInstanceOf('Laminas\Log\Logger', $actual);
+        $this->assertInstanceOf(Logger::class, $actual);
     }
 
     /**
      * @dataProvider providerInvalidLoggerService
-     *
      * @param string $service
      */
     public function testInvalidLoggerService($service): void
@@ -91,15 +101,15 @@ class LoggerAbstractServiceFactoryTest extends TestCase
      */
     public function testRetrievesDatabaseServiceFromServiceManagerWhenEncounteringDbWriter(): void
     {
-        $db = $this->getMockBuilder('Laminas\Db\Adapter\Adapter')
+        $db = $this->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $config = new Config([
+        $config         = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'Db\Logger' => $db,
-                'config' => [
+                'config'    => [
                     'log' => [
                         'Application\Log' => [
                             'writers' => [
@@ -123,7 +133,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $config->configureServiceManager($serviceManager);
 
         $logger = $serviceManager->get('Application\Log');
-        $this->assertInstanceOf('Laminas\Log\Logger', $logger);
+        $this->assertInstanceOf(Logger::class, $logger);
         $writers = $logger->getWriters();
         $found   = false;
 
@@ -136,7 +146,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
 
         $this->assertTrue($found, 'Did not find expected DB writer');
 
-        $writerDb = \Closure::bind(function () {
+        $writerDb = Closure::bind(function () {
             return $this->db;
         }, $writer, DbWriter::class)();
 
@@ -157,11 +167,11 @@ class LoggerAbstractServiceFactoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $config = new Config([
+        $config         = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'mongo_client' => $mongoClient,
-                'config' => [
+                'config'       => [
                     'log' => [
                         'Application\Log' => [
                             'writers' => [
@@ -169,9 +179,9 @@ class LoggerAbstractServiceFactoryTest extends TestCase
                                     'name'     => 'mongo',
                                     'priority' => 1,
                                     'options'  => [
-                                        'database'     => 'applicationdb',
-                                        'collection'   => 'applicationlog',
-                                        'mongo'        => 'mongo_client',
+                                        'database'   => 'applicationdb',
+                                        'collection' => 'applicationlog',
+                                        'mongo'      => 'mongo_client',
                                     ],
                                 ],
                             ],
@@ -184,7 +194,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $config->configureServiceManager($serviceManager);
 
         $logger = $serviceManager->get('Application\Log');
-        $this->assertInstanceOf('Laminas\Log\Logger', $logger);
+        $this->assertInstanceOf(Logger::class, $logger);
         $writers = $logger->getWriters();
         $found   = false;
 
@@ -206,11 +216,11 @@ class LoggerAbstractServiceFactoryTest extends TestCase
 
         $manager = new Manager('mongodb://localhost:27017');
 
-        $config = new Config([
+        $config         = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'mongo_manager' => $manager,
-                'config' => [
+                'config'        => [
                     'log' => [
                         'Application\Log' => [
                             'writers' => [
@@ -218,9 +228,9 @@ class LoggerAbstractServiceFactoryTest extends TestCase
                                     'name'     => 'mongodb',
                                     'priority' => 1,
                                     'options'  => [
-                                        'database'     => 'applicationdb',
-                                        'collection'   => 'applicationlog',
-                                        'manager'      => 'mongo_manager',
+                                        'database'   => 'applicationdb',
+                                        'collection' => 'applicationlog',
+                                        'manager'    => 'mongo_manager',
                                     ],
                                 ],
                             ],
@@ -233,7 +243,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $config->configureServiceManager($serviceManager);
 
         $logger = $serviceManager->get('Application\Log');
-        $this->assertInstanceOf('Laminas\Log\Logger', $logger);
+        $this->assertInstanceOf(Logger::class, $logger);
         $writers = $logger->getWriters();
         $found   = false;
 
@@ -252,15 +262,15 @@ class LoggerAbstractServiceFactoryTest extends TestCase
      */
     public function testWillInjectWriterPluginManagerIfAvailable(): void
     {
-        $writers = new WriterPluginManager(new ServiceManager());
-        $mockWriter = $this->createMock('Laminas\Log\Writer\WriterInterface');
+        $writers    = new WriterPluginManager(new ServiceManager());
+        $mockWriter = $this->createMock(WriterInterface::class);
         $writers->setService('CustomWriter', $mockWriter);
 
-        $config = new Config([
+        $config   = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'LogWriterManager' => $writers,
-                'config' => [
+                'config'           => [
                     'log' => [
                         'Application\Frontend' => [
                             'writers' => [['name' => 'CustomWriter']],
@@ -272,7 +282,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $services = new ServiceManager();
         $config->configureServiceManager($services);
 
-        $log = $services->get('Application\Frontend');
+        $log        = $services->get('Application\Frontend');
         $logWriters = $log->getWriters();
         $this->assertEquals(1, count($logWriters));
         $writer = $logWriters->current();
@@ -284,15 +294,15 @@ class LoggerAbstractServiceFactoryTest extends TestCase
      */
     public function testWillInjectProcessorPluginManagerIfAvailable(): void
     {
-        $processors = new ProcessorPluginManager(new ServiceManager());
-        $mockProcessor = $this->createMock('Laminas\Log\Processor\ProcessorInterface');
+        $processors    = new ProcessorPluginManager(new ServiceManager());
+        $mockProcessor = $this->createMock(ProcessorInterface::class);
         $processors->setService('CustomProcessor', $mockProcessor);
 
-        $config = new Config([
+        $config   = new Config([
             'abstract_factories' => [LoggerAbstractServiceFactory::class],
-            'services' => [
+            'services'           => [
                 'LogProcessorManager' => $processors,
-                'config' => [
+                'config'              => [
                     'log' => [
                         'Application\Frontend' => [
                             'writers'    => [['name' => Noop::class]],
@@ -305,7 +315,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
         $services = new ServiceManager();
         $config->configureServiceManager($services);
 
-        $log = $services->get('Application\Frontend');
+        $log           = $services->get('Application\Frontend');
         $logProcessors = $log->getProcessors();
         $this->assertEquals(1, count($logProcessors));
         $processor = $logProcessors->current();
