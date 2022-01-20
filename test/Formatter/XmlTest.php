@@ -8,6 +8,7 @@ use DateTime;
 use Laminas\Log\Formatter\Xml as XmlFormatter;
 use LaminasTest\Log\TestAsset\SerializableObject;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use stdClass;
 
 use function simplexml_load_string;
@@ -80,7 +81,7 @@ class XmlTest extends TestCase
         $line = $f->format(['message' => 'foo', 'priority' => 42]);
 
         $sxml = @simplexml_load_string($line);
-        $this->assertInstanceOf('SimpleXMLElement', $sxml, 'Formatted XML is invalid');
+        $this->assertInstanceOf(SimpleXMLElement::class, $sxml, 'Formatted XML is invalid');
     }
 
     /**

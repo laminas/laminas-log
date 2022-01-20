@@ -36,8 +36,7 @@ use const PHP_VERSION_ID;
 
 class LoggerTest extends TestCase
 {
-    /** @var Logger */
-    private $logger;
+    private Logger $logger;
 
     protected function setUp(): void
     {

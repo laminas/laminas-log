@@ -99,6 +99,6 @@ class FirePhpBridge implements FirePhpInterface
      */
     public function log($line, $label = null)
     {
-        return $this->firephp->trace($line, $label);
+        return $this->firephp->trace($line);
     }
 }

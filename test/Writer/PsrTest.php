@@ -27,9 +27,7 @@ class PsrTest extends TestCase
     {
         $psrLogger = $this->createMock(LoggerInterface::class);
         $writer    = new PsrWriter($psrLogger);
-        $logger    = Closure::bind(function () {
-            return $this->logger;
-        }, $writer, PsrWriter::class)();
+        $logger    = Closure::bind(fn() => $this->logger, $writer, PsrWriter::class)();
         $this->assertSame($psrLogger, $logger);
     }
 

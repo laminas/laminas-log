@@ -25,9 +25,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
         $formatters = $factory($container, FormatterPluginManagerFactory::class);
         $this->assertInstanceOf(FormatterPluginManager::class, $formatters);
 
-        $creationContext = Closure::bind(function () {
-            return $this->creationContext;
-        }, $formatters, FormatterPluginManager::class)();
+        $creationContext = Closure::bind(fn() => $this->creationContext, $formatters, FormatterPluginManager::class)();
         $this->assertSame($container, $creationContext);
     }
 
@@ -57,9 +55,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($formatter) {
-                        return $formatter;
-                    },
+                    'test-too' => static fn($container) => $formatter,
                 ],
             ],
         ];
@@ -90,9 +86,7 @@ class FormatterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($formatter) {
-                        return $formatter;
-                    },
+                    'test-too' => static fn($container) => $formatter,
                 ],
             ],
         ];

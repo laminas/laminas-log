@@ -28,7 +28,7 @@ class StreamWriterTest extends TestCase
     /**
      * Flag used to prevent running tests that require full isolation
      */
-    private static $ranSuite = false;
+    private static bool $ranSuite = false;
 
     protected function setUp(): void
     {

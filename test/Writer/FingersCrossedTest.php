@@ -79,9 +79,7 @@ class FingersCrossedTest extends TestCase
         $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf(Priority::class, $filters[0]);
-        $priority = Closure::bind(function () {
-            return $this->priority;
-        }, $filters[0], Priority::class)();
+        $priority = Closure::bind(fn() => $this->priority, $filters[0], Priority::class)();
         $this->assertEquals(3, $priority);
     }
 

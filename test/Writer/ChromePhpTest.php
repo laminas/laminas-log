@@ -69,14 +69,10 @@ class ChromePhpTest extends TestCase
             'instance'  => $this->chromephp,
         ]);
         $this->assertInstanceOf(ChromePhpInterface::class, $writer->getChromePhp());
-        $formatter = Closure::bind(function () {
-            return $this->getFormatter();
-        }, $writer, ChromePhp::class)();
+        $formatter = Closure::bind(fn() => $this->getFormatter(), $writer, ChromePhp::class)();
         $this->assertInstanceOf(\Laminas\Log\Formatter\ChromePhp::class, $formatter);
 
-        $filters = Closure::bind(function () {
-            return $this->filters;
-        }, $writer, ChromePhp::class)();
+        $filters = Closure::bind(fn() => $this->filters, $writer, ChromePhp::class)();
 
         $this->assertCount(1, $filters);
         $this->assertEquals($filter, $filters[0]);

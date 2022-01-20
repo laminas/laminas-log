@@ -146,9 +146,7 @@ class LoggerAbstractServiceFactoryTest extends TestCase
 
         $this->assertTrue($found, 'Did not find expected DB writer');
 
-        $writerDb = Closure::bind(function () {
-            return $this->db;
-        }, $writer, DbWriter::class)();
+        $writerDb = Closure::bind(fn() => $this->db, $writer, DbWriter::class)();
 
         $this->assertSame($db, $writerDb);
     }

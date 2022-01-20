@@ -33,9 +33,7 @@ class MailTest extends TestCase
         $transport = new Transport\File();
         $options   = new Transport\FileOptions([
             'path'     => __DIR__,
-            'callback' => function (Transport\File $transport) {
-                return MailTest::FILENAME;
-            },
+            'callback' => static fn(Transport\File $transport) => self::FILENAME,
         ]);
         $transport->setOptions($options);
 
@@ -84,9 +82,7 @@ class MailTest extends TestCase
         $transport = new Transport\File();
         $options   = new Transport\FileOptions([
             'path'     => __DIR__,
-            'callback' => function (Transport\File $transport) {
-                    return MailTest::FILENAME;
-            },
+            'callback' => static fn(Transport\File $transport) => self::FILENAME,
         ]);
         $transport->setOptions($options);
 

@@ -25,9 +25,7 @@ class FilterPluginManagerFactoryTest extends TestCase
         $filters = $factory($container, FilterPluginManagerFactory::class);
         $this->assertInstanceOf(FilterPluginManager::class, $filters);
 
-        $creationContext = Closure::bind(function () {
-            return $this->creationContext;
-        }, $filters, FilterPluginManager::class)();
+        $creationContext = Closure::bind(fn() => $this->creationContext, $filters, FilterPluginManager::class)();
         $this->assertSame($container, $creationContext);
     }
 
@@ -57,9 +55,7 @@ class FilterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($filter) {
-                        return $filter;
-                    },
+                    'test-too' => static fn($container) => $filter,
                 ],
             ],
         ];
@@ -90,9 +86,7 @@ class FilterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($filter) {
-                        return $filter;
-                    },
+                    'test-too' => static fn($container) => $filter,
                 ],
             ],
         ];

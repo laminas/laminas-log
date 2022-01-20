@@ -25,9 +25,7 @@ class WriterPluginManagerFactoryTest extends TestCase
         $writers = $factory($container, WriterPluginManagerFactory::class);
         $this->assertInstanceOf(WriterPluginManager::class, $writers);
 
-        $creationContext = Closure::bind(function () {
-            return $this->creationContext;
-        }, $writers, WriterPluginManager::class)();
+        $creationContext = Closure::bind(fn() => $this->creationContext, $writers, WriterPluginManager::class)();
         $this->assertSame($container, $creationContext);
     }
 
@@ -57,9 +55,7 @@ class WriterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($writer) {
-                        return $writer;
-                    },
+                    'test-too' => static fn($container) => $writer,
                 ],
             ],
         ];
@@ -90,9 +86,7 @@ class WriterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($writer) {
-                        return $writer;
-                    },
+                    'test-too' => static fn($container) => $writer,
                 ],
             ],
         ];

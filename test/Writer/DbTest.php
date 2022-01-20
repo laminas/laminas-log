@@ -53,9 +53,7 @@ class DbTest extends TestCase
         ];
         $writer  = new DbWriter($options);
         $this->assertInstanceOf(DbWriter::class, $writer);
-        $tableName = Closure::bind(function () {
-            return $this->tableName;
-        }, $writer, DbWriter::class)();
+        $tableName = Closure::bind(fn() => $this->tableName, $writer, DbWriter::class)();
         $this->assertSame($this->tableName, $tableName);
     }
 

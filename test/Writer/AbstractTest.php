@@ -35,9 +35,7 @@ class AbstractTest extends TestCase
     public function testSetSimpleFormatterByName(): void
     {
         $instance  = $this->writer->setFormatter('simple');
-        $formatter = Closure::bind(function () {
-            return $this->getFormatter();
-        }, $instance, ConcreteWriter::class)();
+        $formatter = Closure::bind(fn() => $this->getFormatter(), $instance, ConcreteWriter::class)();
         $this->assertInstanceOf(SimpleFormatter::class, $formatter);
     }
 
@@ -122,9 +120,7 @@ class AbstractTest extends TestCase
         $priorityFilter = $filters[1];
         $this->assertInstanceOf(Priority::class, $priorityFilter);
 
-        $priority = Closure::bind(function () {
-            return $this->priority;
-        }, $priorityFilter, Priority::class)();
+        $priority = Closure::bind(fn() => $this->priority, $priorityFilter, Priority::class)();
 
         $this->assertEquals(3, $priority);
     }
@@ -141,9 +137,7 @@ class AbstractTest extends TestCase
         $filters = $writer->getFilters();
         $this->assertCount(1, $filters);
         $this->assertInstanceOf(Priority::class, $filters[0]);
-        $priority = Closure::bind(function () {
-            return $this->priority;
-        }, $filters[0], Priority::class)();
+        $priority = Closure::bind(fn() => $this->priority, $filters[0], Priority::class)();
         $this->assertEquals(3, $priority);
 
         // Accept an int in an array of filters as a PriorityFilter
@@ -158,9 +152,7 @@ class AbstractTest extends TestCase
         $filters = $writer->getFilters();
         $this->assertCount(2, $filters);
         $this->assertInstanceOf(Priority::class, $filters[0]);
-        $priority = Closure::bind(function () {
-            return $this->priority;
-        }, $filters[0], Priority::class)();
+        $priority = Closure::bind(fn() => $this->priority, $filters[0], Priority::class)();
         $this->assertEquals(3, $priority);
         $this->assertInstanceOf(Mock::class, $filters[1]);
     }

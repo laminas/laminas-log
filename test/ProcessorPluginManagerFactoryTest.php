@@ -25,9 +25,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
         $processors = $factory($container, ProcessorPluginManagerFactory::class);
         $this->assertInstanceOf(ProcessorPluginManager::class, $processors);
 
-        $creationContext = Closure::bind(function () {
-            return $this->creationContext;
-        }, $processors, ProcessorPluginManager::class)();
+        $creationContext = Closure::bind(fn() => $this->creationContext, $processors, ProcessorPluginManager::class)();
         $this->assertSame($container, $creationContext);
     }
 
@@ -57,9 +55,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($processor) {
-                        return $processor;
-                    },
+                    'test-too' => static fn($container) => $processor,
                 ],
             ],
         ];
@@ -90,9 +86,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($processor) {
-                        return $processor;
-                    },
+                    'test-too' => static fn($container) => $processor,
                 ],
             ],
         ];
