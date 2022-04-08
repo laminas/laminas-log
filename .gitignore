@@ -7,6 +7,3 @@
 /vendor/
 .phpunit.result.cache
 .phpcs-cache
-.buildpath
-.project
-.settings/org.eclipse.php.core.prefs
