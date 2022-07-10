@@ -131,7 +131,7 @@ message, in the database fields date, type, and event, respectively.
 `Laminas\Log\Writer\Db` has a fourth optional parameter in the constructor. This
 parameter is the character separator for array fields in the log event. For
 instance, if we have a log event that contains the field `extra`, and that field
-is an array, its elements will be translated as 'extra-field', where '-' is the
+is an array, its elements will be translated as `extra_field`, where '_' is the
 character separator (default), and 'field' is the subname of the specific field
 found in the `extra` array.
 
