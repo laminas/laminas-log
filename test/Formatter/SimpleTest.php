@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace LaminasTest\Log\Formatter;
 
+use ArrayIterator;
 use DateTime;
+use EmptyIterator;
 use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Formatter\Simple;
+use LaminasTest\Log\TestAsset\StringObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use stdClass;
+
+use function fopen;
+use function range;
 
 class SimpleTest extends TestCase
 {
@@ -45,6 +52,82 @@ class SimpleTest extends TestCase
             'priority'     => 42,
             'priorityName' => 'bar',
             'extra'        => [],
+        ];
+
+        $outputExpected = '2012-08-28T18:15:00+00:00 bar (42): foo';
+        $formatter      = new Simple();
+
+        $this->assertEquals($outputExpected, $formatter->format($fields));
+    }
+
+    public function testFormatAllTypes(): void
+    {
+        $date        = new DateTime('2012-08-28T18:15:00Z');
+        $object      = new stdClass();
+        $object->foo = 'bar';
+        $fields      = [
+            'timestamp'    => $date,
+            'message'      => 'foo',
+            'priority'     => 42,
+            'priorityName' => 'bar',
+            'extra'        => [
+                'float'             => 0.2,
+                'boolean'           => false,
+                'array_empty'       => [],
+                'array'             => range(0, 4),
+                'traversable_empty' => new EmptyIterator(),
+                'traversable'       => new ArrayIterator(['id', 42]),
+                'null'              => null,
+                'object_empty'      => new stdClass(),
+                'object'            => $object,
+                'string object'     => new StringObject(),
+                'resource'          => fopen('php://stdout', 'w'),
+            ],
+        ];
+
+        $outputExpected = '2012-08-28T18:15:00+00:00 bar (42): foo {'
+            . '"float":0.2,'
+            . '"boolean":false,'
+            . '"array_empty":"[]",'
+            . '"array":"[0,1,2,3,4]",'
+            . '"traversable_empty":"[]",'
+            . '"traversable":"[\"id\",42]",'
+            . '"null":null,'
+            . '"object_empty":"object(stdClass) {}",'
+            . '"object":"object(stdClass) {\"foo\":\"bar\"}",'
+            . '"string object":"Hello World",'
+            . '"resource":"resource(stream)"}';
+        $formatter      = new Simple();
+
+        $this->assertEquals($outputExpected, $formatter->format($fields));
+    }
+
+    public function testFormatExtraArrayKeyWithNonArrayValue(): void
+    {
+        $date   = new DateTime('2012-08-28T18:15:00Z');
+        $fields = [
+            'timestamp'    => $date,
+            'message'      => 'foo',
+            'priority'     => 42,
+            'priorityName' => 'bar',
+            'extra'        => '',
+        ];
+
+        $outputExpected = '2012-08-28T18:15:00+00:00 bar (42): foo';
+        $formatter      = new Simple();
+
+        $this->assertEquals($outputExpected, $formatter->format($fields));
+    }
+
+    public function testFormatExtraArrayKeyWithNullValue(): void
+    {
+        $date   = new DateTime('2012-08-28T18:15:00Z');
+        $fields = [
+            'timestamp'    => $date,
+            'message'      => 'foo',
+            'priority'     => 42,
+            'priorityName' => 'bar',
+            'extra'        => null,
         ];
 
         $outputExpected = '2012-08-28T18:15:00+00:00 bar (42): foo';
