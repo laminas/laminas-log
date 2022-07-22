@@ -7,6 +7,7 @@ namespace Laminas\Log\Formatter;
 use Laminas\Log\Exception;
 use Traversable;
 
+use function array_key_exists;
 use function count;
 use function is_array;
 use function is_string;
@@ -65,7 +66,7 @@ class Simple extends Base
 
         $event = parent::format($event);
         foreach ($event as $name => $value) {
-            if ('extra' === $name && count($value)) {
+            if ('extra' === $name && is_array($value) && count($value)) {
                 $value = $this->normalize($value);
             } elseif ('extra' === $name) {
                 // Don't print an empty array
@@ -75,7 +76,7 @@ class Simple extends Base
         }
 
         if (
-            isset($event['extra']) && empty($event['extra'])
+            array_key_exists('extra', $event) && empty($event['extra'])
             && false !== strpos($this->format, '%extra%')
         ) {
             $output = rtrim($output, ' ');
