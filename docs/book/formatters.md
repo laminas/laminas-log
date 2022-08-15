@@ -37,11 +37,11 @@ format string and the format for DateTime objects in event data. The format
 string contains keys surrounded by percent signs (e.g.
 `%message%`) and may contain any key from the event data array.
 You can retrieve the default keys by using the `DEFAULT_FORMAT` constant from
-`Laminas\Log\Formatter\Simple`. 
+`Laminas\Log\Formatter\Simple`.
 
-The DateTime format string follows PHP's [DateTimeInterface::format](https://www.php.net/manual/en/datetime.format.php) 
+The DateTime format string follows PHP's [DateTimeInterface::format](https://www.php.net/manual/en/datetime.format.php)
 pattern and defaults to the format described in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601). You can
-retrieve the default DateTime format by using the 
+retrieve the default DateTime format by using the
 `DEFAULT_DATETIME_FORMAT` constant from `Laminas\Log\Formatter\FormatterInterface`.
 
 ## Formatting to JSON
