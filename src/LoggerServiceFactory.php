@@ -23,10 +23,11 @@ class LoggerServiceFactory implements FactoryInterface
      *
      * @param string $requestedName
      * @param null|array $options
+     * @return Logger
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Logger
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         // Configure the logger
         $config    = $container->get('config');
@@ -42,10 +43,11 @@ class LoggerServiceFactory implements FactoryInterface
      *
      * Proxies to `__invoke()`.
      *
+     * @return Logger
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): Logger
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return $this($serviceLocator, Logger::class);
     }
@@ -53,9 +55,10 @@ class LoggerServiceFactory implements FactoryInterface
     /**
      * Process and return the configuration from the container.
      *
-     * @param array $config Passed by reference
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function processConfig(&$config, ContainerInterface $services)
+    protected function processConfig(array &$config, ContainerInterface $services)
     {
         if (
             isset($config['writer_plugin_manager'])
@@ -142,7 +145,6 @@ class LoggerServiceFactory implements FactoryInterface
                 // inject it into the configuration.
                 $manager                                         = $services->get($writerConfig['options']['manager']);
                 $config['writers'][$index]['options']['manager'] = $manager;
-                continue;
             }
         }
     }

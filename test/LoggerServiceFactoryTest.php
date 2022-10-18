@@ -21,7 +21,6 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use MongoDB\Driver\Manager;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -30,8 +29,6 @@ use function extension_loaded;
 
 class LoggerServiceFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     protected ServiceLocatorInterface $serviceManager;
 
     /**

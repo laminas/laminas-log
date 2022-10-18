@@ -18,12 +18,12 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class LoggerAbstractServiceFactory extends LoggerServiceFactory implements AbstractFactoryInterface
 {
-    protected array $config;
+    protected $config;
 
     /**
      * Configuration key holding logger configuration
      */
-    protected string $configKey;
+    protected $configKey;
 
     public function __construct(string $configKey = 'log')
     {
@@ -32,10 +32,11 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
 
     /**
      * @param string $requestedName
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function canCreate(ContainerInterface $container, $requestedName): bool
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
         $config = $this->getConfig($container);
         if (empty($config)) {
@@ -48,10 +49,11 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
     /**
      * @param string $name
      * @param string $requestedName
+     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName): bool
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         return $this->canCreate($serviceLocator, $requestedName);
     }
@@ -59,7 +61,7 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
     /**
      * {@inheritdoc}
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Logger
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $this->getConfig($container);
         $config = $config[$requestedName];
@@ -72,11 +74,12 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
     /**
      * @param string $name
      * @param string $requestedName
+     * @return Logger
      * @throws ContainerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName): Logger
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         return $this($serviceLocator, $requestedName);
     }
