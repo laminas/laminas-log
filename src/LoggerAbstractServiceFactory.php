@@ -18,10 +18,13 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class LoggerAbstractServiceFactory extends LoggerServiceFactory implements AbstractFactoryInterface
 {
+    /** @var array */
     protected $config;
 
     /**
      * Configuration key holding logger configuration
+     *
+     * @var string
      */
     protected $configKey;
 
@@ -87,10 +90,11 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
     /**
      * Retrieve configuration for loggers, if any
      *
+     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getConfig(ContainerInterface $services): array
+    protected function getConfig(ContainerInterface $services)
     {
         if (isset($this->config)) {
             return $this->config;

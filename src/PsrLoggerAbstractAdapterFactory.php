@@ -20,6 +20,8 @@ class PsrLoggerAbstractAdapterFactory implements AbstractFactoryInterface
 {
     /**
      * Configuration key holding logger configuration
+     *
+     * @var string
      */
     protected $configKey = 'psr_log';
 
@@ -56,7 +58,7 @@ class PsrLoggerAbstractAdapterFactory implements AbstractFactoryInterface
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return $this->loggerAbstractServiceFactory->canCreate($serviceLocator, $name);
+        return $this->canCreate($serviceLocator, $name);
     }
 
     /**
