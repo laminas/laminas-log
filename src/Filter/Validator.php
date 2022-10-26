@@ -32,7 +32,7 @@ class Validator implements FilterInterface
      */
     public function __construct($validator)
     {
-        if ($validator instanceof Traversable) {
+        if ($validator instanceof Traversable && ! $validator instanceof LaminasValidator) {
             $validator = iterator_to_array($validator);
         }
         if (is_array($validator)) {

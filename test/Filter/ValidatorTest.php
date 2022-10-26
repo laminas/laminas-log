@@ -15,10 +15,10 @@ class ValidatorTest extends TestCase
     public function testValidatorFilter(): void
     {
         $filter = new Validator(new DigitsFilter());
-        $this->assertTrue($filter->filter(['message' => '123']));
-        $this->assertFalse($filter->filter(['message' => 'test']));
-        $this->assertFalse($filter->filter(['message' => 'test123']));
-        $this->assertFalse($filter->filter(['message' => '(%$']));
+        self::assertTrue($filter->filter(['message' => '123']));
+        self::assertFalse($filter->filter(['message' => 'test']));
+        self::assertFalse($filter->filter(['message' => 'test123']));
+        self::assertFalse($filter->filter(['message' => '(%$']));
     }
 
     public function testValidatorChain(): void
@@ -27,7 +27,7 @@ class ValidatorTest extends TestCase
         $validatorChain->attach(new NotEmptyFilter());
         $validatorChain->attach(new DigitsFilter());
         $filter = new Validator($validatorChain);
-        $this->assertTrue($filter->filter(['message' => '123']));
-        $this->assertFalse($filter->filter(['message' => 'test']));
+        self::assertTrue($filter->filter(['message' => '123']));
+        self::assertFalse($filter->filter(['message' => 'test']));
     }
 }
