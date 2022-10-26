@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace Laminas\Log;
 
+use ArrayAccess;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_iterable;
+use function is_object;
 use function is_string;
+use function iterator_to_array;
 
 /**
  * Factory for logger instances.
@@ -92,11 +100,22 @@ class LoggerServiceFactory implements FactoryInterface
             $config['processor_plugin_manager'] = $services->get('LogProcessorManager');
         }
 
-        if (! isset($config['writers'])) {
+        if (! isset($config['writers']) || ! is_iterable($config['writers'])) {
             return;
         }
 
+        if (! is_array($config['writers'])) {
+            $config['writers'] = iterator_to_array($config['writers']);
+        }
+
         foreach ($config['writers'] as $index => $writerConfig) {
+            if (! is_array($writerConfig) && ! $writerConfig instanceof ArrayAccess) {
+                $type = is_object($writerConfig) ? get_class($writerConfig) : gettype($writerConfig);
+                throw new InvalidArgumentException(
+                    'config log.writers[] must contain array or ArrayAccess, ' . $type . ' provided'
+                );
+            }
+
             if (
                 isset($writerConfig['name'])
                 && ('db' === $writerConfig['name']
@@ -145,6 +164,7 @@ class LoggerServiceFactory implements FactoryInterface
                 // inject it into the configuration.
                 $manager                                         = $services->get($writerConfig['options']['manager']);
                 $config['writers'][$index]['options']['manager'] = $manager;
+                continue;
             }
         }
     }
