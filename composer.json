@@ -20,7 +20,10 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.99"
+        }
     },
     "extra": {
         "laminas": {
@@ -29,7 +32,7 @@
         }
     },
     "require": {
-        "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "laminas/laminas-servicemanager": "^3.3.0",
         "laminas/laminas-stdlib": "^3.0",
         "psr/log": "^1.1.2"
