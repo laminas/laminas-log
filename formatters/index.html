@@ -352,11 +352,16 @@ $logger-&gt;addWriter($writer);
 $logger-&gt;info('there');
 
 // outputs "hello there"</code></pre>
-<p>The constructor of <code>Laminas\Log\Formatter\Simple</code> accepts a single parameter: the
-format string. This string contains keys surrounded by percent signs (e.g.
-<code>%message%</code>). The format string may contain any key from the event data array.
+<p>The constructor of <code>Laminas\Log\Formatter\Simple</code> accepts two parameters: the
+format string and the format for DateTime objects in event data. The format
+string contains keys surrounded by percent signs (e.g.
+<code>%message%</code>) and may contain any key from the event data array.
 You can retrieve the default keys by using the <code>DEFAULT_FORMAT</code> constant from
 <code>Laminas\Log\Formatter\Simple</code>.</p>
+<p>The DateTime format string follows PHP's <a href="https://www.php.net/manual/en/datetime.format.php">DateTimeInterface::format</a>
+pattern and defaults to the format described in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>. You can
+retrieve the default DateTime format by using the
+<code>DEFAULT_DATETIME_FORMAT</code> constant from <code>Laminas\Log\Formatter\FormatterInterface</code>.</p>
 <h2 id="formatting-to-json">Formatting to JSON</h2>
 <p><code>Laminas\Log\Formatter\Json</code> is the JSON formatter.  By default, it
 automatically logs all items as JSON:</p>
