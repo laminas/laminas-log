@@ -3,6 +3,7 @@ site_dir: docs/html
 nav:
     - Home: index.md
     - Introduction: intro.md
+    - Installation: installation.md
     - Reference:
       - Writers: writers.md
       - Filters: filters.md
@@ -15,3 +16,6 @@ site_description: 'Robust, composite logger with filtering, formatting, and PSR-
 repo_url: 'https://github.com/laminas/laminas-log'
 extra:
     project: Components
+    installation:
+      config_provider_class: 'Laminas\Log\ConfigProvider'
+      module_class: 'Laminas\Log\Module'
