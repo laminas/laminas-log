@@ -22,17 +22,15 @@ class PsrLoggerAdapter extends PsrAbstractLogger
 {
     /**
      * Laminas\Log logger
-     *
-     * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * Map PSR-3 LogLevels to priority
      *
      * @var array
      */
-    protected $psrPriorityMap = [
+    protected array $psrPriorityMap = [
         LogLevel::EMERGENCY => Logger::EMERG,
         LogLevel::ALERT     => Logger::ALERT,
         LogLevel::CRITICAL  => Logger::CRIT,
@@ -53,10 +51,8 @@ class PsrLoggerAdapter extends PsrAbstractLogger
 
     /**
      * Returns composed LoggerInterface instance.
-     *
-     * @return LoggerInterface
      */
-    public function getLogger()
+    public function getLogger(): LoggerInterface
     {
         return $this->logger;
     }
@@ -67,16 +63,17 @@ class PsrLoggerAdapter extends PsrAbstractLogger
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     * @return void
      * @throws InvalidArgumentException If log level is not recognized.
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         if (! array_key_exists($level, $this->psrPriorityMap)) {
-            throw new InvalidArgumentException(sprintf(
-                '$level must be one of PSR-3 log levels; received %s',
-                var_export($level, true)
-            ));
+            throw new InvalidArgumentException(
+                sprintf(
+                    '$level must be one of PSR-3 log levels; received %s',
+                    var_export($level, true)
+                )
+            );
         }
 
         $priority = $this->psrPriorityMap[$level];
