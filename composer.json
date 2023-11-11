@@ -35,7 +35,7 @@
         "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "laminas/laminas-servicemanager": "^3.3.0",
         "laminas/laminas-stdlib": "^3.0",
-        "psr/log": "^1.1.2"
+        "psr/log": "^3.0"
     },
     "require-dev": {
         "ext-dom": "*",
