@@ -7,6 +7,7 @@ namespace LaminasTest\Log;
 use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Filter;
 use Laminas\Log\FilterPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +19,7 @@ class FilterPluginManagerCompatibilityTest extends TestCase
     use CommonPluginManagerTrait;
     use ServicesNotSharedByDefaultTrait;
 
-    protected function getPluginManager()
+    protected static function getPluginManager(): AbstractPluginManager
     {
         return new FilterPluginManager(new ServiceManager());
     }

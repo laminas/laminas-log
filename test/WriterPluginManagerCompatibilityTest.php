@@ -7,6 +7,7 @@ namespace LaminasTest\Log;
 use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Writer;
 use Laminas\Log\WriterPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +19,7 @@ class WriterPluginManagerCompatibilityTest extends TestCase
     use CommonPluginManagerTrait;
     use ServicesNotSharedByDefaultTrait;
 
-    protected function getPluginManager()
+    protected static function getPluginManager(): AbstractPluginManager
     {
         return new WriterPluginManager(new ServiceManager());
     }

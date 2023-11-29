@@ -7,6 +7,7 @@ namespace LaminasTest\Log;
 use Laminas\Log\Exception\InvalidArgumentException;
 use Laminas\Log\Formatter;
 use Laminas\Log\FormatterPluginManager;
+use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +17,7 @@ class FormatterPluginManagerCompatibilityTest extends TestCase
     use CommonPluginManagerTrait;
     use ServicesNotSharedByDefaultTrait;
 
-    protected function getPluginManager()
+    protected static function getPluginManager(): AbstractPluginManager
     {
         return new FormatterPluginManager(new ServiceManager());
     }

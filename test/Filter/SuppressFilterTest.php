@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class SuppressFilterTest extends TestCase
 {
+    private SuppressFilter $filter;
+
     protected function setUp(): void
     {
         $this->filter = new SuppressFilter();
