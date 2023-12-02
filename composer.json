@@ -47,6 +47,7 @@
         "laminas/laminas-escaper": "^2.5",
         "laminas/laminas-filter": "^2.5",
         "laminas/laminas-mail": "^2.6.1",
+        "laminas/laminas-servicemanager": "^3.12",
         "laminas/laminas-validator": "^2.10.1",
         "mikey179/vfsstream": "^1.6.7",
         "phpspec/prophecy-phpunit": "^2.0",

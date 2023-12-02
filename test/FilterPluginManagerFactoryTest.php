@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LaminasTest\Log;
 
 use Closure;
-use Interop\Container\ContainerInterface;
 use Laminas\Log\Filter\FilterInterface;
 use Laminas\Log\FilterPluginManager;
 use Laminas\Log\FilterPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class FilterPluginManagerFactoryTest extends TestCase
 {
@@ -34,7 +34,7 @@ class FilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
+    public function testFactoryConfiguresPluginManagerUnderContainerPSR(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $filter    = $this->prophesize(FilterInterface::class)->reveal();

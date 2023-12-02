@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LaminasTest\Log;
 
 use Closure;
-use Interop\Container\ContainerInterface;
 use Laminas\Log\Writer\WriterInterface;
 use Laminas\Log\WriterPluginManager;
 use Laminas\Log\WriterPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class WriterPluginManagerFactoryTest extends TestCase
 {
@@ -34,7 +34,7 @@ class WriterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
+    public function testFactoryConfiguresPluginManagerUnderContainerPSR(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $writer    = $this->prophesize(WriterInterface::class)->reveal();

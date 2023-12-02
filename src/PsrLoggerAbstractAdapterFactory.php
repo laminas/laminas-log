@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Laminas\Log;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -35,7 +34,6 @@ class PsrLoggerAbstractAdapterFactory implements AbstractFactoryInterface
     /**
      * @param string $requestedName
      * @return PsrLoggerAdapter
-     * @throws ContainerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

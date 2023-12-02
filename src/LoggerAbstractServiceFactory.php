@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Laminas\Log;
 
-use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -78,7 +77,6 @@ class LoggerAbstractServiceFactory extends LoggerServiceFactory implements Abstr
      * @param string $name
      * @param string $requestedName
      * @return Logger
-     * @throws ContainerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

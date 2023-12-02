@@ -27,7 +27,6 @@ class DbTest extends TestCase
     private MockDbAdapter $db;
     private DbWriter $writer;
 
-
     protected function setUp(): void
     {
         $this->tableName = 'db-table-name';
