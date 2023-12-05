@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LaminasTest\Log;
 
 use Closure;
-use Interop\Container\ContainerInterface;
 use Laminas\Log\Processor\ProcessorInterface;
 use Laminas\Log\ProcessorPluginManager;
 use Laminas\Log\ProcessorPluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class ProcessorPluginManagerFactoryTest extends TestCase
 {
@@ -34,7 +34,7 @@ class ProcessorPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop(): void
+    public function testFactoryConfiguresPluginManagerUnderContainerPSR(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $processor = $this->prophesize(ProcessorInterface::class)->reveal();

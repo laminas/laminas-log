@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\Log\Writer\Factory;
 
-use Interop\Container\ContainerInterface;
 use Laminas\Log\Writer\Factory\WriterFactory;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
@@ -12,6 +11,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use LaminasTest\Log\Writer\TestAsset\InvokableObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 
 class WriterFactoryTest extends TestCase
 {

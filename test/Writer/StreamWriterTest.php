@@ -11,6 +11,7 @@ use Laminas\Log\Filter\Mock as MockFilter;
 use Laminas\Log\Formatter\Simple as SimpleFormatter;
 use Laminas\Log\Writer\Stream as StreamWriter;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
 use function fclose;
@@ -29,6 +30,7 @@ class StreamWriterTest extends TestCase
      * Flag used to prevent running tests that require full isolation
      */
     private static $ranSuite = false;
+    private vfsStreamDirectory $root;
 
     protected function setUp(): void
     {

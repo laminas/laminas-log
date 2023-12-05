@@ -20,6 +20,8 @@ use function array_map;
  */
 class PsrLoggerAdapterTest extends LoggerInterfaceTest
 {
+    private MockWriter $mockWriter;
+
     /** @var array */
     protected $psrPriorityMap = [
         LogLevel::EMERGENCY => Logger::EMERG,

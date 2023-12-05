@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Laminas\Log\Writer\Factory;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 use function class_exists;
 use function is_array;
